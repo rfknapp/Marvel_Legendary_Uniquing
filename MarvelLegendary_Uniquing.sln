@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelLegendary_Uniquing", "MarvelLegendary\MarvelLegendary_Uniquing.csproj", "{D5968644-152F-48F3-BD9F-C8C0AFBF6236}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelLegendary_Uniquing_Tests", "MarvelLegendary_Uniquing_Tests\MarvelLegendary_Uniquing_Tests.csproj", "{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5968644-152F-48F3-BD9F-C8C0AFBF6236}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5968644-152F-48F3-BD9F-C8C0AFBF6236}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5968644-152F-48F3-BD9F-C8C0AFBF6236}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5968644-152F-48F3-BD9F-C8C0AFBF6236}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8761C5CC-9482-4444-A012-56EEA07F8DD8}
+	EndGlobalSection
+EndGlobal
