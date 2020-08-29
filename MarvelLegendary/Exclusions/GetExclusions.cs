@@ -651,21 +651,24 @@ namespace MarvelLegendary.Exclusions
         {
             var spreadsheetInfo = GetSpreadsheet.GetSpreadsheetInfo("Hero x Hero");
             var listOfHeroes = spreadsheetInfo.First();
-            var heroName = heroNames[0];
-            var heroIndex = listOfHeroes.ItemArray.ToList().IndexOf(heroName);
-
-            var combinations = spreadsheetInfo.ToList();
-            combinations.RemoveAt(0);
             var heroList = new List<string>();
 
-            foreach (var combination in combinations)
+            foreach (var heroName in heroNames)
             {
-                var combinationList = combination.ItemArray.ToList();
-                var name = combinationList[2].ToString();
+                var heroIndex = listOfHeroes.ItemArray.ToList().IndexOf(heroName);
 
-                if (combinationList[heroIndex].ToString() == "X")
+                var combinations = spreadsheetInfo.ToList();
+                combinations.RemoveAt(0);
+
+                foreach (var combination in combinations)
                 {
-                    heroList.Add(name);
+                    var combinationList = combination.ItemArray.ToList();
+                    var name = combinationList[2].ToString();
+
+                    if (combinationList[heroIndex].ToString() == "X" && !heroList.Contains(name))
+                    {
+                        heroList.Add(name);
+                    }
                 }
             }
 

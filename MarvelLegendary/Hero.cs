@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -509,6 +509,11 @@ namespace MarvelLegendary
             returnString = $"{returnString.Remove(returnString.Length - 2)}\r\n";
 
             return returnString;
+        }
+
+        public List<string> GetListOfHeroes()
+        {
+            return _heroes.ToList().Select(x => x.HeroName).ToList();
         }
     }
 }
