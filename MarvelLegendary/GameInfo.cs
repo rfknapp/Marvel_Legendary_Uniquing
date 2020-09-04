@@ -668,31 +668,8 @@ namespace MarvelLegendary
             var returnList = new List<Hero>();
             var heroesInGame = new List<string>(heroList.Select(x => x.HeroName));
             //var allHeroes = new Hero().GetListOfHeroes();
-            //var allHeroes = new List<string>
-            //{
-            //    "Black Widow",
-            //    "Captain America",
-            //    "Cyclops",
-            //    "Deadpool",
-            //    "Emma Frost",
-            //    "Gambit",
-            //    "Hawkeye",
-            //    "Hulk",
-            //    "Iron Man",
-            //    "Nick Fury",
-            //    "Rogue",
-            //    "Spider-Man",
-            //    "Storm",
-            //    "Thor",
-            //    "Wolverine",
-            //    "Angel",
-            //    "Bishop",
-            //    "Blade",
-            //    "Cable",
-            //    "Colossus"
-            //};
 
-            var allHeroes = new Hero().GetHeroNameList(new List<string>() { "a", "b", "l", "p", "ar" });
+            var allHeroes = new Hero().GetHeroNameList(new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s" });
 
             numRemainingHeroes = numberOfHeroes - currentHeroCount;
 

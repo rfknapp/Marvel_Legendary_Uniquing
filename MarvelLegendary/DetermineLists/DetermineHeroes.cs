@@ -51,22 +51,9 @@ namespace MarvelLegendary.DetermineLists
                         newHeroExclusions.AddRange(from item in schemeExcludedHeroGroups select item);
                         newHeroExclusions = newHeroExclusions.Distinct().ToList();
 
-                        var heroesToExcludeWith = new List<string>(heroesInGame);
-
-                        for (int l = heroesToExcludeWith.Count - 1; l >= 0; l--)
-                        {
-                            var heroByHeroExclusions = GetExclusions.GetHeroByHeroExclusions(heroesToExcludeWith);
-                            var heroExcludedHeroes = schemeExcludedHeroes.Except(heroByHeroExclusions).ToList();
-
-                            if (heroExcludedHeroes.Count != 0)
-                            {
-                                returnList = new List<string>(newHeroExclusions);
-                                returnList.AddRange(from item in heroByHeroExclusions select item);
-                                return returnList;
-                            }
-
-                            heroesToExcludeWith.RemoveAt(l);
-                        }
+                        returnList = GetHeroExclusionsByHeroes(schemeExcludedHeroes, newHeroExclusions, heroesInGame);
+                        if (returnList.Count != 0)
+                            return returnList;
                     }
 
                     //Since we are in this loop, there are heroes left after mastermind and scheme exclusions. This will return the exclusion list.
@@ -90,22 +77,9 @@ namespace MarvelLegendary.DetermineLists
                     //No Scheme, Villains, and Henchmen
                     if (heroesInGame.Count != 0)
                     {
-                        var heroesToExcludeWith = new List<string>(heroesInGame);
-
-                        for (int l = heroesToExcludeWith.Count - 1; l >= 0; l--)
-                        {
-                            var heroByHeroExclusions = GetExclusions.GetHeroByHeroExclusions(heroesToExcludeWith);
-                            var heroExcludedHeroes = mastermindExcludedHeroes.Except(heroByHeroExclusions).ToList();
-
-                            if (heroExcludedHeroes.Count != 0)
-                            {
-                                returnList = new List<string>(allExclusions);
-                                returnList.AddRange(from item in heroByHeroExclusions select item);
-                                return returnList;
-                            }
-
-                            heroesToExcludeWith.RemoveAt(l);
-                        }
+                        returnList = GetHeroExclusionsByHeroes(mastermindExcludedHeroes, allExclusions, heroesInGame);
+                        if (returnList.Count != 0)
+                            return returnList;
                     }
 
                 }
@@ -245,26 +219,38 @@ namespace MarvelLegendary.DetermineLists
                 {
                     if (heroesInGame.Count != 0)
                     {
-                        for (int l = heroesToExcludeWith.Count - 1; l >= 0; l--)
-                        {
-                            var heroByHeroExclusions = GetExclusions.GetHeroByHeroExclusions(heroesToExcludeWith);
-                            var heroExcludedHeroes = henchmenExcludedHeroes.Except(heroByHeroExclusions).ToList();
-
-                            if (heroExcludedHeroes.Count != 0)
-                            {
-                                returnList = new List<string>(newHenchmenExclusions);
-                                returnList.AddRange(from item in heroByHeroExclusions select item);
-                                return returnList;
-                            }
-
-                            heroesToExcludeWith.RemoveAt(l);
-                        }
+                        returnList = GetHeroExclusionsByHeroes(henchmenExcludedHeroes, newHenchmenExclusions, heroesInGame);
+                        if (returnList.Count != 0)
+                            return returnList;
                     }
 
                     return newHenchmenExclusions;
                 }
 
                 henchmenToExcludeWith.RemoveAt(k);
+            }
+
+            return new List<string>();
+        }
+
+        private static List<string> GetHeroExclusionsByHeroes(List<string> previousExcludedHeroes, List<string> previousExclusions, List<string> heroesInGame)
+        {
+            var heroesToExcludeWith = new List<string>(heroesInGame);
+            var returnList = new List<string>();
+
+            for (int l = heroesToExcludeWith.Count - 1; l >= 0; l--)
+            {
+                var heroByHeroExclusions = GetExclusions.GetHeroByHeroExclusions(heroesToExcludeWith);
+                var heroExcludedHeroes = previousExcludedHeroes.Except(heroByHeroExclusions).ToList();
+
+                if (heroExcludedHeroes.Count != 0)
+                {
+                    returnList = new List<string>(previousExclusions);
+                    returnList.AddRange(from item in heroByHeroExclusions select item);
+                    return returnList;
+                }
+
+                heroesToExcludeWith.RemoveAt(l);
             }
 
             return new List<string>();
