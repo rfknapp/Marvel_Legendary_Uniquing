@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DetermineLists\DetermineHenchmen.cs" />
+    <Compile Include="DetermineLists\DetermineHeroes.cs" />
     <Compile Include="Exclusions\GetExclusions.cs" />
     <Compile Include="Exclusions\GetSpreadsheet.cs" />
     <Compile Include="GameInfo.cs" />

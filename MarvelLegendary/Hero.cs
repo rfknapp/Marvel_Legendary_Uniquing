@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace MarvelLegendary
 {
+    public class HeroConnection 
+    {
+        public string Letter { get; set; }
+        public string HeroName { get; set; }
+
+        public HeroConnection(string letter, string heroName)
+        {
+            Letter = letter;
+            HeroName = heroName;
+        }
+    }
+
     public enum HeroTeam
     {
         None,
@@ -103,7 +115,7 @@ namespace MarvelLegendary
             new HeroInfo("Storm", GameInfo.Set.Core, HeroTeam.XMen),
             new HeroInfo("Thor", GameInfo.Set.Core, HeroTeam.Avengers),
             new HeroInfo("Wolverine", GameInfo.Set.Core, HeroTeam.XMen),
-            
+
             new HeroInfo("Angel", GameInfo.Set.Dc, HeroTeam.XMen),
             new HeroInfo("Bishop", GameInfo.Set.Dc, HeroTeam.XMen),
             new HeroInfo("Blade", GameInfo.Set.Dc, HeroTeam.MarvelKnights),
@@ -121,12 +133,12 @@ namespace MarvelLegendary
             new HeroInfo("Professor X", GameInfo.Set.Dc, HeroTeam.XMen),
             new HeroInfo("Punisher", GameInfo.Set.Dc, HeroTeam.MarvelKnights),
             new HeroInfo("Wolverine (X-Force)", GameInfo.Set.Dc, HeroTeam.XForce),
-            
-            new HeroInfo("Mr. Fantastic", GameInfo.Set.Ff, HeroTeam.FantasticFour),
-            new HeroInfo("Invisible Woman", GameInfo.Set.Ff, HeroTeam.FantasticFour),
-            new HeroInfo("Thing", GameInfo.Set.Ff, HeroTeam.FantasticFour),
+
             new HeroInfo("Human Torch", GameInfo.Set.Ff, HeroTeam.FantasticFour),
+            new HeroInfo("Invisible Woman", GameInfo.Set.Ff, HeroTeam.FantasticFour),
+            new HeroInfo("Mr. Fantastic", GameInfo.Set.Ff, HeroTeam.FantasticFour),
             new HeroInfo("Silver Surfer", GameInfo.Set.Ff, HeroTeam.Unaffiliated),
+            new HeroInfo("Thing", GameInfo.Set.Ff, HeroTeam.FantasticFour),
             
             new HeroInfo("Black Cat", GameInfo.Set.PttR, HeroTeam.SpiderFriends),
             new HeroInfo("Moon Knight", GameInfo.Set.PttR, HeroTeam.MarvelKnights),
@@ -162,7 +174,7 @@ namespace MarvelLegendary
             new HeroInfo("Nul, Breaker of Worlds", GameInfo.Set.Fi, HeroTeam.FoesOfAsgard, false, true),
             new HeroInfo("Skadi", GameInfo.Set.Fi, HeroTeam.HYDRA, false, false, true),
             new HeroInfo("Skirn, Breaker of Men", GameInfo.Set.Fi, HeroTeam.FoesOfAsgard, true),
-
+            
             new HeroInfo("Apocalyptic Kitty Pryde", GameInfo.Set.Sw1, HeroTeam.XMen),
             new HeroInfo("Black Bolt", GameInfo.Set.Sw1, HeroTeam.Illuminati),
             new HeroInfo("Black Panther", GameInfo.Set.Sw1, HeroTeam.Illuminati),
@@ -292,7 +304,7 @@ namespace MarvelLegendary
             new HeroInfo("Jessica Jones", GameInfo.Set.Dimensions, HeroTeam.MarvelKnights),
             new HeroInfo("Ms. America", GameInfo.Set.Dimensions, HeroTeam.Avengers),
             new HeroInfo("Squirrel Girl", GameInfo.Set.Dimensions, HeroTeam.Avengers),
-
+            
             new HeroInfo("Captain Marvel, Agent of S.H.I.E.L.D.", GameInfo.Set.Revelations, HeroTeam.SHIELD),
             new HeroInfo("Darkhawk", GameInfo.Set.Revelations, HeroTeam.Avengers),
             new HeroInfo("Hellcat", GameInfo.Set.Revelations, HeroTeam.Avengers),
@@ -302,12 +314,74 @@ namespace MarvelLegendary
             new HeroInfo("Scarlet Witch", GameInfo.Set.Revelations, HeroTeam.Avengers),
             new HeroInfo("Speed", GameInfo.Set.Revelations, HeroTeam.SHIELD),
             new HeroInfo("War Machine", GameInfo.Set.Revelations, HeroTeam.Avengers),
-
+            
             new HeroInfo("Agent Phil Coulson", GameInfo.Set.Shield, HeroTeam.SHIELD),
             new HeroInfo("Deathlok", GameInfo.Set.Shield, HeroTeam.SHIELD),
             new HeroInfo("Mockingbird", GameInfo.Set.Shield, HeroTeam.SHIELD),
             new HeroInfo("Quake", GameInfo.Set.Shield, HeroTeam.SHIELD),
         };
+
+        private readonly List<HeroConnection> _heroConnections = new List<HeroConnection>()
+        {
+            new HeroConnection("a", "Black Widow"),
+            new HeroConnection("b", "Captain America"),
+            new HeroConnection("c", "Cyclops"),
+            new HeroConnection("d", "Deadpool"),
+            new HeroConnection("e", "Emma Frost"),
+            new HeroConnection("f", "Gambit"),
+            new HeroConnection("g", "Hawkeye"),
+            new HeroConnection("h", "Hulk"),
+            new HeroConnection("i", "Iron Man"),
+            new HeroConnection("j", "Nick Fury"),
+            new HeroConnection("k", "Rogue"),
+            new HeroConnection("l", "Spider-Man"),
+            new HeroConnection("m", "Storm"),
+            new HeroConnection("n", "Thor"),
+            new HeroConnection("o", "Wolverine"),
+            new HeroConnection("p", "Angel"),
+            new HeroConnection("q", "Bishop"),
+            new HeroConnection("r", "Blade"),
+            new HeroConnection("s", "Cable"),
+            new HeroConnection("t", "Colossus"),
+            new HeroConnection("u", "Daredevil"),
+            new HeroConnection("v", "Domino"),
+            new HeroConnection("w", "Elektra"),
+            new HeroConnection("x", "Forge"),
+            new HeroConnection("y", "Ghost Rider"),
+            new HeroConnection("z", "Ice Man"),
+            new HeroConnection("aa", "Iron Fist"),
+            new HeroConnection("ab", "Jean Grey"),
+            new HeroConnection("ac", "Nightcrawler"),
+            new HeroConnection("ad", "Professor X"),
+            new HeroConnection("ae", "Punisher"),
+            new HeroConnection("af", "Wolverine (X-Force)"),
+            new HeroConnection("ag", "Human Torch"),
+            new HeroConnection("ah", "Invisible Woman"),
+            new HeroConnection("ai", "Mr. Fantastic"),
+            new HeroConnection("aj", "Silver Surfer"),
+            new HeroConnection("ak", "Thing"),
+            new HeroConnection("al", "Black Cat"),
+            new HeroConnection("am", "Moon Knight"),
+            new HeroConnection("an", "Scarlet Spider"),
+            new HeroConnection("ao", "Spider-Woman"),
+            new HeroConnection("ap", "Symbiote Spider-Man"),
+            new HeroConnection("aq", "Bullseye"),
+            new HeroConnection("ar", "Dr. Octopus"),
+            new HeroConnection("as", "Electro"),
+            new HeroConnection("at", "Enchantress")
+        };
+
+        public List<string> GetHeroNameList(List<string> letters)
+        {
+            var returnList = new List<string>();
+            
+            foreach (var letter in letters)
+            {
+                returnList.Add(_heroConnections.First(x => x.Letter == letter).HeroName);
+            }
+
+            return returnList;
+        }
 
         public bool IsEnoughHeroes(List<HeroTeam> heroTeams, int heroesPerTeam, List<string> exclusionHeroes)
         {
@@ -514,6 +588,13 @@ namespace MarvelLegendary
         public List<string> GetListOfHeroes()
         {
             return _heroes.ToList().Select(x => x.HeroName).ToList();
+        }
+
+        public List<HeroInfo> SetHeroList(List<string> heroNames)
+        {
+            var returnList = _heroes.Where(x => heroNames.Contains(x.HeroName)).ToList();
+
+            return returnList;
         }
     }
 }
