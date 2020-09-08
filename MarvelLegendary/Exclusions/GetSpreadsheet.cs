@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MarvelLegendary.Exclusions
 {
-    static class GetSpreadsheet
+    public class GetSpreadsheet
     {
-        public static EnumerableRowCollection<DataRow> GetSpreadsheetInfo(string tabName)
+        public EnumerableRowCollection<DataRow> GetSpreadsheetInfo(string tabName)
         {
             var spreadsheetName = "Marvel_Legendary_Every_Combo.xlsx";
             //var directory = Directory.GetCurrentDirectory();
