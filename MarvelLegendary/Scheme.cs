@@ -1,8 +1,7 @@
-﻿using System;
+﻿using MarvelLegendary.Exclusions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarvelLegendary
 {
@@ -179,21 +178,21 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("House of M").SetSchemeSet(GameInfo.Set.Revelations).HeroesInVillainDeck("Scarlet Witch").Is4v2().Build(),
             new SchemeInfoBuilder().SetSchemeName("The Korvac Saga").SetSchemeSet(GameInfo.Set.Revelations).Build(),
             new SchemeInfoBuilder().SetSchemeName("Secret HYDRA Corruption").SetSchemeSet(GameInfo.Set.Revelations).SetSchemeTwists(new List<int>{7,9,9,11,11}).Build(),
-
+            
             new SchemeInfoBuilder().SetSchemeName("Hail Hydra").SetSchemeSet(GameInfo.Set.Shield).SetSchemeTwists(11).Build(),
             new SchemeInfoBuilder().SetSchemeName("Hydra Helicarriers Hunt Heroes").SetSchemeSet(GameInfo.Set.Shield).AddAdditionalHero(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Secret Empire of Betrayal").SetSchemeSet(GameInfo.Set.Shield).SetSchemeTwists(11).SetDarkLoyalty().Build(),
             new SchemeInfoBuilder().SetSchemeName("S.H.I.E.L.D. vs. Hydra War").SetSchemeSet(GameInfo.Set.Shield).SetSchemeTwists(7).SetRequiredVillains(new List<string>{"Hydra Elite", "A.I.M., Hydra Offshoot" }, 1).Build(),
-
+            
             new SchemeInfoBuilder().SetSchemeName("Asgardian Test of Worth").SetSchemeSet(GameInfo.Set.Asgard).SetSchemeTwists(11).Build(),
             new SchemeInfoBuilder().SetSchemeName("The Dark World of Svartalfheim").SetSchemeSet(GameInfo.Set.Asgard).SetSchemeTwists(10).Build(),
             new SchemeInfoBuilder().SetSchemeName("Ragnarok, Twilight of the Gods").SetSchemeSet(GameInfo.Set.Asgard).SetSchemeTwists(11).Build(),
             new SchemeInfoBuilder().SetSchemeName("War of the Frost Giants").SetSchemeSet(GameInfo.Set.Asgard).SetSchemeTwists(9).Build(),
-
-            new SchemeInfoBuilder().SetSchemeName("Crash the Moon into the Sun").SetSchemeSet(GameInfo.Set.Asgard).SetSchemeTwists(11).Build(),
-            new SchemeInfoBuilder().SetSchemeName("The Demon Bear Saga").SetSchemeSet(GameInfo.Set.Asgard).SetRequiredVillains("Demons of Limbo").Build(),
-            new SchemeInfoBuilder().SetSchemeName("Superhuman Baseball Game").SetSchemeSet(GameInfo.Set.Asgard).SetSchemeTwists(9).AddAdditionalVillain(1).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Trapped in the Insane Asylum").SetSchemeSet(GameInfo.Set.Asgard).SetSchemeTwists(new List<int>{3,5,7,9,11}).Build(),
+            
+            new SchemeInfoBuilder().SetSchemeName("Crash the Moon into the Sun").SetSchemeSet(GameInfo.Set.NewMutants).SetSchemeTwists(11).Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Demon Bear Saga").SetSchemeSet(GameInfo.Set.NewMutants).SetRequiredVillains("Demons of Limbo").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Superhuman Baseball Game").SetSchemeSet(GameInfo.Set.NewMutants).SetSchemeTwists(9).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Trapped in the Insane Asylum").SetSchemeSet(GameInfo.Set.NewMutants).SetSchemeTwists(new List<int>{3,5,7,9,11}).Build(),
         };
 
         public Scheme(int playerCount, string schemeName)
@@ -246,8 +245,12 @@ namespace MarvelLegendary
             Wounds = schemeInfo.WoundPerPlayer;
         }
 
-        public Scheme(int playerCount, Mastermind mastermind, List<string> schemeExclusions)
+        public Scheme(int playerCount, Mastermind mastermind)
         {
+            var getExclusions = new GetExclusions();
+            var exclusions = getExclusions.GetMastermindExclusion(mastermind.MastermindName);
+            var schemeExclusions = exclusions.SchemeList;
+
             var schemeInfo = _schemes[new Random().Next(_schemes.Count)];
             if(schemeExclusions.Count < _schemes.Count)
             {

@@ -10,7 +10,7 @@ namespace MarvelLegendary.DetermineLists
     class DetermineHeroes
     {
         public static List<string> DetermineHeroList(List<Villain> villainsInGame, List<Mastermind> mastermindsInGame, List<Henchmen> henchmenInGame, Scheme scheme,
-            List<string> heroesInGame, List<string> availableHeroes)
+            List<string> heroesInGame, List<string> availableHeroes, IGetExclusions getExclusions)
         {
             var masterminds = mastermindsInGame.Select(x => x.MastermindName).ToList();
             var villains = villainsInGame.Select(x => x.VillainName).ToList();
@@ -20,13 +20,13 @@ namespace MarvelLegendary.DetermineLists
 
             for (int i = 0; i < masterminds.Count; i++)
             {
-                var exclusions = GetExclusions.GetMastermindExclusion(masterminds); //heroes excluded from mastermind(s)
+                var exclusions = getExclusions.GetMastermindExclusion(masterminds); //heroes excluded from mastermind(s)
                 var mastermindExcludedHeroes = availableHeroes.Except(exclusions.HeroList).Except(heroesInGame).ToList(); //heroes left after taking out mastermind exclusions
 
                 var allExclusions = new List<string>(exclusions.HeroList);
                 allExclusions.AddRange(from item in heroesInGame select item);
 
-                var schemeExcludedHeroGroups = GetExclusions.GetSchemeExclusions(scheme.SchemeName).HeroList; //heroes excluded from scheme(s)
+                var schemeExcludedHeroGroups = getExclusions.GetSchemeExclusions(scheme.SchemeName).HeroList; //heroes excluded from scheme(s)
                 var schemeExcludedHeroes = mastermindExcludedHeroes.Except(schemeExcludedHeroGroups).ToList(); //heroes left after taking out mastermind exclusions and scheme exclusions
 
                 if (schemeExcludedHeroes.Count != 0)
@@ -35,12 +35,12 @@ namespace MarvelLegendary.DetermineLists
                     allExclusionsWithScheme.AddRange(from item in schemeExcludedHeroGroups select item); //heroes excluded from mastermind(s) and scheme(s)
                     allExclusionsWithScheme = allExclusionsWithScheme.Distinct().ToList(); //this removes all duplicates
 
-                    returnList = GetHeroExclusionsByVillainHenchmenAndHeroes(villains, schemeExcludedHeroes, allExclusionsWithScheme, heroesInGame, henchmen);
+                    returnList = GetHeroExclusionsByVillainHenchmenAndHeroes(villains, schemeExcludedHeroes, allExclusionsWithScheme, heroesInGame, henchmen, getExclusions);
                     if (returnList.Count != 0)
                         return returnList;
 
                     //Need to do Mastermind, Scheme, Henchmen, Heroes here
-                    returnList = GetHeroExclusionsByHenchmenAndHeroes(schemeExcludedHeroes, allExclusionsWithScheme, heroesInGame, henchmen);
+                    returnList = GetHeroExclusionsByHenchmenAndHeroes(schemeExcludedHeroes, allExclusionsWithScheme, heroesInGame, henchmen, getExclusions);
                     if (returnList.Count != 0)
                         return returnList;
 
@@ -51,7 +51,7 @@ namespace MarvelLegendary.DetermineLists
                         newHeroExclusions.AddRange(from item in schemeExcludedHeroGroups select item);
                         newHeroExclusions = newHeroExclusions.Distinct().ToList();
 
-                        returnList = GetHeroExclusionsByHeroes(schemeExcludedHeroes, newHeroExclusions, heroesInGame);
+                        returnList = GetHeroExclusionsByHeroes(schemeExcludedHeroes, newHeroExclusions, heroesInGame, getExclusions);
                         if (returnList.Count != 0)
                             return returnList;
                     }
@@ -64,12 +64,12 @@ namespace MarvelLegendary.DetermineLists
                 else
                 {
                     //This will check Mastermind/Villain/Henchmen/Hero when no heroes match with the scheme exclusions
-                    returnList = GetHeroExclusionsByVillainHenchmenAndHeroes(villains, mastermindExcludedHeroes, allExclusions, heroesInGame, henchmen);
+                    returnList = GetHeroExclusionsByVillainHenchmenAndHeroes(villains, mastermindExcludedHeroes, allExclusions, heroesInGame, henchmen, getExclusions);
                     if (returnList.Count != 0)
                         return returnList;
 
                     //This will check mastermind/henchmen/hero exclusions when no heroes match with the scheme and villain exclusions
-                    returnList = GetHeroExclusionsByHenchmenAndHeroes(mastermindExcludedHeroes, allExclusions, heroesInGame, henchmen);
+                    returnList = GetHeroExclusionsByHenchmenAndHeroes(mastermindExcludedHeroes, allExclusions, heroesInGame, henchmen, getExclusions);
                     if (returnList.Count != 0)
                         return returnList;
 
@@ -77,7 +77,7 @@ namespace MarvelLegendary.DetermineLists
                     //No Scheme, Villains, and Henchmen
                     if (heroesInGame.Count != 0)
                     {
-                        returnList = GetHeroExclusionsByHeroes(mastermindExcludedHeroes, allExclusions, heroesInGame);
+                        returnList = GetHeroExclusionsByHeroes(mastermindExcludedHeroes, allExclusions, heroesInGame, getExclusions);
                         if (returnList.Count != 0)
                             return returnList;
                     }
@@ -99,14 +99,15 @@ namespace MarvelLegendary.DetermineLists
             return new List<string>();
         }
 
-        private static List<string> GetHeroExclusionsByVillainHenchmenAndHeroes(List<string> villainsInGame, List<string> previousExcludedHeroes, List<string> previousExclusions, List<string> heroesInGame, List<string> henchmen)
+        private static List<string> GetHeroExclusionsByVillainHenchmenAndHeroes(List<string> villainsInGame, List<string> previousExcludedHeroes, List<string> previousExclusions, 
+            List<string> heroesInGame, List<string> henchmen, IGetExclusions getExclusions)
         {
             var villainsToExcludeWith = new List<string>(villainsInGame);
             var returnList = new List<string>();
 
             for (int j = villainsToExcludeWith.Count - 1; j >= 0; j--)
             {
-                var villainExcludedHeroGroups = GetExclusions.GetVillainExclusion(villainsToExcludeWith).HeroList; //heroes excluded from villain(s)
+                var villainExcludedHeroGroups = getExclusions.GetVillainExclusion(villainsToExcludeWith).HeroList; //heroes excluded from villain(s)
                 var villainExcludedHeroes = previousExcludedHeroes.Except(villainExcludedHeroGroups).ToList(); //heroes left after taking out mastermind, scheme, and villain exclusions
 
                 //Skip over all this if villainExcludedHeroes.Count = 0
@@ -119,7 +120,7 @@ namespace MarvelLegendary.DetermineLists
 
                     var henchmenToExcludeWith = new List<string>(henchmen);
 
-                    returnList = GetHeroExclusionsByHenchmenAndHeroes(villainExcludedHeroes, newVillainExclusions, heroesInGame, henchmen);
+                    returnList = GetHeroExclusionsByHenchmenAndHeroes(villainExcludedHeroes, newVillainExclusions, heroesInGame, henchmen, getExclusions);
                     if (returnList.Count != 0)
                         return returnList;
 
@@ -131,7 +132,7 @@ namespace MarvelLegendary.DetermineLists
                         newHeroExclusions.AddRange(from item in villainExcludedHeroGroups select item);
                         newHeroExclusions = newHeroExclusions.Distinct().ToList();
 
-                        returnList = GetHeroExclusionsByHeroes(villainExcludedHeroes, newHeroExclusions, heroesInGame);
+                        returnList = GetHeroExclusionsByHeroes(villainExcludedHeroes, newHeroExclusions, heroesInGame, getExclusions);
                         if (returnList.Count != 0)
                             return returnList;
                     }
@@ -147,7 +148,8 @@ namespace MarvelLegendary.DetermineLists
             return new List<string>();
         }
 
-        private static List<string> GetHeroExclusionsByHenchmenAndHeroes(List<string> previousExcludedHeroes, List<string> previousExclusions, List<string> heroesInGame, List<string> henchmen)
+        private static List<string> GetHeroExclusionsByHenchmenAndHeroes(List<string> previousExcludedHeroes, List<string> previousExclusions, List<string> heroesInGame,
+            List<string> henchmen, IGetExclusions getExclusions)
         {
             var returnList = new List<string>();
             var henchmenToExcludeWith = new List<string>(henchmen);
@@ -155,7 +157,7 @@ namespace MarvelLegendary.DetermineLists
             //do if henchmen exclusion count != 0
             for (int k = henchmenToExcludeWith.Count - 1; k >= 0; k--)
             {
-                var henchmenExcludedHeroGroups = GetExclusions.GetHenchmenExclusion(henchmenToExcludeWith).HeroList; //heroes excluded from henchmen
+                var henchmenExcludedHeroGroups = getExclusions.GetHenchmenExclusion(henchmenToExcludeWith).HeroList; //heroes excluded from henchmen
                 var henchmenExcludedHeroes = previousExcludedHeroes.Except(henchmenExcludedHeroGroups).ToList(); //heroes left after taking out mastermind, scheme, villains, and henchmen
 
                 var newHenchmenExclusions = new List<string>(previousExclusions);
@@ -168,7 +170,7 @@ namespace MarvelLegendary.DetermineLists
                 {
                     if (heroesInGame.Count != 0)
                     {
-                        returnList = GetHeroExclusionsByHeroes(henchmenExcludedHeroes, newHenchmenExclusions, heroesInGame);
+                        returnList = GetHeroExclusionsByHeroes(henchmenExcludedHeroes, newHenchmenExclusions, heroesInGame, getExclusions);
                         if (returnList.Count != 0)
                             return returnList;
                     }
@@ -182,14 +184,14 @@ namespace MarvelLegendary.DetermineLists
             return new List<string>();
         }
 
-        private static List<string> GetHeroExclusionsByHeroes(List<string> previousExcludedHeroes, List<string> previousExclusions, List<string> heroesInGame)
+        private static List<string> GetHeroExclusionsByHeroes(List<string> previousExcludedHeroes, List<string> previousExclusions, List<string> heroesInGame, IGetExclusions getExclusions)
         {
             var heroesToExcludeWith = new List<string>(heroesInGame);
             var returnList = new List<string>();
 
             for (int l = heroesToExcludeWith.Count - 1; l >= 0; l--)
             {
-                var heroByHeroExclusions = GetExclusions.GetHeroByHeroExclusions(heroesToExcludeWith);
+                var heroByHeroExclusions = getExclusions.GetHeroByHeroExclusions(heroesToExcludeWith);
                 var heroExcludedHeroes = previousExcludedHeroes.Except(heroByHeroExclusions).ToList();
 
                 if (heroExcludedHeroes.Count != 0)

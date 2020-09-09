@@ -17,6 +17,15 @@ namespace MarvelLegendary
             while (int.TryParse(playerCount, out output) && int.Parse(playerCount) > 0 && int.Parse(playerCount) < 6)
             {
                 var game = new GameInfo(int.Parse(playerCount));
+                game.SetMastermind();
+                game.SetScheme();
+
+                if (game.Scheme.SchemeInfo.NumberExtraMasterminds > 0)
+                    game.SetExtraMasterminds();
+
+                game.SetVillains(new List<string>());
+                game.SetHenchmen(new List<string>());
+                game.SetHeroes(new List<string>());
 
                 var gameText = GameTextBuilder(game);
                 Console.Clear();

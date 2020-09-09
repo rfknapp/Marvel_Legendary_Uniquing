@@ -174,13 +174,14 @@ namespace MarvelLegendary
 
         public Villain(List<Mastermind> allMastermindsInGame)
         {
+            var getExclusions = new GetExclusions();
             VillainInfo villain = null;
             var masterminds = allMastermindsInGame.Select(x => x.MastermindName).ToList();
             var villainList = new Villain().GetListOfVillains();
 
             for (int i = masterminds.Count - 1; i >= 0; i--)
             {
-                var exclusions = GetExclusions.GetMastermindExclusion(masterminds);
+                var exclusions = getExclusions.GetMastermindExclusion(masterminds);
 
                 var mastermindCompareList = villainList.Except(exclusions.VillainList).ToList();
                 if (mastermindCompareList.Count > 0)

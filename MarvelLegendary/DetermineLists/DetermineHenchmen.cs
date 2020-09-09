@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using MarvelLegendary.Exclusions;
@@ -15,16 +16,17 @@ namespace MarvelLegendary.DetermineLists
             var villains = villainsInGame.Select(x => x.VillainName).ToList();
             var availableHenchmen = new Henchmen().GetListOfHenchmen();
             var returnList = new List<string>();
+            var getExclusions = new GetExclusions();
 
             for (int i = masterminds.Count - 1; i >= 0; i--)
             {
-                var exclusions = GetExclusions.GetMastermindExclusion(masterminds);
+                var exclusions = getExclusions.GetMastermindExclusion(masterminds);
                 var mastermindExcludedHenchmen = availableHenchmen.Except(exclusions.HenchmenList).Except(henchmenInGame).ToList();
 
                 var allExclusions = new List<string>(exclusions.HenchmenList);
                 allExclusions.AddRange(from item in henchmenInGame select item);
 
-                var schemeExcludedHenchmenGroups = GetExclusions.GetSchemeExclusions(scheme.SchemeName).HenchmenList;
+                var schemeExcludedHenchmenGroups = getExclusions.GetSchemeExclusions(scheme.SchemeName).HenchmenList;
                 var schemeExcludedHenchmen = mastermindExcludedHenchmen.Except(schemeExcludedHenchmenGroups).ToList();
 
                 if (schemeExcludedHenchmen.Count != 0)
@@ -64,11 +66,12 @@ namespace MarvelLegendary.DetermineLists
             List<string> exclusionsHenchmenList, List<string> availableHenchmen, List<string> allExclusions)
         {
             var returnList = new List<string>();
+            var getExclusions = new GetExclusions();
 
             var villainsToExcludeWith = new List<string>(villainsInGame);
             for (int j = villainsToExcludeWith.Count - 1; j >= 0; j--)
             {
-                var villainExcludedHenchmenGroups = GetExclusions.GetVillainExclusion(villainsToExcludeWith).HenchmenList;
+                var villainExcludedHenchmenGroups = getExclusions.GetVillainExclusion(villainsToExcludeWith).HenchmenList;
                 var villainExcludedHenchmen = exclusionHenchmen.Except(villainExcludedHenchmenGroups).ToList();
 
                 if (villainExcludedHenchmen.Count != 0)
@@ -118,13 +121,14 @@ namespace MarvelLegendary.DetermineLists
         {
             var henchmenToExclude = new List<string>(henchmenInGame);
             var returnList = new List<string>();
+            var getExclusions = new GetExclusions();
 
             for (int j = henchmenToExclude.Count - 1; j >= 0; j--)
             {
-                var henchmenExcludedHenchmenGroups = GetExclusions.GetHenchmenByHenchmenExclusions(henchmenInGame);
+                var henchmenExcludedHenchmenGroups = getExclusions.GetHenchmenByHenchmenExclusions(henchmenInGame);
                 var henchmenExcludedHenchmen = exclusionHenchmen.Except(henchmenExcludedHenchmenGroups).ToList();
 
-                var henchByHenchExcludedHenchmen = GetExclusions.GetHenchmenByHenchmenExclusions(henchmenToExclude);
+                var henchByHenchExcludedHenchmen = getExclusions.GetHenchmenByHenchmenExclusions(henchmenToExclude);
                 var excludeList = new List<string>(henchByHenchExcludedHenchmen);
                 excludeList.AddRange(from item in exclusionsHenchmenList select item);
                 excludeList.AddRange(from item in allExclusions select item);
@@ -148,13 +152,14 @@ namespace MarvelLegendary.DetermineLists
         {
             var henchmenToExclude = new List<string>(henchmenInGame);
             var returnList = new List<string>();
+            var getExclusions = new GetExclusions();
 
             for (int j = henchmenToExclude.Count - 1; j >= 0; j--)
             {
-                var henchmenExcludedHenchmenGroups = GetExclusions.GetHenchmenByHenchmenExclusions(henchmenInGame);
+                var henchmenExcludedHenchmenGroups = getExclusions.GetHenchmenByHenchmenExclusions(henchmenInGame);
                 var henchmenExcludedHenchmen = exclusionHenchmen.Except(henchmenExcludedHenchmenGroups).ToList();
 
-                var henchByHenchExcludedHenchmen = GetExclusions.GetHenchmenByHenchmenExclusions(henchmenToExclude);
+                var henchByHenchExcludedHenchmen = getExclusions.GetHenchmenByHenchmenExclusions(henchmenToExclude);
                 var excludeList = new List<string>(henchByHenchExcludedHenchmen);
                 excludeList.AddRange(from item in exclusionsHenchmenList select item);
                 excludeList.AddRange(from item in allExclusions select item);
@@ -179,11 +184,12 @@ namespace MarvelLegendary.DetermineLists
             var returnList = new List<string>();
             var allExclusions = new List<string>(henchmenExclusionsFromMasterminds);
             allExclusions.AddRange(from item in henchmenInGame select item);
+            var getExclusions = new GetExclusions();
 
             var villainsToExcludeWith = new List<string>(villainsInGame);
             for (int j = villainsToExcludeWith.Count - 1; j >= 0; j--)
             {
-                var villainExcludedHenchmenGroups = GetExclusions.GetVillainExclusion(villainsToExcludeWith).HenchmenList;
+                var villainExcludedHenchmenGroups = getExclusions.GetVillainExclusion(villainsToExcludeWith).HenchmenList;
                 var villainExcludedHenchmen = henchmenAfterMastermindExclusions.Except(villainExcludedHenchmenGroups).ToList();
 
                 //If there are henchmen left after excluding the villain exlusions in addition to the mastermind ones it will do the following
@@ -224,13 +230,14 @@ namespace MarvelLegendary.DetermineLists
         {
             var henchmenToExclude = new List<string>(henchmenInGame);
             var returnList = new List<string>();
+            var getExclusions = new GetExclusions();
 
             for (int j = henchmenToExclude.Count - 1; j >= 0; j--)
             {
-                var henchmenExcludedHenchmenGroups = GetExclusions.GetHenchmenByHenchmenExclusions(henchmenInGame);
+                var henchmenExcludedHenchmenGroups = getExclusions.GetHenchmenByHenchmenExclusions(henchmenInGame);
                 var henchmenExcludedHenchmen = henchmenAfterMastermindExclusions.Except(henchmenExcludedHenchmenGroups).ToList();
 
-                var henchByHenchExcludedHenchmen = GetExclusions.GetHenchmenByHenchmenExclusions(henchmenToExclude);
+                var henchByHenchExcludedHenchmen = getExclusions.GetHenchmenByHenchmenExclusions(henchmenToExclude);
                 var excludeList = new List<string>(henchByHenchExcludedHenchmen);
                 excludeList.AddRange(from item in henchmenExclusionsFromMasterminds select item);
                 excludeList.AddRange(from item in allExclusions select item);
@@ -254,13 +261,14 @@ namespace MarvelLegendary.DetermineLists
         {
             var henchmenToExclude = new List<string>(henchmenInGame);
             var returnList = new List<string>();
+            var getExclusions = new GetExclusions();
 
             for (int j = henchmenToExclude.Count - 1; j >= 0; j--)
             {
-                var henchmenExcludedHenchmenGroups = GetExclusions.GetHenchmenByHenchmenExclusions(henchmenInGame);
+                var henchmenExcludedHenchmenGroups = getExclusions.GetHenchmenByHenchmenExclusions(henchmenInGame);
                 var henchmenExcludedHenchmen = exclusionHenchmen.Except(henchmenExcludedHenchmenGroups).ToList();
 
-                var henchByHenchExcludedHenchmen = GetExclusions.GetHenchmenByHenchmenExclusions(henchmenToExclude);
+                var henchByHenchExcludedHenchmen = getExclusions.GetHenchmenByHenchmenExclusions(henchmenToExclude);
                 var excludeList = new List<string>(henchByHenchExcludedHenchmen);
                 excludeList.AddRange(from item in exclusionsHenchmenList select item);
                 excludeList.AddRange(from item in allExclusions select item);

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using MarvelLegendary.Exclusions;
 using MarvelLegendary.DetermineLists;
-using System.Runtime.InteropServices;
 
 namespace MarvelLegendary
 {
@@ -127,25 +126,37 @@ namespace MarvelLegendary
             VillainCount = 0;
             HenchmenCount = 0;
             GameIncludeHeroTeam = false;
+        }
 
-            Mastermind = new Mastermind("Loki");
-            var exclusions = GetExclusions.GetMastermindExclusion(Mastermind.MastermindName);
-            Scheme = new Scheme(PlayerCount, Mastermind, exclusions.SchemeList);
+        public void SetMastermind(string mastermindName = "")
+        {
+            Mastermind = mastermindName == "" ? new Mastermind() : new Mastermind(mastermindName);
+            AllMastermindsInGame.Add(Mastermind);
+        }
 
-            #region ExtraMasterminds
-            if (Scheme.SchemeInfo.NumberExtraMasterminds > 0)
-            {
-                ExtraMasterminds = GetMasterminds(Scheme, Mastermind);
-            }
-
-            AllMastermindsInGame = new List<Mastermind> {Mastermind}.Concat(ExtraMasterminds).ToList();
-            var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
-            exclusions = GetExclusions.GetMastermindExclusion(masterminds);
-            #endregion
-
+        public void SetScheme(string schemenName = "")
+        {
+            Scheme = schemenName == "" ? new Scheme(PlayerCount, Mastermind) : new Scheme(PlayerCount, schemenName);
             PlayerCount = Scheme.NumberOfPlayers;
 
-            #region Villains
+            WoundNumber = GetWoundInformation(Scheme.CustomWoundNumber, Scheme.Wounds);
+            CustomWoundNumber = Scheme.CustomWoundNumber;
+            BindingNumber = Scheme.SchemeInfo.BindingPerPlayer[PlayerCount - 1];
+            NumberHenchmenNextToScheme = Scheme.SchemeInfo.HenchmenNextToSchemePerPlayer[PlayerCount - 1];
+        }
+
+        public void SetExtraMasterminds()
+        {
+            ExtraMasterminds = GetMasterminds(Scheme, Mastermind);
+            AllMastermindsInGame.Concat(ExtraMasterminds).ToList();
+        }
+
+        public void SetVillains(List<string> villainNames = null)
+        {
+            var getExclusions = new GetExclusions();
+            var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
+            var exclusions = getExclusions.GetMastermindExclusion(masterminds);
+
             if (Scheme.SchemeInfo.IsMonsterPitDeck)
             {
                 MonsterPitVillains.Add(new Villain("Monsters Unleashed"));
@@ -162,9 +173,12 @@ namespace MarvelLegendary
                 exclusions.VillainList.Add(villainNotAllowed);
             }
 
-            //Villains = GetVillains(Scheme.NumberOfVillains, Scheme.RequiredVillains);
-            Villains.Add(new Villain("Enemies of Asgard"));
-            Villains.Add(new Villain("HYDRA"));
+            if (villainNames != null)
+            {
+                Villains.AddRange(from item in villainNames select new Villain(item));
+            }
+
+            Villains = GetVillains(Scheme.NumberOfVillains, Scheme.RequiredVillains, Villains);
 
             AllVillainsInGame = new List<Villain>(Villains);
 
@@ -172,9 +186,13 @@ namespace MarvelLegendary
             {
                 AllVillainsInGame.Add(new Villain(schemeRequiredVillain));
             }
-            #endregion
+        }
 
-            #region Henchmen
+        public void SetHenchmen(List<string> henchmenNames = null)
+        {
+            var getExclusions = new GetExclusions();
+            var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
+            var exclusions = getExclusions.GetMastermindExclusion(masterminds);
 
             if (Scheme.SchemeInfo.IsInfectedDeck)
             {
@@ -200,20 +218,29 @@ namespace MarvelLegendary
                 SchemeHenchmen.Add(new Henchmen(exclusions.HenchmenList));
             }
 
-            Henchmen = GetHenchmen(Scheme.RequiredHenchmen, SchemeHenchmen, Mastermind);
+            if (henchmenNames != null)
+            {
+                Henchmen.AddRange(from item in henchmenNames select new Henchmen(item));
+            }
+
+            Henchmen = GetHenchmen(Scheme.RequiredHenchmen, SchemeHenchmen, Mastermind, Henchmen);
             AllHenchmenInGame = new List<Henchmen>(Henchmen).Concat(SchemeHenchmen).ToList();
             foreach (var schemeRequiredHenchmen in Scheme.RequiredHenchmen)
             {
                 AllHenchmenInGame.Add(new Henchmen(schemeRequiredHenchmen));
             }
-            #endregion
+        }
 
-            #region Heroes
+        public void SetHeroes(List<string> heroNames = null)
+        {
+            var getExclusions = new GetExclusions();
+            var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
+            var exclusions = getExclusions.GetMastermindExclusion(masterminds);
 
             RandomVillainHeroes = getHeroes(Scheme.RandomHeroesInVillainDeck, exclusions.HeroList);
             VillainHeroes = getHeroes(Scheme.HeroesInVillainDeck);
             var allHeroesInGame = new List<Hero>(RandomVillainHeroes).Concat(VillainHeroes).ToList();
-            if(Scheme.SchemeInfo.IsDarkLoyalty)
+            if (Scheme.SchemeInfo.IsDarkLoyalty)
             {
                 DarkLoyaltyHero = GetDarkLoyaltyHero(allHeroesInGame);
                 allHeroesInGame.Add(DarkLoyaltyHero);
@@ -227,20 +254,20 @@ namespace MarvelLegendary
                 allHeroesInGame.Add(hero);
             }
 
-            if(Scheme.SchemeInfo.Is4v2 || Scheme.SchemeInfo.Is3v3)
+            if (heroNames != null)
+            {
+                Heroes.AddRange(from item in heroNames select new Hero(item));
+            }
+
+            if (Scheme.SchemeInfo.Is4v2 || Scheme.SchemeInfo.Is3v3)
             {
                 Heroes = GetHeroesByTeam(exclusions.HeroList);
             }
             else
             {
-                Heroes = GetHeroes(exclusions.HeroList, SchemeHeroes);
+                var allHeroes = new Hero().GetListOfHeroes();                
+                Heroes = GetHeroes(exclusions.HeroList, SchemeHeroes, Heroes, allHeroes, getExclusions);
             }
-            #endregion
-
-            WoundNumber = GetWoundInformation(Scheme.CustomWoundNumber, Scheme.Wounds);
-            CustomWoundNumber = Scheme.CustomWoundNumber;
-            BindingNumber = Scheme.SchemeInfo.BindingPerPlayer[PlayerCount - 1];
-            NumberHenchmenNextToScheme = Scheme.SchemeInfo.HenchmenNextToSchemePerPlayer[PlayerCount - 1];
         }
 
         #region Masterminds
@@ -276,9 +303,11 @@ namespace MarvelLegendary
         private static List<string> DetermineMastermindList(List<string> mastermindsInGame)
         {
             var mastermindsToExcludeWith = new List<string>(mastermindsInGame);
+            var getExclusions = new GetExclusions();
+
             for (int i = mastermindsToExcludeWith.Count - 1; i >= 0; i--)
             {
-                var test = GetExclusions.GetMastermindByMastermindExclusions(mastermindsToExcludeWith);
+                var test = getExclusions.GetMastermindByMastermindExclusions(mastermindsToExcludeWith);
                 var mastermindList = new Mastermind().GetListOfMasterminds();
                 var compareList = mastermindList.Except(mastermindsInGame).Except(test).ToList();
                 if (compareList.Count > 0)
@@ -293,10 +322,13 @@ namespace MarvelLegendary
         #endregion
 
         #region Villains
-        private List<Villain> GetVillains(int numberOfVillains, List<string> requiredVillains)
+        private List<Villain> GetVillains(int numberOfVillains, List<string> requiredVillains, List<Villain> currentVillains)
         {
             var villainList = new List<Villain>();
             var allVillainsInGame = new List<Villain>();
+
+            villainList.AddRange(from item in currentVillains select item);
+            allVillainsInGame.AddRange(from item in currentVillains select item);
 
             //Bring in the Monster Pit villain if it that scheme
             villainList.AddRange(from item in MonsterPitVillains select item);
@@ -338,16 +370,16 @@ namespace MarvelLegendary
             var villainsInGame = new List<string>(villainList.Select(x => x.VillainName));
             var allVillains = new Villain().GetListOfVillains();
 
-            //for (int i = 0; i < numRemainingVillains; i++)
-            //{
-            //    var exclusions = DetermineVillainList(villainsInGame, AllMastermindsInGame);
-            //
-            //    var remainingVillains = allVillains.Except(villainsInGame).ToList();
-            //    var villainsToChooseFrom = remainingVillains.Except(exclusions).ToList();
-            //
-            //    var newVillain = villainsToChooseFrom[new Random().Next(villainsToChooseFrom.Count)];
-            //    villainsInGame.Add(newVillain);
-            //}
+            for (int i = 0; i < numRemainingVillains; i++)
+            {
+                var exclusions = DetermineVillainList(villainsInGame, AllMastermindsInGame);
+            
+                var remainingVillains = allVillains.Except(villainsInGame).ToList();
+                var villainsToChooseFrom = remainingVillains.Except(exclusions).ToList();
+            
+                var newVillain = villainsToChooseFrom[new Random().Next(villainsToChooseFrom.Count)];
+                villainsInGame.Add(newVillain);
+            }
 
             returnList.AddRange(from item in villainsInGame
                                 select new Villain(item));
@@ -359,17 +391,18 @@ namespace MarvelLegendary
         {
             var masterminds = mastermindsInGame.Select(x => x.MastermindName).ToList();
             var villainList = new Villain().GetListOfVillains();
+            var getExclusions = new GetExclusions();
 
             for (int i = masterminds.Count - 1; i >= 0; i--)
             {
                 var villainsToExcludeWith = new List<string>(villainsInGame);
-                var exclusions = GetExclusions.GetMastermindExclusion(masterminds);
+                var exclusions = getExclusions.GetMastermindExclusion(masterminds);
 
                 if (villainList.Except(exclusions.VillainList).Except(villainsInGame).ToList().Count != 0)
                 {
                     for (int j = villainsToExcludeWith.Count - 1; j >= 0; j--)
                     {
-                        var excludedVillains = GetExclusions.GetVillainByVillainExclusion(villainsToExcludeWith);
+                        var excludedVillains = getExclusions.GetVillainByVillainExclusion(villainsToExcludeWith);
                         var excludeList = new List<string>(excludedVillains);
                         excludeList.AddRange(from item in exclusions.VillainList
                                              select item);
@@ -396,13 +429,16 @@ namespace MarvelLegendary
         #endregion
 
         #region Henchmen
-        private List<Henchmen> GetHenchmen(List<string> requiredHenchmenString, List<Henchmen> schemeHenchmenGroups, Mastermind mastermind)
+        private List<Henchmen> GetHenchmen(List<string> requiredHenchmenString, List<Henchmen> schemeHenchmenGroups, Mastermind mastermind, List<Henchmen> currentHenchmen)
         {
             var henchmenList = new List<Henchmen>();
             var allHenchmenInGame = new List<Henchmen>();
             var requiredHenchmen = new List<Henchmen>();
             var numberOfHenchmen = Scheme.NumberOfHenchmen;
             requiredHenchmen.AddRange(from item in requiredHenchmenString select new Henchmen(item));
+
+            henchmenList.AddRange(from item in currentHenchmen select item);
+            allHenchmenInGame.AddRange(from item in currentHenchmen select item);
 
             henchmenList.AddRange(from schemeHenchmen in schemeHenchmenGroups select schemeHenchmen);
             allHenchmenInGame.AddRange(from schemeHenchmen in schemeHenchmenGroups select schemeHenchmen);
@@ -469,11 +505,12 @@ namespace MarvelLegendary
         private List<Hero> getHeroes(int randomHeroesInVillainDeck, List<string> exclusionHeroes)
         {
             var heroList = new List<Hero>();
+            var getExclusions = new GetExclusions();
 
             var hero = new Hero(exclusionHeroes);
             heroList.Add(hero);
 
-            var heroByHeroExclusions = GetExclusions.GetHeroByHeroExclusions(heroList.First().HeroName);
+            var heroByHeroExclusions = getExclusions.GetHeroByHeroExclusions(heroList.First().HeroName);
 
             if (randomHeroesInVillainDeck > heroList.Count)
             {
@@ -611,7 +648,7 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        public List<Hero> GetHeroes(List<string> exclusionHeroes, List<Hero> schemeHeroGroups)
+        public List<Hero> GetHeroes(List<string> exclusionHeroes, List<Hero> schemeHeroGroups, List<Hero> currentHeroes, List<string> availiableHeroes, IGetExclusions getExclusions)
         {
             var heroList = new List<Hero>();
             var allHeroesInGame = new List<Hero>();
@@ -619,8 +656,13 @@ namespace MarvelLegendary
 
             heroList.AddRange(from item in Scheme.RequiredHeroes select new Hero(item));
             allHeroesInGame.AddRange(from item in Scheme.RequiredHeroes select new Hero(item));
+            AllHeroesInGame.AddRange(from item in Scheme.RequiredHeroes select new Hero(item));
             heroList.AddRange(from item in schemeHeroGroups select item);
             allHeroesInGame.AddRange(from item in schemeHeroGroups select item);
+            AllHeroesInGame.AddRange(from item in schemeHeroGroups select item);
+            heroList.AddRange(from item in currentHeroes select item);
+            allHeroesInGame.AddRange(from item in currentHeroes select item);
+            AllHeroesInGame.AddRange(from item in currentHeroes select item);
 
             if (Scheme.SchemeInfo.IsIncludeHeroTeam)
             {
@@ -652,13 +694,6 @@ namespace MarvelLegendary
                 }
             }
 
-            heroList.Add(new Hero("Spider-Man"));
-            heroList.Add(new Hero("Angel"));
-            AllHeroesInGame.Add(new Hero("Spider-Man"));
-            AllHeroesInGame.Add(new Hero("Angel"));
-            allHeroesInGame.Add(new Hero("Spider-Man"));
-            allHeroesInGame.Add(new Hero("Angel"));
-
             var currentHeroCount = heroList.Count;
             var numRemainingHeroes = numberOfHeroes - currentHeroCount;
 
@@ -667,18 +702,13 @@ namespace MarvelLegendary
 
             var returnList = new List<Hero>();
             var heroesInGame = new List<string>(heroList.Select(x => x.HeroName));
-            //var allHeroes = new Hero().GetListOfHeroes();
-
-            var allHeroes = new Hero().GetHeroNameList(new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s" });
-
-            numRemainingHeroes = numberOfHeroes - currentHeroCount;
 
             //If the required number of heroes from schemes hasn't reached the number of heroes for the player count, it will do this
             for (int i = 0; i < numRemainingHeroes; i++)
             {
-                var exclusions = DetermineHeroes.DetermineHeroList(Villains, AllMastermindsInGame, Henchmen, Scheme, heroesInGame, allHeroes);
+                var exclusions = DetermineHeroes.DetermineHeroList(Villains, AllMastermindsInGame, Henchmen, Scheme, heroesInGame, availiableHeroes, getExclusions);
 
-                var exclusionsWithoutHeroesInGame = allHeroes.Except(heroesInGame).ToList();
+                var exclusionsWithoutHeroesInGame = availiableHeroes.Except(heroesInGame).ToList();
                 var heroesToChooseFrom = exclusionsWithoutHeroesInGame.Except(exclusions).ToList();
                 var heroName = heroesToChooseFrom[new Random().Next(heroesToChooseFrom.Count)];
 
