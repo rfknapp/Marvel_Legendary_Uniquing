@@ -20,7 +20,7 @@ namespace MarvelLegendary_Uniquing_Tests
         List<string> twoHeroExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "m", "n", "o", "q", "r", "s", "u", "v", "x", "aa", "ac", "ad", "af", "ah", "ak", "an", "aq", "at" });
 
         [TestCaseSource("_sourceLists")]
-        public void TestMethod1(List<string> heroesToInclude, string expectedHero)
+        public void TestGetHeroesThirdHero(List<string> heroesToInclude, string expectedHero)
         {
             var allHeroes = new Hero().GetHeroNameList(heroesToInclude);
             var testMoq = new Mock<IGetExclusions>();
@@ -39,21 +39,21 @@ namespace MarvelLegendary_Uniquing_Tests
             var henchmenExclusions = new GameExclusions();
             henchmenExclusions.HeroList = henchmenExclusionHeroes;
 
-            var test = new GameInfo(1);
-            test.Mastermind = new Mastermind("Loki");
-            test.AllMastermindsInGame = new List<Mastermind>() { test.Mastermind };
-            test.Scheme = new Scheme(1, "Steal the Weaponized Plutonium");
-            test.Villains = new List<Villain>() { new Villain("Enemies of Asgard"), new Villain("HYDRA") };
-            test.Henchmen = new List<Henchmen>() { new Henchmen("Doombot Legion") };
-            test.Heroes = new List<Hero>() { new Hero("Spider-Man"), new Hero("Angel") };
+            var newGameInfo = new GameInfo(1);
+            newGameInfo.Mastermind = new Mastermind("Loki");
+            newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
+            newGameInfo.Scheme = new Scheme(1, "Steal the Weaponized Plutonium");
+            newGameInfo.Villains = new List<Villain>() { new Villain("Enemies of Asgard"), new Villain("HYDRA") };
+            newGameInfo.Henchmen = new List<Henchmen>() { new Henchmen("Doombot Legion") };
+            newGameInfo.Heroes = new List<Hero>() { new Hero("Spider-Man"), new Hero("Angel") };
 
             var mastermindStrings = new List<string>();
-            foreach (var item in test.AllMastermindsInGame)
+            foreach (var item in newGameInfo.AllMastermindsInGame)
             {
                 mastermindStrings.Add(item.MastermindName);
             }
             var twoVillainStrings = new List<string>();
-            foreach (var item in test.Villains)
+            foreach (var item in newGameInfo.Villains)
             {
                 twoVillainStrings.Add(item.VillainName);
             }
@@ -66,9 +66,9 @@ namespace MarvelLegendary_Uniquing_Tests
             testMoq.Setup(x => x.GetHeroByHeroExclusions(new List<string>() { "Spider-Man" })).Returns(oneHeroExclusionHeroes);
             testMoq.Setup(x => x.GetHeroByHeroExclusions(new List<string>() { "Spider-Man", "Angel" })).Returns(twoHeroExclusionHeroes);
 
-            var test2 = test.GetHeroes(mastermindExclusionHeroes, new List<Hero>(), test.Heroes, allHeroes, testMoq.Object);
+            var heroList = newGameInfo.GetHeroes(mastermindExclusionHeroes, new List<Hero>(), newGameInfo.Heroes, allHeroes, testMoq.Object);
 
-            Assert.AreEqual(expectedHero, test2.Last().HeroName);
+            Assert.AreEqual(expectedHero, heroList.Last().HeroName);
 
         }
 
