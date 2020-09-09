@@ -9,7 +9,7 @@ using static MarvelLegendary.Exclusions.GetExclusions;
 namespace MarvelLegendary_Uniquing_Tests
 {
     [TestFixture]
-    public class UnitTest1
+    public class GetHeroesTests
     {
         List<string> mastermindExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "a", "b", "c" });
         List<string> schemeExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "c", "d", "e", "k", "ae", "af", "ag", "ah", "ai", "aj", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at" });
