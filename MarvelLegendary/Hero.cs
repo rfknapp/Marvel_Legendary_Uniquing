@@ -393,16 +393,9 @@ namespace MarvelLegendary
             new HeroConnection("at", "Enchantress")
         };
 
-        public List<string> GetHeroNameList(List<string> letters)
+        public List<string> GetHeroNameList(List<int> indicies)
         {
-            var returnList = new List<string>();
-            
-            foreach (var letter in letters)
-            {
-                returnList.Add(_heroConnections.First(x => x.Letter == letter).HeroName);
-            }
-
-            return returnList;
+            return (from index in indicies select _heroes.ElementAt(index-1).HeroName).ToList();
         }
 
         public bool IsEnoughHeroes(List<HeroTeam> heroTeams, int heroesPerTeam, List<string> exclusionHeroes)
