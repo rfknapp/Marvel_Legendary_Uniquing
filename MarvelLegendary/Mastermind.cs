@@ -128,11 +128,18 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Epic Hela").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Omens of Rangarok").Build(),
             new MastermindInfoBuilder().SetMastermindName("Malekith").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Dark Council").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Malekith").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Dark Council").Build(),
-            
-            new MastermindInfoBuilder().SetMastermindName("Belasco, Demon Lord of Limbo").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Demons of Limbo").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Belasco, Demon Lord of Limbo").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Demons of Limbo").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Emma Frost, The White Queen").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Hellions").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Emma Frost, The White Queen").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Hellions").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Belasco, Demon Lord of Limbo").SetMastermindSet(GameInfo.Set.NewMutants).LeadsVillain("Demons of Limbo").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Belasco, Demon Lord of Limbo").SetMastermindSet(GameInfo.Set.NewMutants).LeadsVillain("Demons of Limbo").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Emma Frost, The White Queen").SetMastermindSet(GameInfo.Set.NewMutants).LeadsVillain("Hellions").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Emma Frost, The White Queen").SetMastermindSet(GameInfo.Set.NewMutants).LeadsVillain("Hellions").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("The Beyonder").SetMastermindSet(GameInfo.Set.Cosmos).LeadsVillain("From Beyond").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic The Beyonder").SetMastermindSet(GameInfo.Set.Cosmos).LeadsVillain("From Beyond").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Grandmaster").SetMastermindSet(GameInfo.Set.Cosmos).LeadsVillain("Elders of the Universe").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Grandmaster").SetMastermindSet(GameInfo.Set.Cosmos).LeadsVillain("Elders of the Universe").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Magus").SetMastermindSet(GameInfo.Set.Cosmos).LeadsHenchmen("Universal Church of Truth").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Magus").SetMastermindSet(GameInfo.Set.Cosmos).LeadsHenchmen("Universal Church of Truth").Build()
         };
 
         public Mastermind()

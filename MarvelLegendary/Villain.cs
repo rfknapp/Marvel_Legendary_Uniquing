@@ -136,11 +136,16 @@ namespace MarvelLegendary
             new VillainInfo("A.I.M., Hydra Offshoot", GameInfo.Set.Shield),
             new VillainInfo("Hydra Elite", GameInfo.Set.Shield),
             
-            new VillainInfo("Dark Council", GameInfo.Set.Shield),
-            new VillainInfo("Omens of Ragnarok", GameInfo.Set.Shield),
+            new VillainInfo("Dark Council", GameInfo.Set.Asgard),
+            new VillainInfo("Omens of Ragnarok", GameInfo.Set.Asgard),
             
-            new VillainInfo("Demons of Limbo", GameInfo.Set.Shield),
-            new VillainInfo("Hellions", GameInfo.Set.Shield),
+            new VillainInfo("Demons of Limbo", GameInfo.Set.NewMutants),
+            new VillainInfo("Hellions", GameInfo.Set.NewMutants),
+
+            new VillainInfo("Black Order of Thanos", GameInfo.Set.Cosmos),
+            new VillainInfo("Celestials", GameInfo.Set.Cosmos),
+            new VillainInfo("From Beyond", GameInfo.Set.Cosmos),
+            new VillainInfo("Elders of the Universe", GameInfo.Set.Cosmos)
         };
 
         public Villain()

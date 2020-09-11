@@ -11,17 +11,17 @@ namespace MarvelLegendary_Uniquing_Tests
     [TestFixture]
     public class GetHeroesTests
     {
-        List<string> mastermindExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "a", "b", "c" });
-        List<string> schemeExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "c", "d", "e", "k", "ae", "af", "ag", "ah", "ai", "aj", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at" });
-        List<string> oneVillainExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "e", "f", "g", "q", "r", "ab", "ac", "ad", "ao", "ap", "aq", "ar", "as", "at" });
-        List<string> twoVillainExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "e", "f", "g", "h", "i", "q", "r", "w", "x", "y", "z", "aa", "ab", "ac", "ad", "ai", "aj", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at" });
-        List<string> henchmenExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "g", "i", "j", "k", "r", "q", "r", "u", "v", "y", "z", "aa", "ad", "ag", "ah", "al", "am", "an", "ar", "as", "at" });
-        List<string> oneHeroExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "m", "n", "o", "v", "x", "aa", "ac", "ad", "af", "ah", "ak", "an", "aq", "at" });
-        List<string> twoHeroExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "m", "n", "o", "q", "r", "s", "u", "v", "x", "aa", "ac", "ad", "af", "ah", "ak", "an", "aq", "at" });
-
         [TestCaseSource("_sourceLists")]
         public void TestGetHeroesThirdHero(List<string> heroesToInclude, string expectedHero)
         {
+            var mastermindExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "a", "b", "c" });
+            var schemeExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "c", "d", "e", "k", "ae", "af", "ag", "ah", "ai", "aj", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at" });
+            var oneVillainExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "e", "f", "g", "q", "r", "ab", "ac", "ad", "ao", "ap", "aq", "ar", "as", "at" });
+            var twoVillainExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "e", "f", "g", "h", "i", "q", "r", "w", "x", "y", "z", "aa", "ab", "ac", "ad", "ai", "aj", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at" });
+            var henchmenExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "g", "i", "j", "k", "r", "q", "r", "u", "v", "y", "z", "aa", "ad", "ag", "ah", "al", "am", "an", "ar", "as", "at" });
+            var oneHeroExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "m", "n", "o", "v", "x", "aa", "ac", "ad", "af", "ah", "ak", "an", "aq", "at" });
+            var twoHeroExclusionHeroes = new Hero().GetHeroNameList(new List<string>() { "m", "n", "o", "q", "r", "s", "u", "v", "x", "aa", "ac", "ad", "af", "ah", "ak", "an", "aq", "at" });
+
             var allHeroes = new Hero().GetHeroNameList(heroesToInclude);
             var testMoq = new Mock<IGetExclusions>();
             var mastermindExclusions = new GameExclusions();
@@ -69,7 +69,64 @@ namespace MarvelLegendary_Uniquing_Tests
             var heroList = newGameInfo.GetHeroes(mastermindExclusionHeroes, new List<Hero>(), newGameInfo.Heroes, allHeroes, testMoq.Object);
 
             Assert.AreEqual(expectedHero, heroList.Last().HeroName);
+        }
 
+        [Test]
+        public void TestIsHeroesInVillainDeck()
+        {
+            var newGameInfo = new GameInfo(1);
+            newGameInfo.Mastermind = new Mastermind("Loki");
+            newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
+            newGameInfo.Scheme = new Scheme(1, "The Dark Phoenix Saga");
+            newGameInfo.Villains = new List<Villain>() { new Villain("Enemies of Asgard"), new Villain("HYDRA") };
+            newGameInfo.Henchmen = new List<Henchmen>() { new Henchmen("Doombot Legion") };
+            newGameInfo.Heroes = new List<Hero>();
+
+            var allHeroes = new Hero().GetHeroNameList(new List<string>() { "ab", "a", "b", "c"});
+            var mastermindExclusionHeroes = new List<string>() { "Black Widow"};
+            var schemeExclusionHeroes = new List<string>() { "Captain America" };
+            var schemeHeroes = new List<Hero>() { new Hero("Jean Grey") };
+            var heroListString = new List<string>();
+
+            var testMoq = new Mock<IGetExclusions>();
+            var mastermindExclusions = new GameExclusions();
+            mastermindExclusions.HeroList = mastermindExclusionHeroes;
+
+            var schemeExclusions = new GameExclusions();
+            schemeExclusions.HeroList = schemeExclusionHeroes;
+
+            var oneVillainExclusions = new GameExclusions();
+            oneVillainExclusions.HeroList = new List<string>();
+
+            var twoVillainExclusions = new GameExclusions();
+            twoVillainExclusions.HeroList = new List<string>();
+
+            var henchmenExclusions = new GameExclusions();
+            henchmenExclusions.HeroList = new List<string>();
+
+            var mastermindStrings = new List<string>();
+            foreach (var item in newGameInfo.AllMastermindsInGame)
+            {
+                mastermindStrings.Add(item.MastermindName);
+            }
+            var twoVillainStrings = new List<string>();
+            foreach (var item in newGameInfo.Villains)
+            {
+                twoVillainStrings.Add(item.VillainName);
+            }
+
+            testMoq.Setup(x => x.GetMastermindExclusion(mastermindStrings)).Returns(mastermindExclusions);
+            testMoq.Setup(x => x.GetSchemeExclusions("The Dark Phoenix Saga")).Returns(schemeExclusions);
+            testMoq.Setup(x => x.GetVillainExclusion(new List<string>() { "Enemies of Asgard" })).Returns(oneVillainExclusions);
+            testMoq.Setup(x => x.GetVillainExclusion(twoVillainStrings)).Returns(twoVillainExclusions);
+            testMoq.Setup(x => x.GetHenchmenExclusion(new List<string>() { "Doombot Legion" })).Returns(henchmenExclusions);
+            testMoq.Setup(x => x.GetHeroByHeroExclusions(new List<string>() { "Cyclops" })).Returns(new List<string>());
+            testMoq.Setup(x => x.GetHeroByHeroExclusions(new List<string>() { "Cyclops", "Captain America" })).Returns(new List<string>());
+
+            var heroList = newGameInfo.GetHeroes(mastermindExclusionHeroes, schemeHeroes, newGameInfo.Heroes, allHeroes, testMoq.Object);
+            heroListString.AddRange(from item in heroList select item.HeroName);
+
+            CollectionAssert.DoesNotContain(heroListString, "Jean Grey");
         }
 
         private static readonly object[] _sourceLists =

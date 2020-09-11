@@ -86,7 +86,7 @@ namespace MarvelLegendary
                 HeroesInVillainDeck = new List<string>(),
                 IsHeroesInVillainDeck = false,
                 IsRandomHeroesInVillainDeck = false,
-                RandomHeroesInVillainDeck = 0,
+                NumberOfHeroesInVillainDeck = 0,
                 Is3v3 = false,
                 Is4v2 = false,
                 IncludeHeroTeam = HeroTeam.Unaffiliated,
@@ -97,6 +97,8 @@ namespace MarvelLegendary
                 CustomNameString = "",
                 IsMutationDeck = false,
                 IsHulkDeck = false,
+                IsSoulsHero = false,
+                SoulsHero = null,
 
                 //Sidekicks
                 SidekicksInVillainDeck = 0,
@@ -224,13 +226,14 @@ namespace MarvelLegendary
         public SchemeInfoBuilder HeroesInVillainDeck(string heroName)
         {
             _schemeInfo.HeroesInVillainDeck = new List<string> { heroName };
+            _schemeInfo.NumberOfHeroesInVillainDeck = _schemeInfo.HeroesInVillainDeck.Count;
             _schemeInfo.IsHeroesInVillainDeck = true;
             return this;
         }
 
-        public SchemeInfoBuilder RandomHeroesInVillainDeck(int numberOfHeroes)
+        public SchemeInfoBuilder HeroesInVillainDeck(int numberOfHeroes)
         {
-            _schemeInfo.RandomHeroesInVillainDeck = numberOfHeroes;
+            _schemeInfo.NumberOfHeroesInVillainDeck = numberOfHeroes;
             _schemeInfo.IsRandomHeroesInVillainDeck = true;
             return this;
         }
@@ -479,6 +482,13 @@ namespace MarvelLegendary
         public SchemeInfoBuilder SetDarkLoyalty()
         {
             _schemeInfo.IsDarkLoyalty = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetSoulsDeck(string heroName)
+        {
+            _schemeInfo.SoulsHero = new Hero(heroName);
+            _schemeInfo.IsSoulsHero = true;
             return this;
         }
 
