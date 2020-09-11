@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MarvelLegendary
 {
@@ -81,7 +77,7 @@ namespace MarvelLegendary
         public string DarkLoyaltyHero { get; set; }
         public bool IsHeroesInVillainDeck { get; set; }
         public bool IsRandomHeroesInVillainDeck { get; set; }
-        public int RandomHeroesInVillainDeck { get; set; }
+        public int NumberOfHeroesInVillainDeck { get; set; }
         public bool Is3v3 { get; set; }
         public bool Is4v2 { get; set; }
         public HeroTeam IncludeHeroTeam { get; set; }
@@ -93,6 +89,8 @@ namespace MarvelLegendary
         public bool IsMutationDeck { get; set; }
         public bool IsHulkDeck { get; set; }
         public bool IsDarkLoyalty { get; set; }
+        public bool IsSoulsHero { get; set; }
+        public Hero SoulsHero { get; set; }
 
         //Sidekicks
         public int SidekicksInVillainDeck { get; set; }

@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarvelLegendary
 {
@@ -63,7 +61,9 @@ namespace MarvelLegendary
         [Description("Venomverse")]
         Venomverse,
         [Description("Unaffiliated")]
-        Unaffiliated
+        Unaffiliated,
+        [Description("Heroes of Asgard")]
+        HeroesOfAsgard
     };
 
     public class HeroInfo
@@ -319,6 +319,28 @@ namespace MarvelLegendary
             new HeroInfo("Deathlok", GameInfo.Set.Shield, HeroTeam.SHIELD),
             new HeroInfo("Mockingbird", GameInfo.Set.Shield, HeroTeam.SHIELD),
             new HeroInfo("Quake", GameInfo.Set.Shield, HeroTeam.SHIELD),
+
+            new HeroInfo("Beta Ray Bill", GameInfo.Set.Asgard, HeroTeam.HeroesOfAsgard),
+            new HeroInfo("Lady Sif", GameInfo.Set.Asgard, HeroTeam.HeroesOfAsgard),
+            new HeroInfo("Thor (Asgard)", GameInfo.Set.Asgard, HeroTeam.HeroesOfAsgard),
+            new HeroInfo("Valkyrie", GameInfo.Set.Asgard, HeroTeam.HeroesOfAsgard),
+            new HeroInfo("The Warriors Three", GameInfo.Set.Asgard, HeroTeam.HeroesOfAsgard),
+
+            new HeroInfo("Karma", GameInfo.Set.NewMutants, HeroTeam.XMen),
+            new HeroInfo("Mirage", GameInfo.Set.NewMutants, HeroTeam.XMen),
+            new HeroInfo("Sunspot", GameInfo.Set.NewMutants, HeroTeam.XMen),
+            new HeroInfo("Warlock", GameInfo.Set.NewMutants, HeroTeam.XMen),
+            new HeroInfo("Wolfsbane", GameInfo.Set.NewMutants, HeroTeam.XMen),
+
+            new HeroInfo("Adam Warlock", GameInfo.Set.Cosmos, HeroTeam.Avengers),
+            new HeroInfo("Captain Mar-Vell", GameInfo.Set.Cosmos, HeroTeam.Avengers),
+            new HeroInfo("Moondragon", GameInfo.Set.Cosmos, HeroTeam.Avengers),
+            new HeroInfo("Nebula", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy),
+            new HeroInfo("Nova", GameInfo.Set.Cosmos, HeroTeam.Avengers),
+            new HeroInfo("Quasar", GameInfo.Set.Cosmos, HeroTeam.Avengers),
+            new HeroInfo("Ronan the Accuser", GameInfo.Set.Cosmos, HeroTeam.Unaffiliated),
+            new HeroInfo("Phyla-Vell", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy),
+            new HeroInfo("Yondu", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy)
         };
 
         private readonly List<HeroConnection> _heroConnections = new List<HeroConnection>()
@@ -448,7 +470,14 @@ namespace MarvelLegendary
 
         public Hero(bool contains, string heroNamePart)
         {
-            var heroList = _heroes.Where(x => x.HeroName.Contains(heroNamePart)).ToList();
+            var heroList = new List<HeroInfo>();
+            heroList = _heroes.Where(x => x.HeroName.Contains(heroNamePart)).ToList();
+
+            if (heroNamePart == "Hulk")
+            {
+                heroList.Add(_heroes.First(x => x.HeroName == "Nul, Breaker of Worlds"));
+            }
+
             var heroInfo = heroList[new Random().Next(heroList.Count)];
 
             HeroName = heroInfo.HeroName;

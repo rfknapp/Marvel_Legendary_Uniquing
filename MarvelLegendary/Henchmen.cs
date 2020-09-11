@@ -84,7 +84,10 @@ namespace MarvelLegendary
             new HenchmenInfo("Ten Rings Fanatics (Doombot Legion)", GameInfo.Set.P1, "Doombot Legion"),
             
             new HenchmenInfo("HYDRA Base", GameInfo.Set.Revelations),
-            new HenchmenInfo("Mandarin's Rings", GameInfo.Set.Revelations)
+            new HenchmenInfo("Mandarin's Rings", GameInfo.Set.Revelations),
+
+            new HenchmenInfo("Sidera Maris, Bridge Builders", GameInfo.Set.Cosmos),
+            new HenchmenInfo("Universal Church of Truth", GameInfo.Set.Cosmos)
         };
 
         public Henchmen()

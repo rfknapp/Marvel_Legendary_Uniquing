@@ -44,7 +44,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Negative Zone Prison Breakout").AddAdditionalHenchmen(1).CannotBeSolo().Build(),
             new SchemeInfoBuilder().SetSchemeName("Portals to The Dark Dimension").SetSchemeTwists(7).Build(),
             new SchemeInfoBuilder().SetSchemeName("Replace Earth's Leaders With Killbots").SetSchemeTwists(5).SetSchemesNextToTwist(3).SetBystanderCount(18).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Secret Invasion of the Skrull Shapeshifters").SetHeroCount(6).SetRequiredVillains("Skrulls").RandomHeroesInVillainDeck(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Secret Invasion of the Skrull Shapeshifters").SetHeroCount(6).SetRequiredVillains("Skrulls").Build(),
             new SchemeInfoBuilder().SetSchemeName("Super Hero Civil War").CannotBeSolo().SetSchemeTwists(new List<int> { 0,8,8,5,5}).SetHeroCount(new List<int> {0,4,5,5,6}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Unleash the Power of the Cosmic Cube").Build(),
             
@@ -55,7 +55,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Save Humanity").SetSchemeSet(GameInfo.Set.Dc).SetHeroBystanderCount(new List<int> { 12, 24, 24, 24, 24}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Steal the Weaponized Plutonium").SetSchemeSet(GameInfo.Set.Dc).AddAdditionalVillain(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Transform Citizens into Demons").SetSchemeSet(GameInfo.Set.Dc).HeroesInVillainDeck("Jean Grey").SetBystanderCount(0).Build(),
-            new SchemeInfoBuilder().SetSchemeName("X-Cutioner's Song").SetSchemeSet(GameInfo.Set.Dc).RandomHeroesInVillainDeck(1).SetBystanderCount(0).Build(),
+            new SchemeInfoBuilder().SetSchemeName("X-Cutioner's Song").SetSchemeSet(GameInfo.Set.Dc).HeroesInVillainDeck(1).SetBystanderCount(0).Build(),
             
             new SchemeInfoBuilder().SetSchemeName("Bathe Earth in Cosmic Rays").SetSchemeSet(GameInfo.Set.Ff).SetSchemeTwists(6).Build(),
             new SchemeInfoBuilder().SetSchemeName("Flood the Planet with Melted Glaciers").SetSchemeSet(GameInfo.Set.Ff).Build(),
@@ -98,7 +98,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Enthrone the Barons of Battleworld").SetSchemeSet(GameInfo.Set.Sw2).Build(),
             new SchemeInfoBuilder().SetSchemeName("The Fountain of Eternal Life").SetSchemeSet(GameInfo.Set.Sw2).SetSchemeTwists(new List<int> { 4, 8, 8, 8, 8 }).Build(),
             new SchemeInfoBuilder().SetSchemeName("The God-Emperor of Battleworld").SetSchemeSet(GameInfo.Set.Sw2).Build(),
-            new SchemeInfoBuilder().SetSchemeName("The Mark of Khonshu").SetSchemeSet(GameInfo.Set.Sw2).SetSchemeTwists(10).SetRequiredHenchmen("Khonshu Guardians").RandomHeroesInVillainDeck(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Mark of Khonshu").SetSchemeSet(GameInfo.Set.Sw2).SetSchemeTwists(10).SetRequiredHenchmen("Khonshu Guardians").HeroesInVillainDeck(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Master the Mysteries of Kung-Fu").SetSchemeSet(GameInfo.Set.Sw2).Build(),
             new SchemeInfoBuilder().SetSchemeName("Secret Wars").SetSchemeSet(GameInfo.Set.Sw2).SetSecretWarsMasterminds().Build(),
             new SchemeInfoBuilder().SetSchemeName("Sinister Ambitions").SetSchemeSet(GameInfo.Set.Sw2).SetSchemeTwists(6).SetAmbitions().Build(),
@@ -157,7 +157,7 @@ namespace MarvelLegendary
             
             new SchemeInfoBuilder().SetSchemeName("Asgard Under Siege (Negative Zone Prison Breakout)").SetSchemeSet(GameInfo.Set.P1).AddAdditionalHenchmen(1).CannotBeSolo().Build(),
             new SchemeInfoBuilder().SetSchemeName("Destroy the Cities of Earth! (Midtown Bank Robbery)").SetSchemeSet(GameInfo.Set.P1).SetBystanderCount(12).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Enslave Minds with the Chitauri Scepter (Secret Invasion Of The Skrull Shapeshifters)").SetSchemeSet(GameInfo.Set.P1).SetHeroCount(6).SetRequiredVillains("Chitauri").RandomHeroesInVillainDeck(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Enslave Minds with the Chitauri Scepter (Secret Invasion of the Skrull Shapeshifters)").SetSchemeSet(GameInfo.Set.P1).SetHeroCount(6).SetRequiredVillains("Chitauri").Build(),
             new SchemeInfoBuilder().SetSchemeName("Invade Asgard (Portals to The Dark Dimension)").SetSchemeSet(GameInfo.Set.P1).SetSchemeTwists(7).Build(),
             new SchemeInfoBuilder().SetSchemeName("Radioactive Palladium Poisoning (The Legacy Virus)").SetSchemeSet(GameInfo.Set.P1).SetWoundCount(true, 6).Build(),
             new SchemeInfoBuilder().SetSchemeName("Replace Earth's Leaders with HYDRA (Replace Earth's Leaders With Killbots)").SetSchemeSet(GameInfo.Set.P1).SetSchemeTwists(5).SetSchemesNextToTwist(3).SetBystanderCount(18).Build(),
@@ -167,7 +167,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Age of Ultron").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(7).SetHeroCount(new List<int> { 3, 5, 5, 6, 7}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Pull Earth Into Midieval Times").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(9).Build(),
             new SchemeInfoBuilder().SetSchemeName("Transform Commuters Into Giant Ants").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(new List<int> { 7, 8, 9, 10, 11}).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Trap Heroes In The Microverse").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(11).RandomHeroesInVillainDeck(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Trap Heroes In The Microverse").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(11).HeroesInVillainDeck(1).Build(),
             
             new SchemeInfoBuilder().SetSchemeName("Invasion of the Venom Symbiotes").SetSchemeSet(GameInfo.Set.Venom).AddAdditionalHenchmen(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Maximum Carnage").SetSchemeSet(GameInfo.Set.Venom).SetSchemeTwists(10).SetWoundCount(true,6).Build(),
@@ -193,6 +193,11 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("The Demon Bear Saga").SetSchemeSet(GameInfo.Set.NewMutants).SetRequiredVillains("Demons of Limbo").Build(),
             new SchemeInfoBuilder().SetSchemeName("Superhuman Baseball Game").SetSchemeSet(GameInfo.Set.NewMutants).SetSchemeTwists(9).AddAdditionalVillain(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Trapped in the Insane Asylum").SetSchemeSet(GameInfo.Set.NewMutants).SetSchemeTwists(new List<int>{3,5,7,9,11}).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Annihilation Conquest").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Contest of Champions").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Destroy the Nova Corps").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(9).SetHeroCount(new List<int>(){ 5, 5, 5, 5, 6 }).SetNumberOfHeroWithNameLike(1, "Nova").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Turn the Soul of Adam Warlock").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(14).SetSoulsDeck("Adam Warlock").Build()
         };
 
         public Scheme(int playerCount, string schemeName)
@@ -234,7 +239,7 @@ namespace MarvelLegendary
             NumberOfHeroes = schemeInfo.Heroes[playerCount - 1];
             RequiredHeroes = schemeInfo.RequiredHeroes;
             HeroesInVillainDeck = schemeInfo.HeroesInVillainDeck;
-            RandomHeroesInVillainDeck = schemeInfo.RandomHeroesInVillainDeck;
+            RandomHeroesInVillainDeck = schemeInfo.NumberOfHeroesInVillainDeck;
 
             BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1];
             BystandersInHeroDeck = schemeInfo.BystandersInHeroDeck[playerCount - 1];
@@ -295,7 +300,7 @@ namespace MarvelLegendary
             NumberOfHeroes = schemeInfo.Heroes[playerCount - 1];
             RequiredHeroes = schemeInfo.RequiredHeroes;
             HeroesInVillainDeck = schemeInfo.HeroesInVillainDeck;
-            RandomHeroesInVillainDeck = schemeInfo.RandomHeroesInVillainDeck;
+            RandomHeroesInVillainDeck = schemeInfo.NumberOfHeroesInVillainDeck;
 
             BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1];
             BystandersInHeroDeck = schemeInfo.BystandersInHeroDeck[playerCount-1];

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarvelLegendary
 {
@@ -34,8 +32,6 @@ namespace MarvelLegendary
                 Console.WriteLine("How many players are playing? (0 to quit)");
                 playerCount = Console.ReadLine();
             }
-            
-            
         }
 
         private static string GameTextBuilder(GameInfo game)
@@ -47,15 +43,14 @@ namespace MarvelLegendary
             var mastermindOutput = $"Mastermind is {new Mastermind().ToString(new List<Mastermind> { game.Mastermind })}\r\n";
             var schemeOutput = $"Whose scheme is\r\n1) {scheme.SchemeName}, {scheme.SetName}\r\n\r\n";
             var villainOutput = $"Villains are {new Villain().ToString(game.Villains)}\r\n";
-            var villainHeroOutput = game.VillainHeroes.Count == 0 ? "" : $"Heroes in Villain Deck are {new Hero().ToString(game.VillainHeroes)}\r\n";
+            var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {new Hero().ToString(game.VillainHeroes)}\r\n" : "";
             var henchmenOutput = "Henchmen " + (game.Henchmen.Count==1 ? "is" : "are") + $" {new Henchmen().ToString(game.Henchmen)}\r\n";
             var heroesOutput = $"Heroes are {new Hero().ToString(game.Heroes)}\r\n";
             var twistsBystanderAndMasterStrikeOutput = $"Include {scheme.Twists} Scheme Twists, 5 Master Strikes, and {scheme.BystandersInVillainDeck} Bystanders in the Villain deck.\r\n";
             var woundsOutput = game.CustomWoundNumber ? $"There are {game.WoundNumber} wounds in the wound deck.": "";
             var twistsNextToScheme = scheme.IsSchemeTwistsNextToScheme ? $"Place {scheme.NumberTwistsNextToScheme} Twists next to the Scheme\r\n": "";
             var heroBystandersOutput = scheme.IsBystandersInHeroDeck ? $"Place {scheme.BystandersInHeroDeck} Bystanders in the Hero deck.\r\n" : "";
-            var heroesInVillainDeck = schemeInfo.IsHeroesInVillainDeck ? $"Include the following Heroes in the Villain deck:{new Hero().ToString(game.VillainHeroes)}\r\n" : "";
-            var randomHeroesInVillainDeck = schemeInfo.IsRandomHeroesInVillainDeck ? $"Include the following Heroes in the Villain deck:{new Hero().ToString(game.RandomVillainHeroes)}\r\n" : "";
+            var heroesInVillainDeck = schemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Include the following Heroes in the Villain deck:{new Hero().ToString(game.VillainHeroes)}\r\n" : "";
             var heroHenchmen = schemeInfo.IsHenchmenInHeroDeck ? $"Include 6 cards from the following Henchmen group to the Hero deck:{new Henchmen().ToString(game.SchemeHenchmen)}\r\n" : "";
             var bindingsInGame = schemeInfo.CustomBindingCount && !schemeInfo.HasBetryalDeck ? $"The Bindings stack holds {game.BindingNumber} Bindings.\r\n" : "";
             var henchmenNextToScheme = schemeInfo.IsHenchmenNextToScheme ? $"Stack {game.NumberHenchmenNextToScheme} of the following Henchmen next to the plot.{new Henchmen().ToString(game.SchemeHenchmen)}\r\n" : "";
@@ -84,12 +79,14 @@ namespace MarvelLegendary
             var hasMadameHydra = game.Heroes.Any(x => x.HeroInfo.IncludeMadameHydra) || game.AllMastermindsInGame.Any(x => x.MastermindInfo.IncludeMadameHydra) || game.Scheme.SchemeInfo.IncludeMadameHydra ? "Include Madame Hydra.\r\n" : "";
             var hasHorrors = game.Mastermind.IncludeHorrors ? "Include horrors.\r\n" : "";
             var hasDarkLoyalty = game.Scheme.SchemeInfo.IsDarkLoyalty ? $"Include 5 cards that cost 5 or less from the hero {game.Scheme.SchemeInfo.DarkLoyaltyHero}.\r\n" : "";
+            var isContestOfChampions = game.Scheme.SchemeInfo.SchemeName == "The Contest of Champions" ? "Put 11 random cards from the Hero Deck face up in a Contest Row\r\n" : "";
+            var isInvasionHero = game.Scheme.SchemeInfo.SchemeName.Contains("Skrull Shapeshifters") ? "Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.\r\n" : "";
 
             var returnString = playerCount + mastermindOutput + schemeOutput + villainOutput + villainHeroOutput + henchmenOutput + heroesOutput + twistsBystanderAndMasterStrikeOutput + woundsOutput
-                + twistsNextToScheme + heroBystandersOutput + heroesInVillainDeck + randomHeroesInVillainDeck + heroHenchmen + bindingsInGame + henchmenNextToScheme + villainCardNextToScheme 
+                + twistsNextToScheme + heroBystandersOutput + heroesInVillainDeck + heroHenchmen + bindingsInGame + henchmenNextToScheme + villainCardNextToScheme
                 + bystandersNextToScheme + shardCount + betrayalDeck + annihilationHenchmen + villainSidekicks + darkAllianceMastermind + tyrantVillain + secretWarsMasterminds + ambitions
                 + villainOfficers + tacticsInVillainDeck + monumentDeck + smugglerHenchmen + monsterDeck + infectedDeck + mutationDeck + hulkDeck + worldWarHulkMasterminds + drainedMastermind
-                + hasBindings + hasNewRecruits + hasMadameHydra + hasHorrors + hasDarkLoyalty + "\r\n\r\n";
+                + hasBindings + hasNewRecruits + hasMadameHydra + hasHorrors + hasDarkLoyalty + isContestOfChampions + isInvasionHero + "\r\n\r\n";
 
             return returnString;
         }
