@@ -240,6 +240,7 @@ namespace MarvelLegendary
             var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
             var exclusions = getExclusions.GetMastermindExclusion(masterminds);
             var allHeroesInGame = new List<Hero>();
+            var allHeroes = new Hero().GetListOfHeroes();
 
             if (Scheme.SchemeInfo.IsRandomHeroesInVillainDeck)
             {
@@ -267,7 +268,7 @@ namespace MarvelLegendary
 
             if (Scheme.SchemeInfo.IsMutationDeck || Scheme.SchemeInfo.IsHulkDeck)
             {
-                var hero = new Hero(true, "Hulk");
+                var hero = new Hero(true, "Hulk", allHeroes);
                 SchemeHeroes.Add(hero);
             }
 
@@ -278,11 +279,10 @@ namespace MarvelLegendary
 
             if (Scheme.SchemeInfo.Is4v2 || Scheme.SchemeInfo.Is3v3)
             {
-                Heroes = GetHeroesByTeam(exclusions.HeroList);
+                Heroes = GetHeroesByTeam(exclusions.HeroList, allHeroes);
             }
             else
             {
-                var allHeroes = new Hero().GetListOfHeroes();                
                 Heroes = GetHeroes(exclusions.HeroList, SchemeHeroes, Heroes, allHeroes, getExclusions);
             }
         }
@@ -559,7 +559,7 @@ namespace MarvelLegendary
             return heroList;
         }
 
-        private List<Hero> getHeroes(int numberOfHeroes, HeroTeam heroTeam, List<string> exclusionList)
+        private List<Hero> getHeroes(int numberOfHeroes, HeroTeam heroTeam, List<string> exclusionList, List<string> availableHeroes)
         {
             var returnList = new List<Hero>();
 
@@ -568,12 +568,12 @@ namespace MarvelLegendary
             {
                 for (int i = currentHeroCount; i < numberOfHeroes; i++)
                 {
-                    var hero = new Hero(heroTeam);
+                    var hero = new Hero(heroTeam, availableHeroes);
                     var heroName = hero.HeroName;
                     //This will make sure there are no duplicate heroes in the list. It will also ignore any heroes that will be included in the villain deck
                     while (returnList.Any(x => x.HeroName == heroName || exclusionList.Contains(heroName)))
                     {
-                        hero = new Hero(heroTeam);
+                        hero = new Hero(heroTeam, availableHeroes);
                         heroName = hero.HeroName;
                     }
                     returnList.Add(hero);
@@ -583,7 +583,7 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        private List<Hero> getHeroesNotInTeam(int numberOfHeroes, HeroTeam heroTeam, List<string> exclusionList)
+        private List<Hero> getHeroesNotInTeam(int numberOfHeroes, HeroTeam heroTeam, List<string> exclusionList, List<string> availableHeroes)
         {
             var returnList = new List<Hero>();
 
@@ -592,12 +592,12 @@ namespace MarvelLegendary
             {
                 for (int i = currentHeroCount; i < numberOfHeroes; i++)
                 {
-                    var hero = new Hero(heroTeam, false);
+                    var hero = new Hero(heroTeam, availableHeroes, false);
                     var heroName = hero.HeroName;
                     //This will make sure there are no duplicate heroes in the list. It will also ignore any heroes that will be included in the villain deck
                     while (returnList.Any(x => x.HeroName == heroName || exclusionList.Contains(heroName)))
                     {
-                        hero = new Hero(heroTeam, false);
+                        hero = new Hero(heroTeam, availableHeroes, false);
                         heroName = hero.HeroName;
                     }
                     returnList.Add(hero);
@@ -607,7 +607,7 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        private List<Hero> GetHeroesByTeam(List<string> exclusionHeroes)
+        private List<Hero> GetHeroesByTeam(List<string> exclusionHeroes, List<string> availableHeroes)
         {
             var returnList = new List<Hero>();
 
@@ -622,7 +622,7 @@ namespace MarvelLegendary
                 var enoughHeroes = new Hero().IsEnoughHeroes(new List<HeroTeam>{randomHeroTeam}, 4, exclusionHeroes);
                 var exclusionCompare = enoughHeroes ? exclusionHeroes : new List<string>();
 
-                var heroList = getHeroes(4, randomHeroTeam, exclusionCompare);
+                var heroList = getHeroes(4, randomHeroTeam, exclusionCompare, availableHeroes);
 
                 foreach (var item in heroList)
                 {
@@ -634,7 +634,7 @@ namespace MarvelLegendary
                 enoughHeroes = new Hero().IsEnoughHeroesWithout(randomHeroTeam, 2, exclusionHeroes);
                 exclusionCompare = enoughHeroes ? exclusionHeroes : new List<string>();
 
-                heroList = getHeroesNotInTeam(2, randomHeroTeam, exclusionCompare);
+                heroList = getHeroesNotInTeam(2, randomHeroTeam, exclusionCompare, availableHeroes);
 
                 foreach (var item in heroList)
                 {
@@ -652,7 +652,7 @@ namespace MarvelLegendary
 
                 foreach (var heroTeam in heroTeams)
                 {
-                    var heroList = getHeroes(3, heroTeam, exclusionCompare);
+                    var heroList = getHeroes(3, heroTeam, exclusionCompare, availableHeroes);
 
                     foreach (var item in heroList)
                     {
@@ -665,7 +665,7 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        public List<Hero> GetHeroes(List<string> exclusionHeroes, List<Hero> schemeHeroGroups, List<Hero> currentHeroes, List<string> availiableHeroes, IGetExclusions getExclusions)
+        public List<Hero> GetHeroes(List<string> exclusionHeroes, List<Hero> schemeHeroGroups, List<Hero> currentHeroes, List<string> availableHeroes, IGetExclusions getExclusions)
         {
             var heroList = new List<Hero>(currentHeroes);
             var numberOfHeroes = Scheme.NumberOfHeroes;
@@ -679,7 +679,7 @@ namespace MarvelLegendary
 
             if (Scheme.SchemeInfo.IsIncludeHeroTeam)
             {
-                var heroGroupList = getHeroes(Scheme.SchemeInfo.NumberOfHeroesFromTeam, Scheme.SchemeInfo.IncludeHeroTeam, exclusionHeroes);
+                var heroGroupList = getHeroes(Scheme.SchemeInfo.NumberOfHeroesFromTeam, Scheme.SchemeInfo.IncludeHeroTeam, exclusionHeroes, availableHeroes);
                 foreach (var heroGroup in heroGroupList)
                 {
                     SchemeHeroes.Add(heroGroup);
@@ -692,10 +692,10 @@ namespace MarvelLegendary
             {
                 for (var i = 0; i < Scheme.SchemeInfo.NumberOfHeroesWithNameString; i++)
                 {
-                    var hero = new Hero(true, Scheme.SchemeInfo.CustomNameString);
+                    var hero = new Hero(true, Scheme.SchemeInfo.CustomNameString, availableHeroes);
                     while (heroList.Any(x => x.HeroName == hero.HeroName))
                     {
-                        hero = new Hero(true, Scheme.SchemeInfo.CustomNameString);
+                        hero = new Hero(true, Scheme.SchemeInfo.CustomNameString, availableHeroes);
                     }
                     heroList.Add(hero);
                     AllHeroesInGame.Add(hero);
@@ -704,7 +704,7 @@ namespace MarvelLegendary
                 var heroesToExclude = new Hero().GetListOfHeroes().Where(x => x.Contains(Scheme.SchemeInfo.CustomNameString)).ToList();
                 excludedHeroes.AddRange(from item in heroesToExclude select item);
 
-                if (Scheme.SchemeInfo.CustomNameString == "Hulk")
+                if (Scheme.SchemeInfo.CustomNameString == "Hulk" && availableHeroes.Contains("Nul, Breaker of Worlds"))
                     excludedHeroes.Add(new Hero().GetListOfHeroes().First(x => x == "Nul, Breaker of Worlds"));
             }
 
@@ -717,7 +717,7 @@ namespace MarvelLegendary
             var returnList = new List<Hero>();
             var heroesInGame = new List<string>(heroList.Select(x => x.HeroName));
 
-            var availableHeroesWithoutExcludedHeroes = new List<string>(availiableHeroes);
+            var availableHeroesWithoutExcludedHeroes = new List<string>(availableHeroes);
             availableHeroesWithoutExcludedHeroes = availableHeroesWithoutExcludedHeroes.Except(excludedHeroes).ToList();
 
             //If the required number of heroes from schemes hasn't reached the number of heroes for the player count, it will do this

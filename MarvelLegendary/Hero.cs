@@ -343,56 +343,6 @@ namespace MarvelLegendary
             new HeroInfo("Yondu", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy)
         };
 
-        private readonly List<HeroConnection> _heroConnections = new List<HeroConnection>()
-        {
-            new HeroConnection("a", "Black Widow"),
-            new HeroConnection("b", "Captain America"),
-            new HeroConnection("c", "Cyclops"),
-            new HeroConnection("d", "Deadpool"),
-            new HeroConnection("e", "Emma Frost"),
-            new HeroConnection("f", "Gambit"),
-            new HeroConnection("g", "Hawkeye"),
-            new HeroConnection("h", "Hulk"),
-            new HeroConnection("i", "Iron Man"),
-            new HeroConnection("j", "Nick Fury"),
-            new HeroConnection("k", "Rogue"),
-            new HeroConnection("l", "Spider-Man"),
-            new HeroConnection("m", "Storm"),
-            new HeroConnection("n", "Thor"),
-            new HeroConnection("o", "Wolverine"),
-            new HeroConnection("p", "Angel"),
-            new HeroConnection("q", "Bishop"),
-            new HeroConnection("r", "Blade"),
-            new HeroConnection("s", "Cable"),
-            new HeroConnection("t", "Colossus"),
-            new HeroConnection("u", "Daredevil"),
-            new HeroConnection("v", "Domino"),
-            new HeroConnection("w", "Elektra"),
-            new HeroConnection("x", "Forge"),
-            new HeroConnection("y", "Ghost Rider"),
-            new HeroConnection("z", "Ice Man"),
-            new HeroConnection("aa", "Iron Fist"),
-            new HeroConnection("ab", "Jean Grey"),
-            new HeroConnection("ac", "Nightcrawler"),
-            new HeroConnection("ad", "Professor X"),
-            new HeroConnection("ae", "Punisher"),
-            new HeroConnection("af", "Wolverine (X-Force)"),
-            new HeroConnection("ag", "Human Torch"),
-            new HeroConnection("ah", "Invisible Woman"),
-            new HeroConnection("ai", "Mr. Fantastic"),
-            new HeroConnection("aj", "Silver Surfer"),
-            new HeroConnection("ak", "Thing"),
-            new HeroConnection("al", "Black Cat"),
-            new HeroConnection("am", "Moon Knight"),
-            new HeroConnection("an", "Scarlet Spider"),
-            new HeroConnection("ao", "Spider-Woman"),
-            new HeroConnection("ap", "Symbiote Spider-Man"),
-            new HeroConnection("aq", "Bullseye"),
-            new HeroConnection("ar", "Dr. Octopus"),
-            new HeroConnection("as", "Electro"),
-            new HeroConnection("at", "Enchantress")
-        };
-
         public List<string> GetHeroNameList(List<int> indicies)
         {
             return (from index in indicies select _heroes.ElementAt(index-1).HeroName).ToList();
@@ -461,33 +411,34 @@ namespace MarvelLegendary
             HeroInfo = hero;
         }
 
-        public Hero(bool contains, string heroNamePart)
+        public Hero(bool contains, string heroNamePart, List<string> availableHeroes)
         {
-            var heroList = new List<HeroInfo>();
-            heroList = _heroes.Where(x => x.HeroName.Contains(heroNamePart)).ToList();
+            var heroList = availableHeroes.Where(x => x.Contains(heroNamePart)).ToList();
 
-            if (heroNamePart == "Hulk")
+            if (heroNamePart == "Hulk" && availableHeroes.Contains("Nul, Breaker of Worlds"))
             {
-                heroList.Add(_heroes.First(x => x.HeroName == "Nul, Breaker of Worlds"));
+                heroList.Add(availableHeroes.First(x => x == "Nul, Breaker of Worlds"));
             }
 
             var heroInfo = heroList[new Random().Next(heroList.Count)];
+            var hero = new Hero(heroInfo);
 
-            HeroName = heroInfo.HeroName;
-            SetName = heroInfo.SetName;
-            HeroTeam = heroInfo.HeroTeam;
-            HeroInfo = heroInfo;
+            HeroName = hero.HeroName;
+            SetName = hero.SetName;
+            HeroTeam = hero.HeroTeam;
+            HeroInfo = hero.HeroInfo;
         }
 
-        public Hero(HeroTeam heroTeam, bool inTeam = true)
+        public Hero(HeroTeam heroTeam, List<string> availableHeroes, bool inTeam = true)
         {
-            var heroInfoList = inTeam ? _heroes.Where(x => x.HeroTeam == heroTeam).ToList() : _heroes.Where(x => x.HeroTeam != heroTeam).ToList();
+            var heroes = (from item in availableHeroes select new Hero(item)).ToList();
+            var heroInfoList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
             var heroInfo = heroInfoList[new Random().Next(heroInfoList.Count)];
 
             HeroName = heroInfo.HeroName;
             SetName = heroInfo.SetName;
             HeroTeam = heroInfo.HeroTeam;
-            HeroInfo = heroInfo;
+            HeroInfo = heroInfo.HeroInfo;
         }
 
         public Hero(List<HeroInfo> newHeroList)
