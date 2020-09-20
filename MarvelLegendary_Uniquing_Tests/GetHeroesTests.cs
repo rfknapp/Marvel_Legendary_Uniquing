@@ -83,7 +83,7 @@ namespace MarvelLegendary_Uniquing_Tests
             newGameInfo.Heroes = new List<Hero>();
 
             var allHeroes = new Hero().GetHeroNameList(new List<int>() { 1, 2, 3, 28 });
-            var mastermindExclusionHeroes = new List<string>() { "Black Widow"};
+            var mastermindExclusionHeroes = new List<string>() { "Black Widow" };
             var schemeExclusionHeroes = new List<string>() { "Captain America" };
             var schemeHeroes = new List<Hero>() { new Hero("Jean Grey") };
             var heroListString = new List<string>();
@@ -250,6 +250,48 @@ namespace MarvelLegendary_Uniquing_Tests
 
             Assert.AreEqual(heroName, heroList.First().HeroName);
         }
+
+        [TestCaseSource("_getNameLimitHeroesLists")]
+        public void TestGetNameLimitHeroesLists(List<string> availableHeroes, List<string> nameLimitHeroes, int numberOfHeroes, string namePart)
+        {
+            var newGameInfo = new GameInfo(1);
+            var result = newGameInfo.GetNameLimitHeroes(namePart, availableHeroes, numberOfHeroes);
+
+            var resultNames = (from item in result select item.HeroName);
+
+            Assert.AreEqual(numberOfHeroes, result.Count);
+            CollectionAssert.IsSubsetOf(resultNames, nameLimitHeroes);
+        }
+
+        [TestCaseSource("_getAllHeroesByNamePart")]
+        public void TestGetAllHeroesByNamePart(List<string> availableHeroes, List<string> nameLimitHeroes, string namePart)
+        {
+            var newHero = new Hero();
+            var result = newHero.GetAllHeroesByNamePart(namePart, availableHeroes);
+
+            var resultNames = (from item in result select item.HeroName);
+            CollectionAssert.IsSubsetOf(resultNames, nameLimitHeroes);
+        }
+
+        private static readonly object[] _getAllHeroesByNamePart =
+        {
+            new object [] { new List<string>() { "Black Widow", "Hulk", "Nul, Breaker of Worlds", "Hulkling", "Totally Awesome Hulk", "Gladiator Hulk", "Hulkbuster Iron Man", "Joe Fixit, Grey Hulk", "She-Hulk", "Skaar, Son Of Hulk"},
+                new List<string>() {"Hulk", "Nul, Breaker of Worlds", "Hulkling", "Totally Awesome Hulk", "Gladiator Hulk", "Hulkbuster Iron Man", "Joe Fixit, Grey Hulk", "She-Hulk", "Skaar, Son Of Hulk"}, "Hulk"},
+            new object [] { new List<string>() { "Captain America", "Hulk", "Nul, Breaker of Worlds"}, new List<string>() {"Hulk", "Nul, Breaker of Worlds"}, "Hulk"},
+            new object [] { new List<string>() { "Hulkbuster Iron Man", "Joe Fixit, Grey Hulk" }, new List<string>() {"Hulkbuster Iron Man", "Joe Fixit, Grey Hulk"}, "Hulk"},
+            new object [] { new List<string>() { "Gambit", "Nova", "Nova (Cosmos)" }, new List<string>() { "Nova", "Nova (Cosmos)" }, "Nova"},
+            new object [] { new List<string>() { "Rogue", "Nova (Cosmos)" }, new List<string>() { "Nova (Cosmos)" }, "Nova"}
+        };
+
+        private static readonly object[] _getNameLimitHeroesLists =
+        {
+            new object [] { new List<string>() { "Black Widow", "Hulk", "Nul, Breaker of Worlds", "Hulkling", "Totally Awesome Hulk", "Gladiator Hulk", "Hulkbuster Iron Man", "Joe Fixit, Grey Hulk", "She-Hulk", "Skaar, Son Of Hulk"},
+                new List<string>() {"Hulk", "Nul, Breaker of Worlds", "Hulkling", "Totally Awesome Hulk", "Gladiator Hulk", "Hulkbuster Iron Man", "Joe Fixit, Grey Hulk", "She-Hulk", "Skaar, Son Of Hulk"}, 2, "Hulk"},
+            new object [] { new List<string>() { "Captain America", "Hulk", "Nul, Breaker of Worlds"}, new List<string>() {"Hulk", "Nul, Breaker of Worlds"}, 2, "Hulk"},
+            new object [] { new List<string>() { "Hulkbuster Iron Man", "Joe Fixit, Grey Hulk" }, new List<string>() {"Hulkbuster Iron Man", "Joe Fixit, Grey Hulk"}, 2, "Hulk"},
+            new object [] { new List<string>() { "Gambit", "Nova", "Nova (Cosmos)" }, new List<string>() { "Nova", "Nova (Cosmos)" }, 1, "Nova"},
+            new object [] { new List<string>() { "Rogue", "Nova (Cosmos)" }, new List<string>() { "Nova (Cosmos)" }, 1, "Nova"}
+        };
 
         private static readonly object[] _sourceLists =
         {
