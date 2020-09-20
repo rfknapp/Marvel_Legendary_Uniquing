@@ -17,16 +17,19 @@
 ###############
 # Directories #
 ###############
-bin/
-obj/
+MarvelLegendary/bin/
+MarvelLegendary/obj/
 .vs/
 TestResults/
 
-.testlog
-.manifest
-.json
-.tmp
-.CopyComplete
-.FileListAbsolute.txt
-.g.props
-.g.targets
+#########
+# Other #
+#########
+*.testlog
+*.manifest
+*.json
+*.tmp
+*.CopyComplete
+*.FileListAbsolute.txt
+*.g.props
+*.g.targets
