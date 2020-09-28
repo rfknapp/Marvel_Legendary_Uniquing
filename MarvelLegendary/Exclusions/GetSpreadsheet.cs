@@ -14,11 +14,7 @@ namespace MarvelLegendary.Exclusions
         public EnumerableRowCollection<DataRow> GetSpreadsheetInfo(string tabName)
         {
             var spreadsheetName = "Marvel_Legendary_Every_Combo.xlsx";
-            //var directory = Directory.GetCurrentDirectory();
-            //var directoryPath = directory.Split(new string[] { "bin" }, StringSplitOptions.None)[0];
-            //var filePath = $"{directoryPath}{spreadsheetName}";
-            var filePath = $@"C:\Users\knaro\Documents\{spreadsheetName}";
-            //var filePath = $@"..\..\Resources\{spreadsheetName}";
+            var filePath = $@"..\..\Resources\{spreadsheetName}";
             var connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0; data source={filePath}; Extended Properties=Excel 12.0;";
 
             var adapter = new OleDbDataAdapter($"SELECT * FROM [{tabName}$]", connectionString);

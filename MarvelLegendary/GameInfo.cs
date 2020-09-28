@@ -690,22 +690,12 @@ namespace MarvelLegendary
 
             if (Scheme.SchemeInfo.IsHeroNameLimit)
             {
-                for (var i = 0; i < Scheme.SchemeInfo.NumberOfHeroesWithNameString; i++)
-                {
-                    var hero = new Hero(true, Scheme.SchemeInfo.CustomNameString, availableHeroes);
-                    while (heroList.Any(x => x.HeroName == hero.HeroName))
-                    {
-                        hero = new Hero(true, Scheme.SchemeInfo.CustomNameString, availableHeroes);
-                    }
-                    heroList.Add(hero);
-                    AllHeroesInGame.Add(hero);
-                }
+                var nameLimitHeroes = GetNameLimitHeroes(Scheme.SchemeInfo.CustomNameString, availableHeroes, Scheme.SchemeInfo.NumberOfHeroesWithNameString);
+                heroList.AddRange(from item in nameLimitHeroes select item);
+                AllHeroesInGame.AddRange(from item in nameLimitHeroes select item);
 
                 var heroesToExclude = new Hero().GetListOfHeroes().Where(x => x.Contains(Scheme.SchemeInfo.CustomNameString)).ToList();
-                excludedHeroes.AddRange(from item in heroesToExclude select item);
-
-                if (Scheme.SchemeInfo.CustomNameString == "Hulk" && availableHeroes.Contains("Nul, Breaker of Worlds"))
-                    excludedHeroes.Add(new Hero().GetListOfHeroes().First(x => x == "Nul, Breaker of Worlds"));
+                excludedHeroes.AddRange(from item in nameLimitHeroes select item.HeroName);
             }
 
             var currentHeroCount = heroList.Count;
@@ -735,6 +725,20 @@ namespace MarvelLegendary
             returnList.AddRange(from item in heroesInGame select new Hero(item));
 
             return returnList;
+        }
+
+        public List<Hero> GetNameLimitHeroes(string heroNamePart, List<string> availableHeroes, int numberOfHeroes)
+        {
+            var heroList = new List<Hero>();
+            var listOfHeroes = new Hero().GetAllHeroesByNamePart(heroNamePart, availableHeroes);
+            var newListOfHeroes = new List<Hero>(listOfHeroes);
+            for (int i = 0; i < numberOfHeroes; i++)
+            {
+                var hero = newListOfHeroes[new Random().Next(newListOfHeroes.Count)];
+                heroList.Add(hero);
+                newListOfHeroes.Remove(hero);
+            }
+            return heroList;
         }
         #endregion
 

@@ -336,7 +336,7 @@ namespace MarvelLegendary
             new HeroInfo("Captain Mar-Vell", GameInfo.Set.Cosmos, HeroTeam.Avengers),
             new HeroInfo("Moondragon", GameInfo.Set.Cosmos, HeroTeam.Avengers),
             new HeroInfo("Nebula", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy),
-            new HeroInfo("Nova", GameInfo.Set.Cosmos, HeroTeam.Avengers),
+            new HeroInfo("Nova (Cosmos)", GameInfo.Set.Cosmos, HeroTeam.Avengers),
             new HeroInfo("Quasar", GameInfo.Set.Cosmos, HeroTeam.Avengers),
             new HeroInfo("Ronan the Accuser", GameInfo.Set.Cosmos, HeroTeam.Unaffiliated),
             new HeroInfo("Phyla-Vell", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy),
@@ -346,6 +346,20 @@ namespace MarvelLegendary
         public List<string> GetHeroNameList(List<int> indicies)
         {
             return (from index in indicies select _heroes.ElementAt(index-1).HeroName).ToList();
+        }
+
+        public List<Hero> GetAllHeroesByNamePart(string namePart, List<string> availableHeroes)
+        {
+            var heroes = availableHeroes.Where(x => x.Contains(namePart)).ToList();
+
+            if (namePart == "Hulk" && availableHeroes.Any(x=>x == "Nul, Breaker of Worlds"))
+            {
+                heroes.Add(availableHeroes.First(x => x == "Nul, Breaker of Worlds"));
+            }
+
+            var returnList = (from item in heroes select new Hero(item)).ToList();
+
+            return returnList;
         }
 
         public bool IsEnoughHeroes(List<HeroTeam> heroTeams, int heroesPerTeam, List<string> exclusionHeroes)
