@@ -295,7 +295,7 @@ namespace MarvelLegendary
             var extraMasterminds = new List<string>();
             var mastermindList = new Mastermind().GetListOfMasterminds();
 
-            for (int i = 0; i < scheme.NumberOfMasterminds; i++)
+            for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
             {
                 var remainingMasterminds = mastermindList.Except(mastermindsInGame).ToList();
                 var exclusions = DetermineMastermindList(mastermindsInGame);
