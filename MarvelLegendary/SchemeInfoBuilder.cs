@@ -31,6 +31,7 @@ namespace MarvelLegendary
                 IsInfectedDeck = false,
                 IncludeNewRecruits = false,
                 IncludeMadameHydra = false,
+                IncludeHorrors = false,
 
                 //Wounds/Bindings
                 WoundCount = -1,
@@ -489,6 +490,12 @@ namespace MarvelLegendary
         {
             _schemeInfo.SoulsHero = new Hero(heroName);
             _schemeInfo.IsSoulsHero = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder IncludeHorrors()
+        {
+            _schemeInfo.IncludeHorrors = true;
             return this;
         }
 
