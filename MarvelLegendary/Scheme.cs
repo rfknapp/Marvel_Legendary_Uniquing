@@ -129,7 +129,7 @@ namespace MarvelLegendary
             
             new SchemeInfoBuilder().SetSchemeName("Alien Brood Encounters").SetSchemeSet(GameInfo.Set.XMen).AddAdditionalHenchmen(1).SetRequiredHenchmen("The Brood").SetBystanderCount(0).Build(),
             new SchemeInfoBuilder().SetSchemeName("Anti-Mutant Hatred ").SetSchemeSet(GameInfo.Set.XMen).SetSchemeTwists(11).SetWoundCount(false, 30).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Horror of Horrors").SetSchemeSet(GameInfo.Set.XMen).SetSchemeTwists(6).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Horror of Horrors").SetSchemeSet(GameInfo.Set.XMen).SetSchemeTwists(6).IncludeHorrors().Build(),
             new SchemeInfoBuilder().SetSchemeName("Mutant-Hunting Super Sentinels").SetSchemeSet(GameInfo.Set.XMen).SetSchemeTwists(9).AddAdditionalHenchmen(1).SetRequiredHenchmen("Sentinels").Build(),
             new SchemeInfoBuilder().SetSchemeName("Nuclear Armageddon").SetSchemeSet(GameInfo.Set.XMen).SetSchemeTwists(5).Build(),
             new SchemeInfoBuilder().SetSchemeName("Televised Deathtraps of Mojo World").SetSchemeSet(GameInfo.Set.XMen).SetSchemeTwists(11).SetWoundCount(true, 6).Build(),

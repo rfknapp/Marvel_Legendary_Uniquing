@@ -20,6 +20,7 @@ namespace MarvelLegendary
         public bool IsInfectedDeck { get; set; }
         public bool IncludeNewRecruits { get; set; }
         public bool IncludeMadameHydra { get; set; }
+        public bool IncludeHorrors { get; set; }
 
         //Wounds/Bindings
         public int WoundCount { get; set; }

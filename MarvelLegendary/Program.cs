@@ -77,7 +77,7 @@ namespace MarvelLegendary
             var hasBindings = game.Heroes.Any(x => x.HeroInfo.IncludeBindings) || game.AllVillainsInGame.Any(x => x.VillainInfo.IncludeBindings) || game.AllMastermindsInGame.Any(x=>x.MastermindInfo.IncludeBindings) ? "Include Bindings.\r\n" : "";
             var hasNewRecruits = game.Heroes.Any(x => x.HeroInfo.IncludeNewRecruits) || game.AllHenchmenInGame.Any(x=>x.HenchmenInfo.IncludeNewRecruits) || game.Scheme.SchemeInfo.IncludeNewRecruits ? "Include New Recruits.\r\n" : "";
             var hasMadameHydra = game.Heroes.Any(x => x.HeroInfo.IncludeMadameHydra) || game.AllMastermindsInGame.Any(x => x.MastermindInfo.IncludeMadameHydra) || game.Scheme.SchemeInfo.IncludeMadameHydra ? "Include Madame Hydra.\r\n" : "";
-            var hasHorrors = game.Mastermind.IncludeHorrors ? "Include horrors.\r\n" : "";
+            var hasHorrors = game.Mastermind.MastermindInfo.IncludeHorrors || game.Scheme.SchemeInfo.IncludeHorrors ? "Include horrors.\r\n" : "";
             var hasDarkLoyalty = game.Scheme.SchemeInfo.IsDarkLoyalty ? $"Include 5 cards that cost 5 or less from the hero {game.Scheme.SchemeInfo.DarkLoyaltyHero}.\r\n" : "";
             var isContestOfChampions = game.Scheme.SchemeInfo.SchemeName == "The Contest of Champions" ? "Put 11 random cards from the Hero Deck face up in a Contest Row\r\n" : "";
             var isInvasionHero = game.Scheme.SchemeInfo.SchemeName.Contains("Skrull Shapeshifters") ? "Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.\r\n" : "";
