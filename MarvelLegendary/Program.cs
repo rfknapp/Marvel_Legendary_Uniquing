@@ -47,7 +47,7 @@ namespace MarvelLegendary
             var henchmenOutput = "Henchmen " + (game.Henchmen.Count==1 ? "is" : "are") + $" {new Henchmen().ToString(game.Henchmen)}\r\n";
             var heroesOutput = $"Heroes are {new Hero().ToString(game.Heroes)}\r\n";
             var twistsBystanderAndMasterStrikeOutput = $"Include {scheme.Twists} Scheme Twists, 5 Master Strikes, and {scheme.BystandersInVillainDeck} Bystanders in the Villain deck.\r\n";
-            var woundsOutput = game.CustomWoundNumber ? $"There are {game.WoundNumber} wounds in the wound deck.": "";
+            var woundsOutput = game.CustomWoundNumber ? $"There are {game.WoundNumber} wounds in the wound deck.\r\n": "";
             var twistsNextToScheme = scheme.IsSchemeTwistsNextToScheme ? $"Place {scheme.NumberTwistsNextToScheme} Twists next to the Scheme\r\n": "";
             var heroBystandersOutput = scheme.IsBystandersInHeroDeck ? $"Place {scheme.BystandersInHeroDeck} Bystanders in the Hero deck.\r\n" : "";
             var heroesInVillainDeck = schemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Include the following Heroes in the Villain deck:{new Hero().ToString(game.VillainHeroes)}\r\n" : "";
