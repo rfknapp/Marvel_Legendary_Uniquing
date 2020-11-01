@@ -197,7 +197,12 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Annihilation Conquest").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("The Contest of Champions").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Destroy the Nova Corps").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(9).SetHeroCount(new List<int>(){ 5, 5, 5, 5, 6 }).SetNumberOfHeroWithNameLike(1, "Nova").Build(),
-            new SchemeInfoBuilder().SetSchemeName("Turn the Soul of Adam Warlock").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(14).SetSoulsDeck("Adam Warlock").Build()
+            new SchemeInfoBuilder().SetSchemeName("Turn the Soul of Adam Warlock").SetSchemeSet(GameInfo.Set.Cosmos).SetSchemeTwists(14).SetSoulsDeck("Adam Warlock").Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Devolve with Xerogen Crystals").SetSchemeSet(GameInfo.Set.Inhumans).SetSchemeTwists(new List<int>{4,5,6,7,8}).AddXerogenHenchmen().Build(),
+            new SchemeInfoBuilder().SetSchemeName("Ruin the Perfect Wedding").SetSchemeSet(GameInfo.Set.Inhumans).SetRoyalWedding().Build(),
+            new SchemeInfoBuilder().SetSchemeName("Tornado of Terrigen Mists").SetSchemeSet(GameInfo.Set.Inhumans).SetSchemeTwists(10).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("War of Kings").SetSchemeSet(GameInfo.Set.Inhumans).SetSchemeTwists(11).Build()
         };
 
         public Scheme(int playerCount, string schemeName)

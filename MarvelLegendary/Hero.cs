@@ -63,7 +63,9 @@ namespace MarvelLegendary
         [Description("Unaffiliated")]
         Unaffiliated,
         [Description("Heroes of Asgard")]
-        HeroesOfAsgard
+        HeroesOfAsgard,
+        [Description("Inhumans")]
+        Inhumans
     };
 
     public class HeroInfo
@@ -340,7 +342,13 @@ namespace MarvelLegendary
             new HeroInfo("Quasar", GameInfo.Set.Cosmos, HeroTeam.Avengers),
             new HeroInfo("Ronan the Accuser", GameInfo.Set.Cosmos, HeroTeam.Unaffiliated),
             new HeroInfo("Phyla-Vell", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy),
-            new HeroInfo("Yondu", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy)
+            new HeroInfo("Yondu", GameInfo.Set.Cosmos, HeroTeam.GuardiansOfTheGalaxy),
+
+            new HeroInfo("Black Bolt (Inhumans)", GameInfo.Set.Inhumans, HeroTeam.Inhumans),
+            new HeroInfo("Crystal", GameInfo.Set.Inhumans, HeroTeam.Inhumans),
+            new HeroInfo("Gorgon", GameInfo.Set.Inhumans, HeroTeam.Inhumans),
+            new HeroInfo("Karnak", GameInfo.Set.Inhumans, HeroTeam.Inhumans),
+            new HeroInfo("Medusa", GameInfo.Set.Inhumans, HeroTeam.Inhumans)
         };
 
         public List<string> GetHeroNameList(List<int> indicies)

@@ -99,7 +99,9 @@ namespace MarvelLegendary
             [Description("The New Mutants")]
             NewMutants,
             [Description("Into the Cosmos")]
-            Cosmos
+            Cosmos,
+            [Description("Realm of Kings")]
+            Inhumans
         }
 
         public GameInfo(int players)
@@ -216,7 +218,7 @@ namespace MarvelLegendary
                 SchemeHenchmen.Add(new Henchmen(henchmen));
             }
 
-            if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen)
+            if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen)
             {
                 SchemeHenchmen.Add(new Henchmen(exclusions.HenchmenList));
             }
@@ -270,6 +272,17 @@ namespace MarvelLegendary
             {
                 var hero = new Hero(true, "Hulk", allHeroes);
                 SchemeHeroes.Add(hero);
+            }
+
+            if (Scheme.SchemeInfo.IsRoyalWedding)
+            {
+                var excludedHeroes = new List<string>();
+                excludedHeroes.AddRange(from item in SchemeHeroes select item.HeroName);
+                excludedHeroes.AddRange(from item in Heroes select item.HeroName);
+
+                var test = GetHeroes(Scheme.SchemeInfo.RoyalWeddingHeroCount, SchemeHeroes, allHeroes, excludedHeroes, getExclusions);
+
+                SchemeHeroes.AddRange(from item in test select new Hero(item));
             }
 
             if (heroNames != null)
@@ -705,13 +718,23 @@ namespace MarvelLegendary
             if (numRemainingHeroes <= 0) return heroList;
 
             var returnList = new List<Hero>();
+            var heroes = GetHeroes(numRemainingHeroes, heroList, availableHeroes, excludedHeroes, getExclusions);
+
+            //returnList.AddRange(from item in heroesInGame select new Hero(item));
+            returnList.AddRange(from item in heroes select new Hero(item));
+
+            return returnList;
+        }
+
+        public List<string> GetHeroes(int heroCount, List<Hero> heroList, List<string> availableHeroes, List<string> excludedHeroes, IGetExclusions getExclusions)
+        {
             var heroesInGame = new List<string>(heroList.Select(x => x.HeroName));
 
             var availableHeroesWithoutExcludedHeroes = new List<string>(availableHeroes);
             availableHeroesWithoutExcludedHeroes = availableHeroesWithoutExcludedHeroes.Except(excludedHeroes).ToList();
 
             //If the required number of heroes from schemes hasn't reached the number of heroes for the player count, it will do this
-            for (int i = 0; i < numRemainingHeroes; i++)
+            for (int i = 0; i < heroCount; i++)
             {
                 var exclusions = DetermineHeroes.DetermineHeroList(Villains, AllMastermindsInGame, Henchmen, Scheme, heroesInGame, availableHeroesWithoutExcludedHeroes, getExclusions);
 
@@ -722,9 +745,7 @@ namespace MarvelLegendary
                 heroesInGame.Add(heroName);
             }
 
-            returnList.AddRange(from item in heroesInGame select new Hero(item));
-
-            return returnList;
+            return heroesInGame;
         }
 
         public List<Hero> GetNameLimitHeroes(string heroNamePart, List<string> availableHeroes, int numberOfHeroes)

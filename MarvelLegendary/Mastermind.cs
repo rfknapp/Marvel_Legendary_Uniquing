@@ -139,7 +139,12 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Grandmaster").SetMastermindSet(GameInfo.Set.Cosmos).LeadsVillain("Elders of the Universe").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Grandmaster").SetMastermindSet(GameInfo.Set.Cosmos).LeadsVillain("Elders of the Universe").Build(),
             new MastermindInfoBuilder().SetMastermindName("Magus").SetMastermindSet(GameInfo.Set.Cosmos).LeadsHenchmen("Universal Church of Truth").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Magus").SetMastermindSet(GameInfo.Set.Cosmos).LeadsHenchmen("Universal Church of Truth").Build()
+            new MastermindInfoBuilder().SetMastermindName("Epic Magus").SetMastermindSet(GameInfo.Set.Cosmos).LeadsHenchmen("Universal Church of Truth").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Emperor Vulcan of the Shi'ar").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Shi'ar Imperial Elite").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Emperor Vulcan").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Shi'ar Imperial Elite").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Maximus the Mad").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Inhuman Rebellion").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Maximus the Mad").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Inhuman Rebellion").Build()
         };
 
         public Mastermind()

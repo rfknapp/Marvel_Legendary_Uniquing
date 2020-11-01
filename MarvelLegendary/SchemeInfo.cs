@@ -21,6 +21,7 @@ namespace MarvelLegendary
         public bool IncludeNewRecruits { get; set; }
         public bool IncludeMadameHydra { get; set; }
         public bool IncludeHorrors { get; set; }
+        public bool IsRoyalWedding { get; set; }
 
         //Wounds/Bindings
         public int WoundCount { get; set; }
@@ -49,6 +50,7 @@ namespace MarvelLegendary
         public bool HasAnnihilationHenchmen { get; set; }
         public bool IsHenchmenInHeroDeck { get; set; }
         public bool IsSmugglerHenchmen { get; set; }
+        public bool IsXerogenHenchmen { get; set; }
 
         //Villains
         public List<int> Villains { get; set; }
@@ -92,6 +94,7 @@ namespace MarvelLegendary
         public bool IsDarkLoyalty { get; set; }
         public bool IsSoulsHero { get; set; }
         public Hero SoulsHero { get; set; }
+        public int RoyalWeddingHeroCount { get; set; }
 
         //Sidekicks
         public int SidekicksInVillainDeck { get; set; }

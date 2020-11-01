@@ -145,7 +145,10 @@ namespace MarvelLegendary
             new VillainInfo("Black Order of Thanos", GameInfo.Set.Cosmos),
             new VillainInfo("Celestials", GameInfo.Set.Cosmos),
             new VillainInfo("From Beyond", GameInfo.Set.Cosmos),
-            new VillainInfo("Elders of the Universe", GameInfo.Set.Cosmos)
+            new VillainInfo("Elders of the Universe", GameInfo.Set.Cosmos),
+
+            new VillainInfo("Shi'ar Imperial Elite", GameInfo.Set.Inhumans),
+            new VillainInfo("Inhuman Rebellion", GameInfo.Set.Inhumans)
         };
 
         public Villain()
