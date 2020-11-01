@@ -32,6 +32,7 @@ namespace MarvelLegendary
                 IncludeNewRecruits = false,
                 IncludeMadameHydra = false,
                 IncludeHorrors = false,
+                IsRoyalWedding = false,
 
                 //Wounds/Bindings
                 WoundCount = -1,
@@ -60,6 +61,7 @@ namespace MarvelLegendary
                 IsHenchmenInHeroDeck = false,
                 IsHenchmenNextToScheme = false,
                 IsSmugglerHenchmen = false,
+                IsXerogenHenchmen = false,
 
                 //Villains
                 Villains = new List<int> { 1, 2, 3, 3, 4 },
@@ -100,6 +102,7 @@ namespace MarvelLegendary
                 IsHulkDeck = false,
                 IsSoulsHero = false,
                 SoulsHero = null,
+                RoyalWeddingHeroCount = 0,
 
                 //Sidekicks
                 SidekicksInVillainDeck = 0,
@@ -496,6 +499,19 @@ namespace MarvelLegendary
         public SchemeInfoBuilder IncludeHorrors()
         {
             _schemeInfo.IncludeHorrors = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder AddXerogenHenchmen()
+        {
+            _schemeInfo.IsXerogenHenchmen = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetRoyalWedding()
+        {
+            _schemeInfo.IsRoyalWedding = true;
+            _schemeInfo.RoyalWeddingHeroCount = 2;
             return this;
         }
 
