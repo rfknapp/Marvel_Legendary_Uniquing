@@ -119,7 +119,7 @@ namespace MarvelLegendary
             
             new SchemeInfoBuilder().SetSchemeName("Deadpool Kills the Marvel Universe").SetSchemeSet(GameInfo.Set.Deadpool).SetHeroCount(new List<int> {4,5,5,5,6}).SetSchemeTwists(new List<int> { 6, 6, 6, 5, 5}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Deadpool Wants a Chimichanga").SetSchemeSet(GameInfo.Set.Deadpool).SetSchemeTwists(6).SetBystanderCount(12).SetVillainCount(new List<int> { 1, 2, 4, 4, 5}).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Deadpool Writes a Scheme").SetSchemeSet(GameInfo.Set.Deadpool).SetSchemeTwists(6).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Deadpool Writes a Scheme").SetSchemeSet(GameInfo.Set.Deadpool).SetNumberOfHeroWithNameLike(1, "Deadpool").SetSchemeTwists(6).Build(),
             new SchemeInfoBuilder().SetSchemeName("Everybody Hates Deadpool").SetSchemeSet(GameInfo.Set.Deadpool).SetSchemeTwists(6).IncludeHeroTeams(1, HeroTeam.MercsForMoney).Build(),
             
             new SchemeInfoBuilder().SetSchemeName("Find the Split Personality Killer").SetSchemeSet(GameInfo.Set.Noir).Build(),
