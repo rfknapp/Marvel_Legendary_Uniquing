@@ -121,11 +121,11 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Mandarin").SetMastermindSet(GameInfo.Set.Revelations).LeadsHenchmen("Mandarin's Rings").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Mandarin").SetMastermindSet(GameInfo.Set.Revelations).LeadsHenchmen("Mandarin's Rings").Build(),
             
-            new MastermindInfoBuilder().SetMastermindName("Hydra High Council").SetMastermindSet(GameInfo.Set.Shield).LeadsVillain("").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Hydra High Council").SetMastermindSet(GameInfo.Set.Shield).LeadsVillain("Hydra Elite").Build(),
             new MastermindInfoBuilder().SetMastermindName("Hydra Sper-Adaptoid").SetMastermindSet(GameInfo.Set.Shield).LeadsHenchmen("A.I.M., Hydra Offshoot").Build(),
             
-            new MastermindInfoBuilder().SetMastermindName("Hela").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Omens of Rangarok").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Hela").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Omens of Rangarok").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Hela").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Omens of Ragnarok").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Hela").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Omens of Ragnarok").Build(),
             new MastermindInfoBuilder().SetMastermindName("Malekith").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Dark Council").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Malekith").SetMastermindSet(GameInfo.Set.Asgard).LeadsVillain("Dark Council").Build(),
 
@@ -144,7 +144,12 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Emperor Vulcan of the Shi'ar").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Shi'ar Imperial Elite").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Emperor Vulcan").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Shi'ar Imperial Elite").Build(),
             new MastermindInfoBuilder().SetMastermindName("Maximus the Mad").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Inhuman Rebellion").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Maximus the Mad").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Inhuman Rebellion").Build()
+            new MastermindInfoBuilder().SetMastermindName("Epic Maximus the Mad").SetMastermindSet(GameInfo.Set.Inhumans).LeadsVillain("Inhuman Rebellion").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Annihilus").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Annihilation Wave").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Annihilus").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Annihilation Wave").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Kang the Conqueror").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Timelines of Kang").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Kang the Conqueror").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Timelines of Kang").Build()
         };
 
         public Mastermind()
@@ -173,7 +178,7 @@ namespace MarvelLegendary
             DoesLeadVillain = mastermindInfo.DoesLeadVillain;
             MastermindInfo = mastermindInfo;
         }
-
+        
         public Mastermind(string mastermindName)
         {
             var mastermindInfo = _masterminds.First(x => x.MastermindName == mastermindName);

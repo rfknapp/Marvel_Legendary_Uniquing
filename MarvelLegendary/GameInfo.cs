@@ -101,7 +101,9 @@ namespace MarvelLegendary
             [Description("Into the Cosmos")]
             Cosmos,
             [Description("Realm of Kings")]
-            Inhumans
+            Inhumans,
+            [Description("Annihilation")]
+            Annihilation
         }
 
         public GameInfo(int players)
@@ -221,6 +223,7 @@ namespace MarvelLegendary
             if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen)
             {
                 SchemeHenchmen.Add(new Henchmen(exclusions.HenchmenList));
+                Scheme.NumberOfHenchmen += 1;
             }
 
             if (henchmenNames != null)

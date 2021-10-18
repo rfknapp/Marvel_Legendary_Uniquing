@@ -164,7 +164,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Super Hero Civil War (Super Hero Civil War)").SetSchemeSet(GameInfo.Set.P1).CannotBeSolo().SetSchemeTwists(new List<int> { 0,8,8,5,5}).SetHeroCount(new List<int> {0,4,5,5,6}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Unleash the Power of the Cosmic Cube (Unleash The Power Of The Cosmic Cube)").SetSchemeSet(GameInfo.Set.P1).Build(),
             
-            new SchemeInfoBuilder().SetSchemeName("Age of Ultron").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(7).SetHeroCount(new List<int> { 3, 5, 5, 6, 7}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Age of Ultron").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(11).SetHeroCount(new List<int> { 3, 5, 5, 6, 7}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Pull Earth Into Midieval Times").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(9).Build(),
             new SchemeInfoBuilder().SetSchemeName("Transform Commuters Into Giant Ants").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(new List<int> { 7, 8, 9, 10, 11}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Trap Heroes In The Microverse").SetSchemeSet(GameInfo.Set.Antman).SetSchemeTwists(11).HeroesInVillainDeck(1).Build(),
@@ -202,14 +202,19 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Devolve with Xerogen Crystals").SetSchemeSet(GameInfo.Set.Inhumans).SetSchemeTwists(new List<int>{4,5,6,7,8}).AddXerogenHenchmen().Build(),
             new SchemeInfoBuilder().SetSchemeName("Ruin the Perfect Wedding").SetSchemeSet(GameInfo.Set.Inhumans).SetRoyalWedding().Build(),
             new SchemeInfoBuilder().SetSchemeName("Tornado of Terrigen Mists").SetSchemeSet(GameInfo.Set.Inhumans).SetSchemeTwists(10).AddAdditionalVillain(1).Build(),
-            new SchemeInfoBuilder().SetSchemeName("War of Kings").SetSchemeSet(GameInfo.Set.Inhumans).SetSchemeTwists(11).Build()
+            new SchemeInfoBuilder().SetSchemeName("War of Kings").SetSchemeSet(GameInfo.Set.Inhumans).SetSchemeTwists(11).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Breach Parallel Dimensions").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(6).IncreaseBystanders(4).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Pulse Waves from the Negative Zone").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(9).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Put Humanity on Trial").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(11).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Sneak Attack the Heroes").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(6).Build()
         };
 
         public Scheme(int playerCount, string schemeName)
         {
             var schemeInfo = _schemes.First(x => x.SchemeName == schemeName);
 
-            if (schemeInfo.SchemeName == "The Kree-Skrull War" && playerCount < 3)
+            if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)
             {
                 playerCount = 3;
             }
@@ -246,7 +251,7 @@ namespace MarvelLegendary
             HeroesInVillainDeck = schemeInfo.HeroesInVillainDeck;
             RandomHeroesInVillainDeck = schemeInfo.NumberOfHeroesInVillainDeck;
 
-            BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1];
+            BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1] + schemeInfo.AdditionalBystanders;
             BystandersInHeroDeck = schemeInfo.BystandersInHeroDeck[playerCount - 1];
             IsBystandersInHeroDeck = schemeInfo.IsBystandersInHeroDeck;
 
@@ -270,7 +275,7 @@ namespace MarvelLegendary
                 schemeInfo = _schemes.First(x => x.SchemeName == schemeName);
             }
 
-            if (RequiredVillains != null && RequiredVillains.Count > 1 && playerCount < 3)
+            if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)
             {
                 playerCount = 3;
             }
@@ -307,7 +312,7 @@ namespace MarvelLegendary
             HeroesInVillainDeck = schemeInfo.HeroesInVillainDeck;
             RandomHeroesInVillainDeck = schemeInfo.NumberOfHeroesInVillainDeck;
 
-            BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1];
+            BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1] + schemeInfo.AdditionalBystanders;
             BystandersInHeroDeck = schemeInfo.BystandersInHeroDeck[playerCount-1];
             IsBystandersInHeroDeck = schemeInfo.IsBystandersInHeroDeck;
 

@@ -148,7 +148,10 @@ namespace MarvelLegendary
             new VillainInfo("Elders of the Universe", GameInfo.Set.Cosmos),
 
             new VillainInfo("Shi'ar Imperial Elite", GameInfo.Set.Inhumans),
-            new VillainInfo("Inhuman Rebellion", GameInfo.Set.Inhumans)
+            new VillainInfo("Inhuman Rebellion", GameInfo.Set.Inhumans),
+
+            new VillainInfo("Annihilation Wave", GameInfo.Set.Annihilation),
+            new VillainInfo("Timelines of Kang", GameInfo.Set.Annihilation)
         };
 
         public Villain()

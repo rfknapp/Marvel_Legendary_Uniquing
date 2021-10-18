@@ -39,6 +39,7 @@ namespace MarvelLegendary
         public int BystandersNextToScheme { get; set; }
         public bool IsBystandersNextToScheme { get; set; }
         public bool IsBystandersInHeroDeck { get; set; }
+        public int AdditionalBystanders { get; set; }
 
         //Henchmen
         public List<int> Henchmen { get; set; }
