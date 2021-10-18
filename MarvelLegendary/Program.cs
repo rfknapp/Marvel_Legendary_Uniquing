@@ -6,13 +6,12 @@ namespace MarvelLegendary
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            int output;
             Console.WriteLine("How many players are playing? (1-5)");
             var playerCount = Console.ReadLine();
 
-            while (int.TryParse(playerCount, out output) && int.Parse(playerCount) > 0 && int.Parse(playerCount) < 6)
+            while (int.TryParse(playerCount, out _) && int.Parse(playerCount) > 0 && int.Parse(playerCount) < 6)
             {
                 var game = new GameInfo(int.Parse(playerCount));
                 game.SetMastermind();
@@ -45,9 +44,7 @@ namespace MarvelLegendary
             var villainOutput = $"Villains are {new Villain().ToString(game.Villains)}\r\n";
             var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {new Hero().ToString(game.VillainHeroes)}\r\n" : "";
             var henchmenOutput = "Henchmen " + (game.Henchmen.Count==1 ? "is" : "are") + $" {new Henchmen().ToString(game.Henchmen)}\r\n";
-            var xerogenHenchmenOutput = game.Scheme.SchemeInfo.IsXerogenHenchmen ? $"All {new Henchmen().ToString(game.SchemeHenchmen)} are Xerogen Expiraments\r\n" : "";
             var heroesOutput = $"Heroes are {new Hero().ToString(game.Heroes)}\r\n";
-            var royalWeddingHeroes = schemeInfo.IsRoyalWedding ? $"\r\nInclude the following heroes as Wedding Heroes: {new Hero().ToString(game.SchemeHeroes)}\r\n" : "";
             var twistsBystanderAndMasterStrikeOutput = $"Include {scheme.Twists} Scheme Twists, 5 Master Strikes, and {scheme.BystandersInVillainDeck} Bystanders in the Villain deck.\r\n";
             var woundsOutput = game.CustomWoundNumber ? $"There are {game.WoundNumber} wounds in the wound deck.\r\n": "";
             var twistsNextToScheme = scheme.IsSchemeTwistsNextToScheme ? $"Place {scheme.NumberTwistsNextToScheme} Twists next to the Scheme\r\n": "";
@@ -83,17 +80,27 @@ namespace MarvelLegendary
             var hasDarkLoyalty = game.Scheme.SchemeInfo.IsDarkLoyalty ? $"Include 5 cards that cost 5 or less from the hero {game.Scheme.SchemeInfo.DarkLoyaltyHero}.\r\n" : "";
             var isContestOfChampions = game.Scheme.SchemeInfo.SchemeName == "The Contest of Champions" ? "Put 11 random cards from the Hero Deck face up in a Contest Row\r\n" : "";
             var isInvasionHero = game.Scheme.SchemeInfo.SchemeName.Contains("Skrull Shapeshifters") ? "Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.\r\n" : "";
-            var xerogenHenchmen = schemeInfo.IsXerogenHenchmen ? $"Include 10 cards from the following Henchmen group as a Xerogen Expirament:{new Henchmen().ToString(game.SchemeHenchmen)}\r\n" : "";
+            var sneakAttackString = game.Scheme.SchemeInfo.SchemeName == "Sneak Attack the Heroes" ? SneakAttackRuleGenerator(game.PlayerCount, game.Heroes) : "";
 
-            var returnString = playerCount + mastermindOutput + schemeOutput + villainOutput + villainHeroOutput + henchmenOutput + xerogenHenchmenOutput + heroesOutput + royalWeddingHeroes + twistsBystanderAndMasterStrikeOutput
-                + woundsOutput  + twistsNextToScheme + heroBystandersOutput + heroesInVillainDeck + heroHenchmen + bindingsInGame + henchmenNextToScheme + villainCardNextToScheme
+            var returnString = playerCount + mastermindOutput + schemeOutput + villainOutput + villainHeroOutput + henchmenOutput + heroesOutput + twistsBystanderAndMasterStrikeOutput + woundsOutput
+                + twistsNextToScheme + heroBystandersOutput + heroesInVillainDeck + heroHenchmen + bindingsInGame + henchmenNextToScheme + villainCardNextToScheme
                 + bystandersNextToScheme + shardCount + betrayalDeck + annihilationHenchmen + villainSidekicks + darkAllianceMastermind + tyrantVillain + secretWarsMasterminds + ambitions
                 + villainOfficers + tacticsInVillainDeck + monumentDeck + smugglerHenchmen + monsterDeck + infectedDeck + mutationDeck + hulkDeck + worldWarHulkMasterminds + drainedMastermind
-                + hasBindings + hasNewRecruits + hasMadameHydra + hasHorrors + hasDarkLoyalty + isContestOfChampions + isInvasionHero + xerogenHenchmen + "\r\n\r\n";
+                + hasBindings + hasNewRecruits + hasMadameHydra + hasHorrors + hasDarkLoyalty + isContestOfChampions + isInvasionHero + $"\r\n{sneakAttackString}\r\n";
 
             return returnString;
         }
 
+        private static string SneakAttackRuleGenerator(int playerCount, List<Hero> heroes)
+        {
+            var returnString = "";
+            for (int i = 0; i < playerCount; i++)
+            {
+                returnString = $"{returnString}Player {i + 1} chooses three non-rare cards with different names from the {heroes[i].HeroName} deck and three wounds and adds them to their deck.\r\n";
+            }
+
+            return returnString;
+        }
 
     }
 }

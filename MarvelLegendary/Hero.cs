@@ -348,7 +348,13 @@ namespace MarvelLegendary
             new HeroInfo("Crystal", GameInfo.Set.Inhumans, HeroTeam.Inhumans),
             new HeroInfo("Gorgon", GameInfo.Set.Inhumans, HeroTeam.Inhumans),
             new HeroInfo("Karnak", GameInfo.Set.Inhumans, HeroTeam.Inhumans),
-            new HeroInfo("Medusa", GameInfo.Set.Inhumans, HeroTeam.Inhumans)
+            new HeroInfo("Medusa", GameInfo.Set.Inhumans, HeroTeam.Inhumans),
+
+            new HeroInfo("Brainstorm", GameInfo.Set.Annihilation, HeroTeam.FantasticFour),
+            new HeroInfo("Fantastic Four United", GameInfo.Set.Annihilation, HeroTeam.FantasticFour),
+            new HeroInfo("Heralds of Galactus", GameInfo.Set.Annihilation, HeroTeam.Unaffiliated),
+            new HeroInfo("Psi-Lord", GameInfo.Set.Annihilation, HeroTeam.FantasticFour),
+            new HeroInfo("Super-Skrull", GameInfo.Set.Annihilation, HeroTeam.Unaffiliated)
         };
 
         public List<string> GetHeroNameList(List<int> indicies)

@@ -50,6 +50,7 @@ namespace MarvelLegendary
                 BystandersNextToScheme = 0,
                 IsBystandersNextToScheme = false,
                 IsBystandersInHeroDeck = false,
+                AdditionalBystanders = 0,
 
                 //Henchmen
                 Henchmen = new List<int> { 1, 1, 1, 2, 2 },
@@ -512,6 +513,12 @@ namespace MarvelLegendary
         {
             _schemeInfo.IsRoyalWedding = true;
             _schemeInfo.RoyalWeddingHeroCount = 2;
+            return this;
+        }
+
+        public SchemeInfoBuilder IncreaseBystanders(int additionalBystanders)
+        {
+            _schemeInfo.AdditionalBystanders = additionalBystanders;
             return this;
         }
 
