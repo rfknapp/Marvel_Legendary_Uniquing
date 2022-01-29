@@ -33,6 +33,7 @@ namespace MarvelLegendary
                 IncludeMadameHydra = false,
                 IncludeHorrors = false,
                 IsRoyalWedding = false,
+                isVeiled = false,
 
                 //Wounds/Bindings
                 WoundCount = -1,
@@ -513,6 +514,12 @@ namespace MarvelLegendary
         {
             _schemeInfo.IsRoyalWedding = true;
             _schemeInfo.RoyalWeddingHeroCount = 2;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetVeiledScheme()
+        {
+            _schemeInfo.isVeiled = true;
             return this;
         }
 

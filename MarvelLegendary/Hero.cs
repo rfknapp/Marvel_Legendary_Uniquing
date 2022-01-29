@@ -65,7 +65,9 @@ namespace MarvelLegendary
         [Description("Heroes of Asgard")]
         HeroesOfAsgard,
         [Description("Inhumans")]
-        Inhumans
+        Inhumans,
+        [Description("X-Factor Investigations")]
+        XFactor
     };
 
     public class HeroInfo
@@ -354,7 +356,16 @@ namespace MarvelLegendary
             new HeroInfo("Fantastic Four United", GameInfo.Set.Annihilation, HeroTeam.FantasticFour),
             new HeroInfo("Heralds of Galactus", GameInfo.Set.Annihilation, HeroTeam.Unaffiliated),
             new HeroInfo("Psi-Lord", GameInfo.Set.Annihilation, HeroTeam.FantasticFour),
-            new HeroInfo("Super-Skrull", GameInfo.Set.Annihilation, HeroTeam.Unaffiliated)
+            new HeroInfo("Super-Skrull", GameInfo.Set.Annihilation, HeroTeam.Unaffiliated),
+
+            new HeroInfo("M", GameInfo.Set.Messiah, HeroTeam.XFactor),
+            new HeroInfo("Multiple Man", GameInfo.Set.Messiah, HeroTeam.XFactor),
+            new HeroInfo("Rictor", GameInfo.Set.Messiah, HeroTeam.XFactor),
+            new HeroInfo("Shatterstar", GameInfo.Set.Messiah, HeroTeam.XForce),
+            new HeroInfo("Siryn", GameInfo.Set.Messiah, HeroTeam.XFactor),
+            new HeroInfo("Stepford Cuckoos", GameInfo.Set.Messiah, HeroTeam.XMen),
+            new HeroInfo("Strong Guy", GameInfo.Set.Messiah, HeroTeam.XFactor),
+            new HeroInfo("Warpath", GameInfo.Set.Messiah, HeroTeam.XForce)
         };
 
         public List<string> GetHeroNameList(List<int> indicies)

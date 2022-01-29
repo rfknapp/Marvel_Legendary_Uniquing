@@ -32,6 +32,7 @@ namespace MarvelLegendary
         public List<Henchmen> AllHenchmenInGame { get; set; }
 
         public Scheme Scheme { get; set; }
+        public UnveiledScheme UnveiledScheme { get; set; }
 
         public int PlayerCount { get; set; }
         public int MastermindCount { get; set; }
@@ -103,7 +104,9 @@ namespace MarvelLegendary
             [Description("Realm of Kings")]
             Inhumans,
             [Description("Annihilation")]
-            Annihilation
+            Annihilation,
+            [Description("Messiah Complex")]
+            Messiah
         }
 
         public GameInfo(int players)
@@ -133,6 +136,7 @@ namespace MarvelLegendary
             VillainCount = 0;
             HenchmenCount = 0;
             GameIncludeHeroTeam = false;
+            UnveiledScheme = null;
         }
 
         public void SetMastermind(string mastermindName = "")
@@ -141,15 +145,20 @@ namespace MarvelLegendary
             AllMastermindsInGame.Add(Mastermind);
         }
 
-        public void SetScheme(string schemenName = "")
+        public void SetScheme(string schemeName = "")
         {
-            Scheme = schemenName == "" ? new Scheme(PlayerCount, Mastermind) : new Scheme(PlayerCount, schemenName);
+            Scheme = schemeName == "" ? new Scheme(PlayerCount, Mastermind) : new Scheme(PlayerCount, schemeName);
             PlayerCount = Scheme.NumberOfPlayers;
 
             WoundNumber = GetWoundInformation(Scheme.CustomWoundNumber, Scheme.Wounds);
             CustomWoundNumber = Scheme.CustomWoundNumber;
             BindingNumber = Scheme.SchemeInfo.BindingPerPlayer[PlayerCount - 1];
             NumberHenchmenNextToScheme = Scheme.SchemeInfo.HenchmenNextToSchemePerPlayer[PlayerCount - 1];
+        }
+
+        public void SetUnVeiledScheme(string schemeName = "")
+        {
+            UnveiledScheme = new UnveiledScheme(schemeName);
         }
 
         public void SetExtraMasterminds()

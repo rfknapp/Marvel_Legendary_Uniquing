@@ -62,6 +62,16 @@ namespace MarvelLegendary
             return this;
         }
 
+        public MastermindInfoBuilder LeadsHenchmenByKind(string henchmenKind)
+        {
+            var henchmenList = new Henchmen().GetListOfHenchmen();
+            var henchmenNames = (henchmenList.Where(item => item.Contains(henchmenKind))).ToList();
+
+            _mastermindInfo.LeadsHenchmen = henchmenNames[new Random().Next(henchmenNames.Count)];
+            _mastermindInfo.DoesLeadHenchmen = true;
+            return this;
+        }
+
         public MastermindInfoBuilder IncludeBindings()
         {
             _mastermindInfo.IncludeBindings = true;

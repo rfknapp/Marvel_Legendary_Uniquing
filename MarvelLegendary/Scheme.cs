@@ -5,6 +5,27 @@ using System.Linq;
 
 namespace MarvelLegendary
 {
+
+    public class UnveiledScheme
+    {
+        public string SchemeName { get; set; }
+        public string SetName { get; set; }
+
+        private readonly List<SchemeInfo> _unveiledSchemes = new List<SchemeInfo>()
+        {
+            new SchemeInfoBuilder().SetSchemeName("...Control The Mutant Messiah").SetSchemeSet(GameInfo.Set.Messiah).Build(),
+            new SchemeInfoBuilder().SetSchemeName("...Open Rifts To Future Timelines").SetSchemeSet(GameInfo.Set.Messiah).Build(),
+            new SchemeInfoBuilder().SetSchemeName("...Reveal The Heroes' Evil Clones").SetSchemeSet(GameInfo.Set.Messiah).Build(),
+            new SchemeInfoBuilder().SetSchemeName("...Unleash An Anti-Mutant Bioweapon").SetSchemeSet(GameInfo.Set.Messiah).Build()
+        };
+
+        public UnveiledScheme(string schemeName = "")
+        {
+            var schemeInfo = schemeName == "" ? _unveiledSchemes[new Random().Next(_unveiledSchemes.Count)] : _unveiledSchemes.First(x => x.SchemeName == schemeName);
+            SchemeName = schemeInfo.SchemeName;
+            SetName = schemeInfo.SetName;
+        }
+    }
     public class Scheme
     {
         public string SchemeName { get; set; }
@@ -207,7 +228,12 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Breach Parallel Dimensions").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(6).IncreaseBystanders(4).Build(),
             new SchemeInfoBuilder().SetSchemeName("Pulse Waves from the Negative Zone").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(9).Build(),
             new SchemeInfoBuilder().SetSchemeName("Put Humanity on Trial").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(11).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Sneak Attack the Heroes").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(6).Build()
+            new SchemeInfoBuilder().SetSchemeName("Sneak Attack the Heroes").SetSchemeSet(GameInfo.Set.Annihilation).SetSchemeTwists(6).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Drain Mutants' Powers To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(11).SetVeiledScheme().Build(),
+            new SchemeInfoBuilder().SetSchemeName("Hack Cerebro Servers To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(10).SetVeiledScheme().Build(),
+            new SchemeInfoBuilder().SetSchemeName("Hire Singularity Investigations To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(9).SetVeiledScheme().Build(),
+            new SchemeInfoBuilder().SetSchemeName("Raid Gene Banks To...").SetSchemeSet(GameInfo.Set.Messiah).SetVeiledScheme().Build()
         };
 
         public Scheme(int playerCount, string schemeName)
