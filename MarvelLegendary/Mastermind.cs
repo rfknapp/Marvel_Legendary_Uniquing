@@ -149,7 +149,14 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Annihilus").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Annihilation Wave").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Annihilus").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Annihilation Wave").Build(),
             new MastermindInfoBuilder().SetMastermindName("Kang the Conqueror").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Timelines of Kang").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Kang the Conqueror").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Timelines of Kang").Build()
+            new MastermindInfoBuilder().SetMastermindName("Epic Kang the Conqueror").SetMastermindSet(GameInfo.Set.Annihilation).LeadsVillain("Timelines of Kang").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Bastion, Fused Sentinel").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Purifiers").LeadsHenchmenByKind("Sentinel").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Bastion, Fused Sentinel").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Purifiers").LeadsHenchmenByKind("Sentinel").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Exodus").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Acolytes").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Exodus").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Acolytes").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build()
         };
 
         public Mastermind()

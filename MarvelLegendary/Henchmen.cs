@@ -41,40 +41,40 @@ namespace MarvelLegendary
 
         private readonly List<HenchmenInfo> _hechmen = new List<HenchmenInfo>()
         {
-            new HenchmenInfo("Doombot Legion", GameInfo.Set.Core, "Ten Ring Fantatics"), //a
-            new HenchmenInfo("Hand Ninjas", GameInfo.Set.Core, "HYDRA Piots"), //b
-            new HenchmenInfo("Savage Land Mutates", GameInfo.Set.Core, "HYDRA Spies"), //c
-            new HenchmenInfo("Sentinels", GameInfo.Set.Core, "Hammer Drone Army"), //d
+            new HenchmenInfo("Doombot Legion", GameInfo.Set.Core, "Ten Ring Fantatics"),
+            new HenchmenInfo("Hand Ninjas", GameInfo.Set.Core, "HYDRA Piots"),
+            new HenchmenInfo("Savage Land Mutates", GameInfo.Set.Core, "HYDRA Spies"),
+            new HenchmenInfo("Sentinels", GameInfo.Set.Core, "Hammer Drone Army"),
             
-            new HenchmenInfo("Maggia Goons", GameInfo.Set.Dc), //e
-            new HenchmenInfo("Phalanx", GameInfo.Set.Dc), //f
+            new HenchmenInfo("Maggia Goons", GameInfo.Set.Dc),
+            new HenchmenInfo("Phalanx", GameInfo.Set.Dc),
             
-            new HenchmenInfo("Asgardian Warriors", GameInfo.Set.Villains), //g
-            new HenchmenInfo("Cops", GameInfo.Set.Villains, true), //h
-            new HenchmenInfo("Multiple Man", GameInfo.Set.Villains), //i
-            new HenchmenInfo("S.H.I.E.L.D. Assault Squad", GameInfo.Set.Villains), //j
+            new HenchmenInfo("Asgardian Warriors", GameInfo.Set.Villains),
+            new HenchmenInfo("Cops", GameInfo.Set.Villains, true),
+            new HenchmenInfo("Multiple Man", GameInfo.Set.Villains),
+            new HenchmenInfo("S.H.I.E.L.D. Assault Squad", GameInfo.Set.Villains),
              
-            new HenchmenInfo("Ghost Racers", GameInfo.Set.Sw1), //k
-            new HenchmenInfo("M.O.D.O.K.s", GameInfo.Set.Sw1), //l
-            new HenchmenInfo("Thor Corps", GameInfo.Set.Sw1), //m
+            new HenchmenInfo("Ghost Racers", GameInfo.Set.Sw1),
+            new HenchmenInfo("M.O.D.O.K.s", GameInfo.Set.Sw1),
+            new HenchmenInfo("Thor Corps", GameInfo.Set.Sw1),
              
-            new HenchmenInfo("Khonshu Guardians", GameInfo.Set.Sw2), //n
-            new HenchmenInfo("Magma Men", GameInfo.Set.Sw2), //o
-            new HenchmenInfo("Spider-Infected", GameInfo.Set.Sw2), //p
+            new HenchmenInfo("Khonshu Guardians", GameInfo.Set.Sw2),
+            new HenchmenInfo("Magma Men", GameInfo.Set.Sw2),
+            new HenchmenInfo("Spider-Infected", GameInfo.Set.Sw2),
              
-            new HenchmenInfo("Cape-killers", GameInfo.Set.Cw), //q
-            new HenchmenInfo("Mandroids", GameInfo.Set.Cw), //r
+            new HenchmenInfo("Cape-killers", GameInfo.Set.Cw),
+            new HenchmenInfo("Mandroids", GameInfo.Set.Cw),
              
-            new HenchmenInfo("Circus of Crime", GameInfo.Set.ThreeD), //s
-            new HenchmenInfo("Spider-Slayer", GameInfo.Set.ThreeD), //t
+            new HenchmenInfo("Circus of Crime", GameInfo.Set.ThreeD),
+            new HenchmenInfo("Spider-Slayer", GameInfo.Set.ThreeD),
             
-            new HenchmenInfo("The Brood", GameInfo.Set.XMen), //u
-            new HenchmenInfo("Hellfire Cult", GameInfo.Set.XMen), //v
-            new HenchmenInfo("Sapien League", GameInfo.Set.XMen), //w
-            new HenchmenInfo("Shi'ar Death Commandos", GameInfo.Set.XMen), //x
-            new HenchmenInfo("Shi'ar Patrol Craft", GameInfo.Set.XMen), //y
+            new HenchmenInfo("The Brood", GameInfo.Set.XMen),
+            new HenchmenInfo("Hellfire Cult", GameInfo.Set.XMen),
+            new HenchmenInfo("Sapien League", GameInfo.Set.XMen),
+            new HenchmenInfo("Shi'ar Death Commandos", GameInfo.Set.XMen),
+            new HenchmenInfo("Shi'ar Patrol Craft", GameInfo.Set.XMen),
              
-            new HenchmenInfo("Cytoplasm Spikes", GameInfo.Set.Wwh), //z
+            new HenchmenInfo("Cytoplasm Spikes", GameInfo.Set.Wwh),
             new HenchmenInfo("Death's Heads", GameInfo.Set.Wwh),
             new HenchmenInfo("Sakaaran Hivelings", GameInfo.Set.Wwh),
             
@@ -87,7 +87,10 @@ namespace MarvelLegendary
             new HenchmenInfo("Mandarin's Rings", GameInfo.Set.Revelations),
 
             new HenchmenInfo("Sidera Maris, Bridge Builders", GameInfo.Set.Cosmos),
-            new HenchmenInfo("Universal Church of Truth", GameInfo.Set.Cosmos)
+            new HenchmenInfo("Universal Church of Truth", GameInfo.Set.Cosmos),
+
+            new HenchmenInfo("Mr. Sinister Clones", GameInfo.Set.Messiah),
+            new HenchmenInfo("Sentinel Squad O*N*E*", GameInfo.Set.Messiah)
         };
 
         public Henchmen()

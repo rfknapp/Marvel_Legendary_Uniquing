@@ -151,7 +151,12 @@ namespace MarvelLegendary
             new VillainInfo("Inhuman Rebellion", GameInfo.Set.Inhumans),
 
             new VillainInfo("Annihilation Wave", GameInfo.Set.Annihilation),
-            new VillainInfo("Timelines of Kang", GameInfo.Set.Annihilation)
+            new VillainInfo("Timelines of Kang", GameInfo.Set.Annihilation),
+
+            new VillainInfo("Acolytes", GameInfo.Set.Messiah),
+            new VillainInfo("Clan Yashida", GameInfo.Set.Messiah),
+            new VillainInfo("Purifiers", GameInfo.Set.Messiah),
+            new VillainInfo("Reavers", GameInfo.Set.Messiah),
         };
 
         public Villain()

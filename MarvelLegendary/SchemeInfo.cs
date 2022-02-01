@@ -22,6 +22,7 @@ namespace MarvelLegendary
         public bool IncludeMadameHydra { get; set; }
         public bool IncludeHorrors { get; set; }
         public bool IsRoyalWedding { get; set; }
+        public bool isVeiled { get; set; }
 
         //Wounds/Bindings
         public int WoundCount { get; set; }

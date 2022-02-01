@@ -28,6 +28,14 @@ namespace MarvelLegendary
                 Console.Clear();
                 Console.Out.Write(gameText);
 
+                if(game.Scheme.SchemeInfo.isVeiled)
+                {
+                    game.SetUnVeiledScheme();
+                    Console.WriteLine("Press any key to reveal unveiled scheme.");
+                    Console.ReadLine();
+                    Console.WriteLine($"Unveiled scheme is\r\n1) {game.UnveiledScheme.SchemeName}, {game.UnveiledScheme.SetName}\r\n\r\n");
+                }
+
                 Console.WriteLine("How many players are playing? (0 to quit)");
                 playerCount = Console.ReadLine();
             }
