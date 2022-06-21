@@ -106,7 +106,9 @@ namespace MarvelLegendary
             [Description("Annihilation")]
             Annihilation,
             [Description("Messiah Complex")]
-            Messiah
+            Messiah,
+            [Description("Doctor Strange")]
+            DoctorStrange
         }
 
         public GameInfo(int players)

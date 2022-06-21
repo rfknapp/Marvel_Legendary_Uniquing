@@ -365,7 +365,13 @@ namespace MarvelLegendary
             new HeroInfo("Siryn", GameInfo.Set.Messiah, HeroTeam.XFactor),
             new HeroInfo("Stepford Cuckoos", GameInfo.Set.Messiah, HeroTeam.XMen),
             new HeroInfo("Strong Guy", GameInfo.Set.Messiah, HeroTeam.XFactor),
-            new HeroInfo("Warpath", GameInfo.Set.Messiah, HeroTeam.XForce)
+            new HeroInfo("Warpath", GameInfo.Set.Messiah, HeroTeam.XForce),
+
+            new HeroInfo("The Ancient One", GameInfo.Set.DoctorStrange, HeroTeam.Unaffiliated),
+            new HeroInfo("Clea", GameInfo.Set.DoctorStrange, HeroTeam.MarvelKnights),
+            new HeroInfo("Doctor Strange", GameInfo.Set.DoctorStrange, HeroTeam.Avengers),
+            new HeroInfo("Doctor Voodoo", GameInfo.Set.DoctorStrange, HeroTeam.Avengers),
+            new HeroInfo("The Vishanti", GameInfo.Set.DoctorStrange, HeroTeam.Unaffiliated)
         };
 
         public List<string> GetHeroNameList(List<int> indicies)

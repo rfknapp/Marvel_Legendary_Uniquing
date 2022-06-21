@@ -233,7 +233,12 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Drain Mutants' Powers To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(11).SetVeiledScheme().Build(),
             new SchemeInfoBuilder().SetSchemeName("Hack Cerebro Servers To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(10).SetVeiledScheme().Build(),
             new SchemeInfoBuilder().SetSchemeName("Hire Singularity Investigations To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(9).SetVeiledScheme().Build(),
-            new SchemeInfoBuilder().SetSchemeName("Raid Gene Banks To...").SetSchemeSet(GameInfo.Set.Messiah).SetVeiledScheme().Build()
+            new SchemeInfoBuilder().SetSchemeName("Raid Gene Banks To...").SetSchemeSet(GameInfo.Set.Messiah).SetVeiledScheme().Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Claim Souls for Demons").SetSchemeSet(GameInfo.Set.DoctorStrange).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Cursed Pages of the Darkhold Tome").SetSchemeSet(GameInfo.Set.DoctorStrange).SetSchemeTwists(11).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Duels of Science and Magic").SetSchemeSet(GameInfo.Set.DoctorStrange).SetSchemeTwists(new List<int>{ 10, 9, 11, 10, 11}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("War for the Dream Diminsion").SetSchemeSet(GameInfo.Set.DoctorStrange).SetSchemeTwists(7).AddAdditionalVillain(1).Build()
         };
 
         public Scheme(int playerCount, string schemeName)

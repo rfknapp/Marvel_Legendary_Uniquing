@@ -156,7 +156,12 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Exodus").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Acolytes").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Exodus").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Acolytes").Build(),
             new MastermindInfoBuilder().SetMastermindName("Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build()
+            new MastermindInfoBuilder().SetMastermindName("Epic Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Dormammu").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Lords of the Netherworld").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Dormammu").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Lords of the Netherworld").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Nightmare").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Fear Lords").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Nightmare").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Fear Lords").Build()
         };
 
         public Mastermind()

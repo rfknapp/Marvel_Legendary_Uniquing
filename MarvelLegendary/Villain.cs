@@ -157,6 +157,9 @@ namespace MarvelLegendary
             new VillainInfo("Clan Yashida", GameInfo.Set.Messiah),
             new VillainInfo("Purifiers", GameInfo.Set.Messiah),
             new VillainInfo("Reavers", GameInfo.Set.Messiah),
+
+            new VillainInfo("Fear Lords", GameInfo.Set.DoctorStrange),
+            new VillainInfo("Lords of the Netherworld", GameInfo.Set.DoctorStrange)
         };
 
         public Villain()
