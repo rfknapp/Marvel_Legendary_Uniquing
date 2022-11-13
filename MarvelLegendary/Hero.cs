@@ -67,7 +67,9 @@ namespace MarvelLegendary
         [Description("Inhumans")]
         Inhumans,
         [Description("X-Factor Investigations")]
-        XFactor
+        XFactor,
+        [Description("Black Panther")]
+        BlackPanther
     };
 
     public class HeroInfo
@@ -371,7 +373,25 @@ namespace MarvelLegendary
             new HeroInfo("Clea", GameInfo.Set.DoctorStrange, HeroTeam.MarvelKnights),
             new HeroInfo("Doctor Strange", GameInfo.Set.DoctorStrange, HeroTeam.Avengers),
             new HeroInfo("Doctor Voodoo", GameInfo.Set.DoctorStrange, HeroTeam.Avengers),
-            new HeroInfo("The Vishanti", GameInfo.Set.DoctorStrange, HeroTeam.Unaffiliated)
+            new HeroInfo("The Vishanti", GameInfo.Set.DoctorStrange, HeroTeam.Unaffiliated),
+
+            new HeroInfo("Drax", GameInfo.Set.McuGotG, HeroTeam.GuardiansOfTheGalaxy),
+            new HeroInfo("Gamora (MCU)", GameInfo.Set.McuGotG, HeroTeam.GuardiansOfTheGalaxy),
+            new HeroInfo("Mantis", GameInfo.Set.McuGotG, HeroTeam.GuardiansOfTheGalaxy),
+            new HeroInfo("Rocket & Groot", GameInfo.Set.McuGotG, HeroTeam.GuardiansOfTheGalaxy),
+            new HeroInfo("Star-Lord (MCU)", GameInfo.Set.McuGotG, HeroTeam.GuardiansOfTheGalaxy),
+
+            new HeroInfo("General Okoye", GameInfo.Set.BlackPanther, HeroTeam.BlackPanther),
+            new HeroInfo("King Black Panther", GameInfo.Set.BlackPanther, HeroTeam.BlackPanther),
+            new HeroInfo("Princess Shuri", GameInfo.Set.BlackPanther, HeroTeam.BlackPanther),
+            new HeroInfo("Queen Storm of Wakanda", GameInfo.Set.BlackPanther, HeroTeam.BlackPanther),
+            new HeroInfo("White Wolf", GameInfo.Set.BlackPanther, HeroTeam.BlackPanther),
+
+            new HeroInfo("Black Widow (Black Widow)", GameInfo.Set.BlackWidow, HeroTeam.SHIELD),
+            new HeroInfo("Falcon & Winter Soldier", GameInfo.Set.BlackWidow, HeroTeam.Avengers),
+            new HeroInfo("Red Guardians", GameInfo.Set.BlackWidow, HeroTeam.Unaffiliated),
+            new HeroInfo("White Tiger", GameInfo.Set.BlackWidow, HeroTeam.MarvelKnights),
+            new HeroInfo("Yelena Belova", GameInfo.Set.BlackWidow, HeroTeam.SHIELD)
         };
 
         public List<string> GetHeroNameList(List<int> indicies)

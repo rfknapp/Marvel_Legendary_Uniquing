@@ -161,7 +161,22 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Dormammu").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Lords of the Netherworld").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Dormammu").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Lords of the Netherworld").Build(),
             new MastermindInfoBuilder().SetMastermindName("Nightmare").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Fear Lords").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Nightmare").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Fear Lords").Build()
+            new MastermindInfoBuilder().SetMastermindName("Epic Nightmare").SetMastermindSet(GameInfo.Set.DoctorStrange).LeadsVillain("Fear Lords").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Ego, the Living Planet").SetMastermindSet(GameInfo.Set.McuGotG).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Ego, the Living Planet").SetMastermindSet(GameInfo.Set.McuGotG).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Ronan the Accuser").SetMastermindSet(GameInfo.Set.McuGotG).LeadsVillain("Followers of Ronan").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Ronan the Accuser").SetMastermindSet(GameInfo.Set.McuGotG).LeadsVillain("Followers of Ronan").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Killmonger").SetMastermindSet(GameInfo.Set.BlackPanther).LeadsVillain("Killmonger's League").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Killmonger").SetMastermindSet(GameInfo.Set.BlackPanther).LeadsVillain("Killmonger's League").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Klaw").SetMastermindSet(GameInfo.Set.BlackPanther).LeadsVillain("Followers of Ronan").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Klaw").SetMastermindSet(GameInfo.Set.BlackPanther).LeadsVillain("Followers of Ronan").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Indestructible Man").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Elite Assassins").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Indestructible Man").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Elite Assassins").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Taskmaster").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Taskmaster's Thunderbolts").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Taskmaster").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Taskmaster's Thunderbolts").Build()
         };
 
         public Mastermind()

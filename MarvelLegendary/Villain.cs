@@ -159,7 +159,16 @@ namespace MarvelLegendary
             new VillainInfo("Reavers", GameInfo.Set.Messiah),
 
             new VillainInfo("Fear Lords", GameInfo.Set.DoctorStrange),
-            new VillainInfo("Lords of the Netherworld", GameInfo.Set.DoctorStrange)
+            new VillainInfo("Lords of the Netherworld", GameInfo.Set.DoctorStrange),
+
+            new VillainInfo("Followers of Ronan", GameInfo.Set.McuGotG),
+            new VillainInfo("Ravagers", GameInfo.Set.McuGotG),
+
+            new VillainInfo("Enemies of Wakanda", GameInfo.Set.BlackPanther),
+            new VillainInfo("Killmonger's League", GameInfo.Set.BlackPanther),
+
+            new VillainInfo("Elite Assassins", GameInfo.Set.BlackWidow),
+            new VillainInfo("Taskmaster's Thunderbolts", GameInfo.Set.BlackWidow)
         };
 
         public Villain()
