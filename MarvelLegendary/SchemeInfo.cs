@@ -53,6 +53,7 @@ namespace MarvelLegendary
         public bool IsHenchmenInHeroDeck { get; set; }
         public bool IsSmugglerHenchmen { get; set; }
         public bool IsXerogenHenchmen { get; set; }
+        public bool DoubleHenchmen { get; set; }
 
         //Villains
         public List<int> Villains { get; set; }
@@ -61,6 +62,7 @@ namespace MarvelLegendary
         public string VillainCardNextToScheme { get; set; }
         public bool IsVillainCardNextToScheme { get; set; }
         public bool IsMonsterPitDeck { get; set; }
+        public bool DoubleVillains { get; set; }
 
         //Masterminds
         public int NumberOfMasterminds { get; set; }

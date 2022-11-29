@@ -106,7 +106,15 @@ namespace MarvelLegendary
             [Description("Annihilation")]
             Annihilation,
             [Description("Messiah Complex")]
-            Messiah
+            Messiah,
+            [Description("Doctor Strange")]
+            DoctorStrange,
+            [Description("MCU's Guardians of the Galaxy")]
+            McuGotG,
+            [Description("Black Panther")]
+            BlackPanther,
+            [Description("Black Widow")]
+            BlackWidow
         }
 
         public GameInfo(int players)
@@ -167,7 +175,7 @@ namespace MarvelLegendary
             AllMastermindsInGame.Concat(ExtraMasterminds).ToList();
         }
 
-        public void SetVillains(List<string> villainNames = null)
+        public void SetVillains(List<string> villainNames, bool doubleVillains)
         {
             var getExclusions = new GetExclusions();
             var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
@@ -194,6 +202,11 @@ namespace MarvelLegendary
                 Villains.AddRange(from item in villainNames select new Villain(item));
             }
 
+            if (doubleVillains)
+            {
+                Scheme.NumberOfVillains *= 2;
+            }
+
             Villains = GetVillains(Scheme.NumberOfVillains, Scheme.RequiredVillains, Villains);
 
             AllVillainsInGame = new List<Villain>(Villains);
@@ -204,7 +217,7 @@ namespace MarvelLegendary
             }
         }
 
-        public void SetHenchmen(List<string> henchmenNames = null)
+        public void SetHenchmen(List<string> henchmenNames, bool doubleHenchmen)
         {
             var getExclusions = new GetExclusions();
             var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
@@ -238,6 +251,11 @@ namespace MarvelLegendary
             if (henchmenNames != null)
             {
                 Henchmen.AddRange(from item in henchmenNames select new Henchmen(item));
+            }
+
+            if (doubleHenchmen)
+            {
+                Scheme.NumberOfHenchmen *= 2;
             }
 
             Henchmen = GetHenchmen(Scheme.RequiredHenchmen, SchemeHenchmen, Mastermind, Henchmen);

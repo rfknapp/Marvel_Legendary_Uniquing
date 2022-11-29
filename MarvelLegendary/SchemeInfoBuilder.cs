@@ -64,6 +64,7 @@ namespace MarvelLegendary
                 IsHenchmenNextToScheme = false,
                 IsSmugglerHenchmen = false,
                 IsXerogenHenchmen = false,
+                DoubleHenchmen = false,
 
                 //Villains
                 Villains = new List<int> { 1, 2, 3, 3, 4 },
@@ -72,6 +73,7 @@ namespace MarvelLegendary
                 IsVillainCardNextToScheme = false,
                 IsMonsterPitDeck = false,
                 VillainsNotAllowed = new List<string>(),
+                DoubleVillains = false,
 
                 //Masterminds
                 NumberOfMasterminds = 1,
@@ -526,6 +528,13 @@ namespace MarvelLegendary
         public SchemeInfoBuilder IncreaseBystanders(int additionalBystanders)
         {
             _schemeInfo.AdditionalBystanders = additionalBystanders;
+            return this;
+        }
+
+        public SchemeInfoBuilder DoubleVillainsAndHenchmen()
+        {
+            _schemeInfo.DoubleVillains = true;
+            _schemeInfo.DoubleHenchmen = true;
             return this;
         }
 

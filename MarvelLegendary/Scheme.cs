@@ -233,7 +233,27 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Drain Mutants' Powers To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(11).SetVeiledScheme().Build(),
             new SchemeInfoBuilder().SetSchemeName("Hack Cerebro Servers To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(10).SetVeiledScheme().Build(),
             new SchemeInfoBuilder().SetSchemeName("Hire Singularity Investigations To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(9).SetVeiledScheme().Build(),
-            new SchemeInfoBuilder().SetSchemeName("Raid Gene Banks To...").SetSchemeSet(GameInfo.Set.Messiah).SetVeiledScheme().Build()
+            new SchemeInfoBuilder().SetSchemeName("Raid Gene Banks To...").SetSchemeSet(GameInfo.Set.Messiah).SetVeiledScheme().Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Claim Souls for Demons").SetSchemeSet(GameInfo.Set.DoctorStrange).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Cursed Pages of the Darkhold Tome").SetSchemeSet(GameInfo.Set.DoctorStrange).SetSchemeTwists(11).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Duels of Science and Magic").SetSchemeSet(GameInfo.Set.DoctorStrange).SetSchemeTwists(new List<int>{ 10, 9, 11, 10, 11}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("War for the Dream Diminsion").SetSchemeSet(GameInfo.Set.DoctorStrange).SetSchemeTwists(7).AddAdditionalVillain(1).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Inescapable \"Kyln\" Space Prison").SetSchemeSet(GameInfo.Set.McuGotG).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Provoke the Sovereign War Fleet").SetSchemeSet(GameInfo.Set.McuGotG).SetSchemeTwists(11).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Star-Lord's Awesome Mix Tape").SetSchemeSet(GameInfo.Set.McuGotG).SetSchemeTwists(7).DoubleVillainsAndHenchmen().Build(),
+            new SchemeInfoBuilder().SetSchemeName("Unleash the Abilisk Space Monster").SetSchemeSet(GameInfo.Set.McuGotG).SetSchemeTwists(9).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Plunder Wakanda's Vibranium").SetSchemeSet(GameInfo.Set.BlackPanther).SetSchemeTwists(10).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Poison Lakes with Nanite Microbots").SetSchemeSet(GameInfo.Set.BlackPanther).SetSchemeTwists(new List<int>{ 6, 7, 8, 9, 10}).SetWoundCount(false, 30).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Provoke a Clash of Nations").SetSchemeSet(GameInfo.Set.BlackPanther).SetSchemeTwists(11).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Seize the Wakandan Throne").SetSchemeSet(GameInfo.Set.BlackPanther).SetSchemeTwists(6).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Corrupt the Spy Agencies").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(7).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Frame Heroes for Murder").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(7).SetHeroCount(6).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Sniper Rifle Assassins").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(new List<int>{ 10, 9, 8, 7, 6}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Train Black Widows in the Red Room").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(new List<int>{ 7, 6, 5, 4, 3}).SetVillainOfficers(8).Build()
         };
 
         public Scheme(int playerCount, string schemeName)

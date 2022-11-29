@@ -20,8 +20,8 @@ namespace MarvelLegendary
                 if (game.Scheme.SchemeInfo.NumberExtraMasterminds > 0)
                     game.SetExtraMasterminds();
 
-                game.SetVillains(new List<string>());
-                game.SetHenchmen(new List<string>());
+                game.SetVillains(new List<string>(), game.Scheme.SchemeInfo.DoubleVillains);
+                game.SetHenchmen(new List<string>(), game.Scheme.SchemeInfo.DoubleHenchmen);
                 game.SetHeroes(new List<string>());
 
                 var gameText = GameTextBuilder(game);
@@ -50,8 +50,11 @@ namespace MarvelLegendary
             var mastermindOutput = $"Mastermind is {new Mastermind().ToString(new List<Mastermind> { game.Mastermind })}\r\n";
             var schemeOutput = $"Whose scheme is\r\n1) {scheme.SchemeName}, {scheme.SetName}\r\n\r\n";
             var villainOutput = $"Villains are {new Villain().ToString(game.Villains)}\r\n";
+            var mixTapeVillainOutput = game.Scheme.SchemeInfo.DoubleVillains ? "Secretly, only use half the cards from the villain groups.\r\n" : "";
             var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {new Hero().ToString(game.VillainHeroes)}\r\n" : "";
             var henchmenOutput = "Henchmen " + (game.Henchmen.Count==1 ? "is" : "are") + $" {new Henchmen().ToString(game.Henchmen)}\r\n";
+            var mixTapeHenchmenOutput = game.Scheme.SchemeInfo.DoubleHenchmen ? "Secretly, only use half the cards from the henchmen groups.\r\n" : "";
+            var mixTapHenchmenSoloOutput = game.Scheme.SchemeInfo.DoubleHenchmen && game.Scheme.NumberOfPlayers == 1 ? "Use two henchmen per group\r\n" : "";
             var heroesOutput = $"Heroes are {new Hero().ToString(game.Heroes)}\r\n";
             var twistsBystanderAndMasterStrikeOutput = $"Include {scheme.Twists} Scheme Twists, 5 Master Strikes, and {scheme.BystandersInVillainDeck} Bystanders in the Villain deck.\r\n";
             var woundsOutput = game.CustomWoundNumber ? $"There are {game.WoundNumber} wounds in the wound deck.\r\n": "";
