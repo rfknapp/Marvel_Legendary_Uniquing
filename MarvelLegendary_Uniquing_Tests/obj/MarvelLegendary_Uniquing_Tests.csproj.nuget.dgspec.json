@@ -1,28 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\MarvelLegendary_Uniquing_Tests.csproj": {}
+    "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\MarvelLegendary_Uniquing_Tests.csproj": {}
   },
   "projects": {
-    "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj": {
-      "version": "1.0.0",
+    "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj": {
       "restore": {
-        "projectUniqueName": "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj",
+        "projectUniqueName": "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj",
         "projectName": "MarvelLegendary_Uniquing",
-        "projectPath": "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj"
+        "projectPath": "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj",
+        "frameworks": {
+          "net461": {
+            "projectReferences": {}
+          }
+        }
       },
       "frameworks": {
         "net461": {}
       }
     },
-    "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\MarvelLegendary_Uniquing_Tests.csproj": {
+    "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\MarvelLegendary_Uniquing_Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\MarvelLegendary_Uniquing_Tests.csproj",
+        "projectUniqueName": "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\MarvelLegendary_Uniquing_Tests.csproj",
         "projectName": "MarvelLegendary_Uniquing_Tests",
-        "projectPath": "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\MarvelLegendary_Uniquing_Tests.csproj",
+        "projectPath": "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\MarvelLegendary_Uniquing_Tests.csproj",
         "packagesPath": "C:\\Users\\knaro\\.nuget\\packages\\",
-        "outputPath": "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\obj\\",
+        "outputPath": "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary_Uniquing_Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\knaro\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -37,9 +41,10 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
             "projectReferences": {
-              "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj": {
-                "projectPath": "D:\\vs_legendary\\MarvelLegendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj"
+              "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj": {
+                "projectPath": "D:\\git\\Marvel_Legendary_Uniquing\\MarvelLegendary\\MarvelLegendary_Uniquing.csproj"
               }
             }
           }
@@ -52,6 +57,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "MSTest.TestAdapter": {
               "target": "Package",
@@ -64,6 +70,18 @@
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[16.5.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.14.5, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[3.12.0, )"
+            },
+            "NUnit3TestAdapter": {
+              "target": "Package",
+              "version": "[3.17.0, )"
             },
             "coverlet.collector": {
               "target": "Package",
@@ -85,7 +103,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.414\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -114,7 +114,9 @@ namespace MarvelLegendary
             [Description("Black Panther")]
             BlackPanther,
             [Description("Black Widow")]
-            BlackWidow
+            BlackWidow,
+            [Description("Infinity Saga")]
+            InfinitySaga
         }
 
         public GameInfo(int players)

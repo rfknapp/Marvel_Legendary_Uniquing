@@ -176,7 +176,12 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Indestructible Man").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Elite Assassins").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Indestructible Man").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Elite Assassins").Build(),
             new MastermindInfoBuilder().SetMastermindName("Taskmaster").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Taskmaster's Thunderbolts").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Taskmaster").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Taskmaster's Thunderbolts").Build()
+            new MastermindInfoBuilder().SetMastermindName("Epic Taskmaster").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Taskmaster's Thunderbolts").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Ebony Maw").SetMastermindSet(GameInfo.Set.InfinitySaga).LeadsVillain("Children of Thanos").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Ebony Maw").SetMastermindSet(GameInfo.Set.InfinitySaga).LeadsVillain("Children of Thanos").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Thanos (Infinity Saga)").SetMastermindSet(GameInfo.Set.InfinitySaga).LeadsVillain("Infinity Stones").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Thanos (Infinity Saga)").SetMastermindSet(GameInfo.Set.InfinitySaga).LeadsVillain("Infinity Stones").Build()
         };
 
         public Mastermind()

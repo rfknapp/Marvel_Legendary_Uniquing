@@ -91,6 +91,7 @@ namespace MarvelLegendary
                 Heroes = new List<int> { 3, 5, 5, 5, 6 },
                 RequiredHeroes = new List<string>(),
                 HeroesInVillainDeck = new List<string>(),
+                PastHeroDeck = new List<string>(),
                 IsHeroesInVillainDeck = false,
                 IsRandomHeroesInVillainDeck = false,
                 NumberOfHeroesInVillainDeck = 0,

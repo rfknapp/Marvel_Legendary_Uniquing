@@ -391,7 +391,13 @@ namespace MarvelLegendary
             new HeroInfo("Falcon & Winter Soldier", GameInfo.Set.BlackWidow, HeroTeam.Avengers),
             new HeroInfo("Red Guardians", GameInfo.Set.BlackWidow, HeroTeam.Unaffiliated),
             new HeroInfo("White Tiger", GameInfo.Set.BlackWidow, HeroTeam.MarvelKnights),
-            new HeroInfo("Yelena Belova", GameInfo.Set.BlackWidow, HeroTeam.SHIELD)
+            new HeroInfo("Yelena Belova", GameInfo.Set.BlackWidow, HeroTeam.SHIELD),
+
+            new HeroInfo("Black Panther (Infinity Saga)", GameInfo.Set.InfinitySaga, HeroTeam.Avengers),
+            new HeroInfo("Bruce Banner (Infinity Saga)", GameInfo.Set.InfinitySaga, HeroTeam.Avengers),
+            new HeroInfo("Captain Marvel (Infinity Saga)", GameInfo.Set.InfinitySaga, HeroTeam.Avengers),
+            new HeroInfo("Doctor Strange (Infinity Saga)", GameInfo.Set.InfinitySaga, HeroTeam.Avengers),
+            new HeroInfo("Wanda & Vision", GameInfo.Set.InfinitySaga, HeroTeam.Avengers)
         };
 
         public List<string> GetHeroNameList(List<int> indicies)

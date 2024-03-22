@@ -253,7 +253,12 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Corrupt the Spy Agencies").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(7).Build(),
             new SchemeInfoBuilder().SetSchemeName("Frame Heroes for Murder").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(7).SetHeroCount(6).Build(),
             new SchemeInfoBuilder().SetSchemeName("Sniper Rifle Assassins").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(new List<int>{ 10, 9, 8, 7, 6}).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Train Black Widows in the Red Room").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(new List<int>{ 7, 6, 5, 4, 3}).SetVillainOfficers(8).Build()
+            new SchemeInfoBuilder().SetSchemeName("Train Black Widows in the Red Room").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(new List<int>{ 7, 6, 5, 4, 3}).SetVillainOfficers(8).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Halve All Life in the Universe").SetSchemeSet(GameInfo.Set.InfinitySaga).SetSchemeTwists(5).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Sacrifice For the Soul Stone").SetSchemeSet(GameInfo.Set.InfinitySaga).SetSchemeTwists(new List<int>{ 5, 6, 7, 8, 9}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Time Heist").SetSchemeSet(GameInfo.Set.InfinitySaga).SetSchemeTwists(11).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Warp Reality Into a TV Show").SetSchemeSet(GameInfo.Set.InfinitySaga).SetSchemeTwists(11).SetVillainOfficers(8).Build()
         };
 
         public Scheme(int playerCount, string schemeName)

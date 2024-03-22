@@ -81,6 +81,7 @@ namespace MarvelLegendary
         public List<int> Heroes { get; set; }
         public List<string> RequiredHeroes { get; set; }
         public List<string> HeroesInVillainDeck { get; set; }
+        public List<string> PastHeroDeck { get; set; }
         public string DarkLoyaltyHero { get; set; }
         public bool IsHeroesInVillainDeck { get; set; }
         public bool IsRandomHeroesInVillainDeck { get; set; }
