@@ -15,7 +15,8 @@ namespace MarvelLegendary
             {
                 var game = new GameInfo(int.Parse(playerCount));
                 game.SetMastermind();
-                game.SetScheme();
+                //game.SetScheme();
+                game.SetSchemeSql();
 
                 if (game.Scheme.SchemeInfo.NumberExtraMasterminds > 0)
                     game.SetExtraMasterminds();
