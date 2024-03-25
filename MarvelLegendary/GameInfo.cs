@@ -156,6 +156,17 @@ namespace MarvelLegendary
             NumberHenchmenNextToScheme = Scheme.SchemeInfo.HenchmenNextToSchemePerPlayer[PlayerCount - 1];
         }
 
+        public void SetSchemeSql(string schemeName = "")
+        {
+            Scheme = schemeName == "" ? new Scheme(PlayerCount, Mastermind, true) : new Scheme(PlayerCount, schemeName);
+            PlayerCount = Scheme.NumberOfPlayers;
+
+            WoundNumber = GetWoundInformation(Scheme.CustomWoundNumber, Scheme.Wounds);
+            CustomWoundNumber = Scheme.CustomWoundNumber;
+            BindingNumber = Scheme.SchemeInfo.BindingPerPlayer[PlayerCount - 1];
+            NumberHenchmenNextToScheme = Scheme.SchemeInfo.HenchmenNextToSchemePerPlayer[PlayerCount - 1];
+        }
+
         public void SetUnVeiledScheme(string schemeName = "")
         {
             UnveiledScheme = new UnveiledScheme(schemeName);

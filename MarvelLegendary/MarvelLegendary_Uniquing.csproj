@@ -57,11 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CombosDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CombosDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="DetermineLists\DetermineHenchmen.cs" />
     <Compile Include="DetermineLists\DetermineHeroes.cs" />
     <Compile Include="Exclusions\GetExclusions.cs" />
@@ -86,17 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="CombosDataSet.xsc">
-      <DependentUpon>CombosDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="CombosDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>CombosDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="CombosDataSet.xss">
-      <DependentUpon>CombosDataSet.xsd</DependentUpon>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
