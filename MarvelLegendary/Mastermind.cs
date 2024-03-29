@@ -161,7 +161,10 @@ namespace MarvelLegendary
 
         public Mastermind()
         {
-            var mastermindInfo = _masterminds[new Random().Next(_masterminds.Count)];
+            var allMastermindsQuery = "SELECT [MastermindName] FROM [Masterminds]";
+            var allMasterminds = SqlHelper.GetList(allMastermindsQuery);
+            var mastermind = allMasterminds[new Random().Next(allMasterminds.Count)];
+            var mastermindInfo = _masterminds.FirstOrDefault(m => m.MastermindName == mastermind);
             
             MastermindName = mastermindInfo.MastermindName;
             SetName = mastermindInfo.SetName;

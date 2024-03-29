@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -7,9 +8,18 @@ using System.Threading.Tasks;
 
 namespace MarvelLegendary
 {
-    class SqlHelper
+    static class SqlHelper
     {
-        public List<string> GetList(string sqlString, SqlConnection connection)
+        static string connectionString;
+        static SqlConnection connection;
+
+        static SqlHelper()
+        {
+            connectionString = ConfigurationManager.ConnectionStrings["MarvelLegendary.Database"].ConnectionString;
+            connection = new SqlConnection(connectionString);
+        }
+
+        static public List<string> GetList(string sqlString)
         {
             List<string> returnList = new List<string>();
 

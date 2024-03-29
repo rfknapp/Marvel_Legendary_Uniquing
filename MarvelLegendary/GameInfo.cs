@@ -174,7 +174,7 @@ namespace MarvelLegendary
 
         public void SetExtraMasterminds()
         {
-            ExtraMasterminds = GetMasterminds(Scheme, Mastermind);
+            ExtraMasterminds = GetMasterminds(Scheme, Mastermind, true);
             AllMastermindsInGame.Concat(ExtraMasterminds).ToList();
         }
 
@@ -325,6 +325,35 @@ namespace MarvelLegendary
 
         #region Masterminds
         private static List<Mastermind> GetMasterminds(Scheme scheme, Mastermind mainMastermind)
+        {
+            var returnList = new List<Mastermind>();
+            var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
+            var extraMasterminds = new List<string>();
+            var mastermindList = new Mastermind().GetListOfMasterminds();
+
+            for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
+            {
+                var remainingMasterminds = mastermindList.Except(mastermindsInGame).ToList();
+                var exclusions = DetermineMastermindList(mastermindsInGame);
+                var mastermindsToChooseFrom = remainingMasterminds.Except(exclusions).ToList();
+
+                var newMastermind = mastermindsToChooseFrom[new Random().Next(mastermindsToChooseFrom.Count)];
+                mastermindsInGame.Add(newMastermind);
+                extraMasterminds.Add(newMastermind);
+            }
+
+            returnList.AddRange(from item in extraMasterminds
+                                select new Mastermind(item));
+
+            if (scheme.SchemeInfo.IsDrainedMastermind)
+            {
+                scheme.SchemeInfo.DrainedMastermind = new Mastermind(extraMasterminds.First());
+            }
+
+            return returnList;
+        }
+
+        private static List<Mastermind> GetMasterminds(Scheme scheme, Mastermind mainMastermind, bool useSql)
         {
             var returnList = new List<Mastermind>();
             var mastermindsInGame = new List<string> { mainMastermind.MastermindName };

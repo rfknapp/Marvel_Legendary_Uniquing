@@ -350,17 +350,14 @@ namespace MarvelLegendary
 
         public Scheme(int playerCount, Mastermind mastermind, bool useSql)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["MarvelLegendary.Database"].ConnectionString;
-            var connection = new SqlConnection(connectionString);
-
             var allSchemesQuery = "SELECT [SchemeName] FROM [Schemes]";
             var allSchemesByMastermind = $@"select s.SchemeName from Schemes s
 inner join SchemeByMastermind sbm ON s.Id = sbm.SchemeId
 inner join Masterminds m ON m.Id = sbm.MastermindId
 where m.MastermindName = '{mastermind.MastermindName}'";
 
-            var allSchemes = new SqlHelper().GetList(allSchemesQuery, connection);
-            var mastermindSchemes = new SqlHelper().GetList(allSchemesByMastermind, connection);
+            var allSchemes = SqlHelper.GetList(allSchemesQuery);
+            var mastermindSchemes = SqlHelper.GetList(allSchemesByMastermind);
             var remainingSchemes = allSchemes.Except(mastermindSchemes).ToList();
             var scheme = remainingSchemes[new Random().Next(remainingSchemes.Count)];
 
