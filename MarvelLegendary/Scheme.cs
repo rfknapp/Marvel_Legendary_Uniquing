@@ -1,4 +1,4 @@
-﻿using MarvelLegendary.Exclusions;
+using MarvelLegendary.Exclusions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
