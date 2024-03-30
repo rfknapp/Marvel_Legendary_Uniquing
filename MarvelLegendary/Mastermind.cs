@@ -253,5 +253,78 @@ namespace MarvelLegendary
             var allMasterminds = new SqlHelper().GetList(allMastermindsQuery);
             return allMasterminds;
         }
+
+        public string GetRandomMastermind()
+        {
+            var allMasterminds = GetListOfMasterminds();
+            var mastermind = allMasterminds[new Random().Next(allMasterminds.Count)];
+            return mastermind;
+        }
+
+        public List<string> GetListOfMastermindByX(string cardType, string name)
+        {
+            //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
+            var mastermindByTable = $"MastermindBy{cardType}";
+            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+
+            var allMastermindsBy = $@"select m.MastermindName from Masterminds m
+                    inner join {mastermindByTable} mb ON m.Id = mb.MastermindId
+                    inner join {tableName} t ON t.Id = mb.{cardType}Id
+                    where t.{cardType}Name = '{name}'";
+
+            var allMastermindsByX = new SqlHelper().GetList(allMastermindsBy);
+            return allMastermindsByX;
+        }
+
+        public List<Mastermind> GetExtraMasterminds(Scheme scheme, Mastermind mainMastermind)
+        {
+            var returnList = new List<Mastermind>();
+            var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
+            var extraMasterminds = new List<string>();
+
+            //Get Masterminds
+            var mastermindList = new Mastermind().GetListOfMasterminds();
+
+            //Get Masterminds that have played with the scheme
+            var schemesByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", mainMastermind.MastermindName);
+
+            //Remove all Masterminds that have played with the scheme from the list
+            var remainingMasterminds2 = mastermindList.Except(schemesByMastermind).ToList();
+
+            //Remove the current Mastermind from the list
+            remainingMasterminds2 = remainingMasterminds2.Except(mastermindsInGame).ToList();
+
+            for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
+            {
+                //Get random mastermind from remaining list
+                var newMastermind = remainingMasterminds2[new Random().Next(remainingMasterminds2.Count)];
+
+                //Get MastermindxMastermind
+                var mastermindByMastermind = GetListOfMastermindByX("Mastermind", newMastermind);
+
+                //Get SchemexMastermind
+                var schemeByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", newMastermind);
+
+                //Remove all from main list
+                remainingMasterminds2 = remainingMasterminds2.Except(mastermindByMastermind).ToList();
+                remainingMasterminds2 = remainingMasterminds2.Except(schemeByMastermind).ToList();
+
+                //Add mastermind to extraMasterminds
+                extraMasterminds.Add(newMastermind);
+
+                //Add mastermind to mastermndsInGame
+                mastermindsInGame.Add(newMastermind);
+            }
+
+            returnList.AddRange(from item in extraMasterminds
+                                select new Mastermind().GetNewMastermind(item));
+
+            if (scheme.SchemeInfo.IsDrainedMastermind)
+            {
+                scheme.SchemeInfo.DrainedMastermind = new Mastermind().GetNewMastermind(extraMasterminds.First());
+            }
+
+            return returnList;
+        }
     }
 }

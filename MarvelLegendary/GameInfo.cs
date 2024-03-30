@@ -163,7 +163,7 @@ namespace MarvelLegendary
 
         public void SetExtraMasterminds()
         {
-            ExtraMasterminds = GetMasterminds(Scheme, Mastermind, true);
+            ExtraMasterminds = new Mastermind().GetExtraMasterminds(Scheme, Mastermind);
             AllMastermindsInGame.Concat(ExtraMasterminds).ToList();
         }
 
@@ -345,14 +345,22 @@ namespace MarvelLegendary
         private static List<Mastermind> GetMasterminds(Scheme scheme, Mastermind mainMastermind, bool useSql)
         {
             var returnList = new List<Mastermind>();
-            var test = new Mastermind().GetListOfMasterminds();
-            var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
+            /*var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
             var extraMasterminds = new List<string>();
+            
+            //Get Masterminds
             var mastermindList = new Mastermind().GetListOfMasterminds();
+            //Get Masterminds that have played with the scheme
+            var schemesByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", mainMastermind.MastermindName);
+
+            //Remove all Masterminds that have played with the scheme from the list
+            var remainingMasterminds2 = mastermindList.Except(schemesByMastermind).ToList();
+
+            //Remove the current Mastermind from the list
+            remainingMasterminds2 = remainingMasterminds2.Except(mastermindsInGame).ToList();
 
             for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
             {
-                var remainingMasterminds = mastermindList.Except(mastermindsInGame).ToList();
                 var exclusions = DetermineMastermindList(mastermindsInGame);
                 var mastermindsToChooseFrom = remainingMasterminds.Except(exclusions).ToList();
 
@@ -367,7 +375,7 @@ namespace MarvelLegendary
             if (scheme.SchemeInfo.IsDrainedMastermind)
             {
                 scheme.SchemeInfo.DrainedMastermind = new Mastermind().GetNewMastermind(extraMasterminds.First());
-            }
+            }*/
 
             return returnList;
         }

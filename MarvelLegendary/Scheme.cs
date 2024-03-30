@@ -264,13 +264,12 @@ namespace MarvelLegendary
         private SchemeInfo GetRandomScheme(Mastermind mastermind)
         {
             var schemeName = "";
-            var allSchemesQuery = "SELECT [SchemeName] FROM [Schemes]";
             var allSchemesByMastermind = $@"select s.SchemeName from Schemes s
                     inner join SchemeByMastermind sbm ON s.Id = sbm.SchemeId
                     inner join Masterminds m ON m.Id = sbm.MastermindId
                     where m.MastermindName = '{mastermind.MastermindName}'";
 
-            var schemeNameList = new SqlHelper().GetList(allSchemesQuery);
+            var schemeNameList = GetListOfSchemes();
             var mastermindSchemeNameList = new SqlHelper().GetList(allSchemesByMastermind);
 
             if (mastermindSchemeNameList.Count <= schemeNameList.Count)
@@ -334,6 +333,42 @@ namespace MarvelLegendary
             var allSchemesQuery = "SELECT [SchemeName] FROM [Schemes]";
             var allSchemes = new SqlHelper().GetList(allSchemesQuery);
             return allSchemes;
+        }
+
+        public List<string> GetListOfSchemesByX(string cardType, string name)
+        {
+            //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
+            var schemeByTable = $"SchemeBy{cardType}";
+            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+
+            var allSchemesBy = $@"select s.SchemeName from Schemes s
+                    inner join {schemeByTable} sb ON s.Id = sb.SchemeId
+                    inner join {tableName} t ON t.Id = sb.{cardType}Id
+                    where t.{cardType}Name = '{name}'";
+
+            /*var allSchemesByMastermind = $@"select s.SchemeName from Schemes s
+                    inner join SchemeByMastermind sb ON s.Id = sb.SchemeId
+                    inner join Masterminds m ON m.Id = sb.MastermindId
+                    where m.MastermindName = '{name}'";
+            var allSchemesByVillain = $@"select s.SchemeName from Schemes s
+                    inner join SchemeByVillain sb ON s.Id = sb.SchemeId
+                    inner join Villains v ON v.Id = sb.VillainId
+                    where v.VillainName = '{name}'";
+            var allSchemesByHero = $@"select s.SchemeName from Schemes s
+                    inner join SchemeByHero sb ON s.Id = sb.SchemeId
+                    inner join Heroes h ON h.Id = sb.HeroId
+                    where h.HeroName = '{name}'";
+            var allSchemesByHenchmen = $@"select s.SchemeName from Schemes s
+                    inner join SchemeByHenchmen sb ON s.Id = sb.SchemeId
+                    inner join Henchmen h ON h.Id = sb.HenchmenId
+                    where h.HenchmenName = '{name}'";
+            var allSchemesByScheme = $@"select s.SchemeName from Schemes s
+                    inner join SchemeByScheme sb ON s.Id = sb.SchemeId
+                    inner join Schemes s ON s.Id = sb.Scheme2Id
+                    where s.SchemeName = '{name}'";*/
+
+            var allSchemesByX = new SqlHelper().GetList(allSchemesBy);
+            return allSchemesByX;
         }
     }
 }
