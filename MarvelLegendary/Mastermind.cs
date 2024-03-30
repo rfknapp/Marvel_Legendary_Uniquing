@@ -159,26 +159,18 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Epic Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build()
         };
 
-        public Mastermind()
+        public Mastermind(){}
+
+        public Mastermind GetNewMastermind(string mastermindName = "")
         {
-            var allMastermindsQuery = "SELECT [MastermindName] FROM [Masterminds]";
-            var allMasterminds = SqlHelper.GetList(allMastermindsQuery);
-            var mastermind = allMasterminds[new Random().Next(allMasterminds.Count)];
-            var mastermindInfo = _masterminds.FirstOrDefault(m => m.MastermindName == mastermind);
+            var mastermind = mastermindName;
+            if(string.IsNullOrEmpty(mastermind))
+            {
+                var allMasterminds = GetListOfMasterminds();
+                mastermind = allMasterminds[new Random().Next(allMasterminds.Count)];
+            }
             
-            MastermindName = mastermindInfo.MastermindName;
-            SetName = mastermindInfo.SetName;
-            LeadsHenchmen = mastermindInfo.LeadsHenchmen;
-            LeadsVillain = mastermindInfo.LeadsVillain;
-            DoesLeadHenchmen = mastermindInfo.DoesLeadHenchmen;
-            DoesLeadVillain = mastermindInfo.DoesLeadVillain;
-            MastermindInfo = mastermindInfo;
-        }
-
-        public Mastermind(List<MastermindInfo> masterminds)
-        {
-            var mastermindInfo = masterminds[new Random().Next(masterminds.Count)];
-            //mastermindInfo = masterminds.First(x => x.MastermindName == "Loki");
+            var mastermindInfo = _masterminds.FirstOrDefault(m => m.MastermindName == mastermind);
 
             MastermindName = mastermindInfo.MastermindName;
             SetName = mastermindInfo.SetName;
@@ -187,6 +179,8 @@ namespace MarvelLegendary
             DoesLeadHenchmen = mastermindInfo.DoesLeadHenchmen;
             DoesLeadVillain = mastermindInfo.DoesLeadVillain;
             MastermindInfo = mastermindInfo;
+
+            return this;
         }
         
         public Mastermind(string mastermindName)
@@ -255,7 +249,9 @@ namespace MarvelLegendary
 
         public List<string> GetListOfMasterminds()
         {
-            return _masterminds.ToList().Select(x => x.MastermindName).ToList();
+            var allMastermindsQuery = "SELECT [MastermindName] FROM [Masterminds]";
+            var allMasterminds = new SqlHelper().GetList(allMastermindsQuery);
+            return allMasterminds;
         }
     }
 }

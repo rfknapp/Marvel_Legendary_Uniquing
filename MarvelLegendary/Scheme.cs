@@ -237,146 +237,65 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Raid Gene Banks To...").SetSchemeSet(GameInfo.Set.Messiah).SetVeiledScheme().Build()
         };
 
-        public Scheme(int playerCount, string schemeName)
+        public Scheme() {}
+
+        public Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName="")
         {
-            var schemeInfo = _schemes.First(x => x.SchemeName == schemeName);
+            SchemeInfo schemeInfo;
 
-            if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)
+            if (string.IsNullOrEmpty(schemeName))
             {
-                playerCount = 3;
+                schemeInfo = GetRandomScheme(mastermind);
+            }
+            else
+            {
+                schemeInfo = GetSchemeInfo(schemeName);
             }
 
-            if (schemeInfo.RequiredHenchmen.Count > 0)
-            {
-                playerCount = 4;
-            }
-
-            while (schemeInfo.CannotBeSolo && playerCount == 1)
-            {
-                schemeInfo = _schemes[new Random().Next(_schemes.Count)];
-            }
-
-            SchemeName = schemeInfo.SchemeName;
-            SetName = schemeInfo.SetName;
-            Twists = schemeInfo.SchemeTwists[playerCount - 1];
-            NumberOfSchemeTwists = schemeInfo.SchemeTwists[playerCount - 1];
-            SchemeInfo = schemeInfo;
-            IsSchemeTwistsNextToScheme = schemeInfo.IsSchemeTwistsNextToScheme;
-            NumberTwistsNextToScheme = schemeInfo.NumberTwistsNextToScheme;
-            NumberOfPlayers = playerCount;
-
-            NumberOfMasterminds = schemeInfo.NumberOfMasterminds;
-
-            NumberOfVillains = schemeInfo.Villains[playerCount - 1];
-            RequiredVillains = schemeInfo.RequiredVillains;
-
-            NumberOfHenchmen = schemeInfo.Henchmen[playerCount - 1];
-            RequiredHenchmen = schemeInfo.RequiredHenchmen;
-
-            NumberOfHeroes = schemeInfo.Heroes[playerCount - 1];
-            RequiredHeroes = schemeInfo.RequiredHeroes;
-            HeroesInVillainDeck = schemeInfo.HeroesInVillainDeck;
-            RandomHeroesInVillainDeck = schemeInfo.NumberOfHeroesInVillainDeck;
-
-            BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1] + schemeInfo.AdditionalBystanders;
-            BystandersInHeroDeck = schemeInfo.BystandersInHeroDeck[playerCount - 1];
-            IsBystandersInHeroDeck = schemeInfo.IsBystandersInHeroDeck;
-
-            WoundsPerPlayer = schemeInfo.WoundsPerPlayer;
-            CustomWoundNumber = schemeInfo.CustomWoundCount;
-            Wounds = schemeInfo.WoundPerPlayer;
+            ProcessSchemeInfo(playerCount, schemeInfo, mastermind);
+            return this;
         }
 
-        public Scheme(int playerCount, Mastermind mastermind)
+        private SchemeInfo GetSchemeInfo(string schemeName)
         {
-            var getExclusions = new GetExclusions();
-            var exclusions = getExclusions.GetMastermindExclusion(mastermind.MastermindName);
-            var schemeExclusions = exclusions.SchemeList;
-
-            var schemeInfo = _schemes[new Random().Next(_schemes.Count)];
-            if(schemeExclusions.Count < _schemes.Count)
-            {
-                var schemeNameList = _schemes.ToList().Select(x => x.SchemeName).ToList();
-                var remainingSchemes = schemeNameList.Except(schemeExclusions).ToList();
-                var schemeName = remainingSchemes[new Random().Next(remainingSchemes.Count)];
-                schemeInfo = _schemes.First(x => x.SchemeName == schemeName);
-            }
-
-            if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)
-            {
-                playerCount = 3;
-            }
-
-            if (mastermind.DoesLeadHenchmen)
-            {
-                playerCount = 4;
-            }
-
-            while (schemeInfo.CannotBeSolo && playerCount == 1)
-            {
-                schemeInfo = _schemes[new Random().Next(_schemes.Count)];
-            }
-
-            SchemeName = schemeInfo.SchemeName;
-            SetName = schemeInfo.SetName;
-            Twists = schemeInfo.SchemeTwists[playerCount - 1];
-            NumberOfSchemeTwists = schemeInfo.SchemeTwists[playerCount - 1];
-            SchemeInfo = schemeInfo;
-            IsSchemeTwistsNextToScheme = schemeInfo.IsSchemeTwistsNextToScheme;
-            NumberTwistsNextToScheme = schemeInfo.NumberTwistsNextToScheme;
-            NumberOfPlayers = playerCount;
-
-            NumberOfMasterminds = schemeInfo.NumberOfMasterminds;
-
-            NumberOfVillains = schemeInfo.Villains[playerCount - 1];
-            RequiredVillains = schemeInfo.RequiredVillains;
-
-            NumberOfHenchmen = schemeInfo.Henchmen[playerCount - 1];
-            RequiredHenchmen = schemeInfo.RequiredHenchmen;
-
-            NumberOfHeroes = schemeInfo.Heroes[playerCount - 1];
-            RequiredHeroes = schemeInfo.RequiredHeroes;
-            HeroesInVillainDeck = schemeInfo.HeroesInVillainDeck;
-            RandomHeroesInVillainDeck = schemeInfo.NumberOfHeroesInVillainDeck;
-
-            BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1] + schemeInfo.AdditionalBystanders;
-            BystandersInHeroDeck = schemeInfo.BystandersInHeroDeck[playerCount-1];
-            IsBystandersInHeroDeck = schemeInfo.IsBystandersInHeroDeck;
-
-            WoundsPerPlayer = schemeInfo.WoundsPerPlayer;
-            CustomWoundNumber = schemeInfo.CustomWoundCount;
-            Wounds = schemeInfo.WoundPerPlayer;
+            return _schemes.First(x => x.SchemeName == schemeName);
         }
 
-        public Scheme(int playerCount, Mastermind mastermind, bool useSql)
+        private SchemeInfo GetRandomScheme(Mastermind mastermind)
         {
+            var schemeName = "";
             var allSchemesQuery = "SELECT [SchemeName] FROM [Schemes]";
             var allSchemesByMastermind = $@"select s.SchemeName from Schemes s
-inner join SchemeByMastermind sbm ON s.Id = sbm.SchemeId
-inner join Masterminds m ON m.Id = sbm.MastermindId
-where m.MastermindName = '{mastermind.MastermindName}'";
+                    inner join SchemeByMastermind sbm ON s.Id = sbm.SchemeId
+                    inner join Masterminds m ON m.Id = sbm.MastermindId
+                    where m.MastermindName = '{mastermind.MastermindName}'";
 
-            var allSchemes = SqlHelper.GetList(allSchemesQuery);
-            var mastermindSchemes = SqlHelper.GetList(allSchemesByMastermind);
-            var remainingSchemes = allSchemes.Except(mastermindSchemes).ToList();
-            var scheme = remainingSchemes[new Random().Next(remainingSchemes.Count)];
+            var schemeNameList = new SqlHelper().GetList(allSchemesQuery);
+            var mastermindSchemeNameList = new SqlHelper().GetList(allSchemesByMastermind);
 
-            //Need to write code in case there are no values in the remainingSchemes list - that is when the mastermind has played with every scheme
-            var schemeInfo = _schemes.FirstOrDefault(s => s.SchemeName == scheme);
+            if (mastermindSchemeNameList.Count <= schemeNameList.Count)
+            {
+                var remainingSchemes = schemeNameList.Except(mastermindSchemeNameList).ToList();
+                schemeName = remainingSchemes[new Random().Next(remainingSchemes.Count)];
+            }
+            else
+            {
+                schemeName = schemeNameList[new Random().Next(schemeNameList.Count)];
+            }
 
+            return _schemes.First(x => x.SchemeName == schemeName);
+        }
+
+        private void ProcessSchemeInfo(int playerCount, SchemeInfo schemeInfo, Mastermind mastermind)
+        {
             if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)
             {
                 playerCount = 3;
             }
 
-            if (mastermind.DoesLeadHenchmen)
+            if (schemeInfo.RequiredHenchmen.Count > 0 || mastermind.DoesLeadHenchmen)
             {
                 playerCount = 4;
-            }
-
-            while (schemeInfo.CannotBeSolo && playerCount == 1)
-            {
-                schemeInfo = _schemes[new Random().Next(_schemes.Count)];
             }
 
             SchemeName = schemeInfo.SchemeName;
@@ -408,6 +327,13 @@ where m.MastermindName = '{mastermind.MastermindName}'";
             WoundsPerPlayer = schemeInfo.WoundsPerPlayer;
             CustomWoundNumber = schemeInfo.CustomWoundCount;
             Wounds = schemeInfo.WoundPerPlayer;
+        }
+
+        public List<string> GetListOfSchemes()
+        {
+            var allSchemesQuery = "SELECT [SchemeName] FROM [Schemes]";
+            var allSchemes = new SqlHelper().GetList(allSchemesQuery);
+            return allSchemes;
         }
     }
 }

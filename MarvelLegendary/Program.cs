@@ -15,8 +15,7 @@ namespace MarvelLegendary
             {
                 var game = new GameInfo(int.Parse(playerCount));
                 game.SetMastermind();
-                //game.SetScheme();
-                game.SetSchemeSql();
+                game.SetScheme();
 
                 if (game.Scheme.SchemeInfo.NumberExtraMasterminds > 0)
                     game.SetExtraMasterminds();
@@ -37,8 +36,16 @@ namespace MarvelLegendary
                     Console.WriteLine($"Unveiled scheme is\r\n1) {game.UnveiledScheme.SchemeName}, {game.UnveiledScheme.SetName}\r\n\r\n");
                 }
 
-                Console.WriteLine("How many players are playing? (0 to quit)");
-                playerCount = Console.ReadLine();
+                try
+                {
+                    Console.WriteLine("How many players are playing? (0 to quit)");
+                    playerCount = Console.ReadLine();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Invalid input detected. Defaulting to 0.");
+                    playerCount = "0";
+                }
             }
         }
 

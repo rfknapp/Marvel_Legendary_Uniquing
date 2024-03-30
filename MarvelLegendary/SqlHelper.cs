@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace MarvelLegendary
 {
-    static class SqlHelper
+    public class SqlHelper
     {
-        static string connectionString;
-        static SqlConnection connection;
+        string connectionString;
+        SqlConnection connection;
 
-        static SqlHelper()
+        public SqlHelper()
         {
             connectionString = ConfigurationManager.ConnectionStrings["MarvelLegendary.Database"].ConnectionString;
             connection = new SqlConnection(connectionString);
         }
 
-        static public List<string> GetList(string sqlString)
+        public List<string> GetList(string sqlString)
         {
             List<string> returnList = new List<string>();
 

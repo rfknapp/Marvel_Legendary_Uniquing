@@ -141,24 +141,13 @@ namespace MarvelLegendary
 
         public void SetMastermind(string mastermindName = "")
         {
-            Mastermind = mastermindName == "" ? new Mastermind() : new Mastermind(mastermindName);
+            Mastermind = new Mastermind().GetNewMastermind(mastermindName);
             AllMastermindsInGame.Add(Mastermind);
         }
 
         public void SetScheme(string schemeName = "")
         {
-            Scheme = schemeName == "" ? new Scheme(PlayerCount, Mastermind) : new Scheme(PlayerCount, schemeName);
-            PlayerCount = Scheme.NumberOfPlayers;
-
-            WoundNumber = GetWoundInformation(Scheme.CustomWoundNumber, Scheme.Wounds);
-            CustomWoundNumber = Scheme.CustomWoundNumber;
-            BindingNumber = Scheme.SchemeInfo.BindingPerPlayer[PlayerCount - 1];
-            NumberHenchmenNextToScheme = Scheme.SchemeInfo.HenchmenNextToSchemePerPlayer[PlayerCount - 1];
-        }
-
-        public void SetSchemeSql(string schemeName = "")
-        {
-            Scheme = schemeName == "" ? new Scheme(PlayerCount, Mastermind, true) : new Scheme(PlayerCount, schemeName);
+            Scheme = new Scheme().GetNewScheme(PlayerCount, Mastermind, schemeName);
             PlayerCount = Scheme.NumberOfPlayers;
 
             WoundNumber = GetWoundInformation(Scheme.CustomWoundNumber, Scheme.Wounds);
@@ -343,11 +332,11 @@ namespace MarvelLegendary
             }
 
             returnList.AddRange(from item in extraMasterminds
-                                select new Mastermind(item));
+                                select new Mastermind().GetNewMastermind(item));
 
             if (scheme.SchemeInfo.IsDrainedMastermind)
             {
-                scheme.SchemeInfo.DrainedMastermind = new Mastermind(extraMasterminds.First());
+                scheme.SchemeInfo.DrainedMastermind = new Mastermind().GetNewMastermind(extraMasterminds.First());
             }
 
             return returnList;
@@ -356,6 +345,7 @@ namespace MarvelLegendary
         private static List<Mastermind> GetMasterminds(Scheme scheme, Mastermind mainMastermind, bool useSql)
         {
             var returnList = new List<Mastermind>();
+            var test = new Mastermind().GetListOfMasterminds();
             var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
             var extraMasterminds = new List<string>();
             var mastermindList = new Mastermind().GetListOfMasterminds();
@@ -372,11 +362,11 @@ namespace MarvelLegendary
             }
 
             returnList.AddRange(from item in extraMasterminds
-                                select new Mastermind(item));
+                                select new Mastermind().GetNewMastermind(item));
 
             if (scheme.SchemeInfo.IsDrainedMastermind)
             {
-                scheme.SchemeInfo.DrainedMastermind = new Mastermind(extraMasterminds.First());
+                scheme.SchemeInfo.DrainedMastermind = new Mastermind().GetNewMastermind(extraMasterminds.First());
             }
 
             return returnList;
