@@ -283,21 +283,21 @@ namespace MarvelLegendary
             var extraMasterminds = new List<string>();
 
             //Get Masterminds
-            var mastermindList = new Mastermind().GetListOfMasterminds();
+            var mastermindList = GetListOfMasterminds();
 
             //Get Masterminds that have played with the scheme
             var schemesByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", mainMastermind.MastermindName);
 
             //Remove all Masterminds that have played with the scheme from the list
-            var remainingMasterminds2 = mastermindList.Except(schemesByMastermind).ToList();
+            var remainingMasterminds = mastermindList.Except(schemesByMastermind).ToList();
 
             //Remove the current Mastermind from the list
-            remainingMasterminds2 = remainingMasterminds2.Except(mastermindsInGame).ToList();
+            remainingMasterminds = remainingMasterminds.Except(mastermindsInGame).ToList();
 
             for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
             {
                 //Get random mastermind from remaining list
-                var newMastermind = remainingMasterminds2[new Random().Next(remainingMasterminds2.Count)];
+                var newMastermind = remainingMasterminds[new Random().Next(remainingMasterminds.Count)];
 
                 //Get MastermindxMastermind
                 var mastermindByMastermind = GetListOfMastermindByX("Mastermind", newMastermind);
@@ -306,8 +306,8 @@ namespace MarvelLegendary
                 var schemeByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", newMastermind);
 
                 //Remove all from main list
-                remainingMasterminds2 = remainingMasterminds2.Except(mastermindByMastermind).ToList();
-                remainingMasterminds2 = remainingMasterminds2.Except(schemeByMastermind).ToList();
+                remainingMasterminds = remainingMasterminds.Except(mastermindByMastermind).ToList();
+                remainingMasterminds = remainingMasterminds.Except(schemeByMastermind).ToList();
 
                 //Add mastermind to extraMasterminds
                 extraMasterminds.Add(newMastermind);

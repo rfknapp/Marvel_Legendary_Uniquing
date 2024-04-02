@@ -159,73 +159,56 @@ namespace MarvelLegendary
             new VillainInfo("Reavers", GameInfo.Set.Messiah),
         };
 
-        public Villain()
-        {
-            var villain = _villains[new Random().Next(_villains.Count)];
+        public Villain() {}
 
-            VillainName = villain.VillainName;
-            SetName = villain.VillainSetName;
-            VillainInfo = villain;
+        public Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme)
+        {
+            //Get Villains
+            var villainList = GetListOfVillains();
+
+            //Get Villains that have played with the Scheme
+            var villainsByScheme = GetListOfVillainsByX("Scheme", scheme.SchemeName);
+
+            //Remove all Villains that have played with the scheme from the list
+            var remainingVillains = villainList.Except(villainsByScheme).ToList();
+
+            //Get Villains that have played with each of the Masterminds with
+            foreach (var mastermind in allMastermindsInGame)
+            {
+                var villainsByMastermind = GetListOfVillainsByX("Mastermind", mastermind.MastermindName);
+                //Remove all Villains that have played with the Mastermind(s)
+                remainingVillains = remainingVillains.Except(villainsByMastermind).ToList();
+            }
+
+            //Select Villain from remaining list
+            var villainName = remainingVillains[new Random().Next(remainingVillains.Count)];
+            var villainInfo = _villains.First(v => v.VillainName == villainName);
+            //Set VillainName
+            VillainName = villainName;
+            //Set SetName
+            SetName = villainInfo.VillainSetName;
+            //Set VillainInfo
+            VillainInfo = villainInfo;
+
+            return this;
         }
 
-        public Villain(List<string> exclusionVillains)
+        public Villain GetNewVillain(string villainName = "")
         {
-            VillainInfo villain;
-            var villainsExcluded = _villains.Select(x => x.VillainName).Except(exclusionVillains).ToList();
-
-            if (villainsExcluded.Count > 0)
+            var villain = villainName;
+            if (string.IsNullOrEmpty(villain))
             {
-                var villainName = villainsExcluded[new Random().Next(villainsExcluded.Count)];
-                villain = _villains.First(x => x.VillainName == villainName);
-            }
-            else
-            {
-                villain = _villains[new Random().Next(_villains.Count)];
+                var allVillains = GetListOfVillains();
+                villain = allVillains[new Random().Next(allVillains.Count)];
             }
 
-            VillainName = villain.VillainName;
-            SetName = villain.VillainSetName;
-            VillainInfo = villain;
-        }
-
-        public Villain(List<Mastermind> allMastermindsInGame)
-        {
-            var getExclusions = new GetExclusions();
-            VillainInfo villain = null;
-            var masterminds = allMastermindsInGame.Select(x => x.MastermindName).ToList();
-            var villainList = new Villain().GetListOfVillains();
-
-            for (int i = masterminds.Count - 1; i >= 0; i--)
-            {
-                var exclusions = getExclusions.GetMastermindExclusion(masterminds);
-
-                var mastermindCompareList = villainList.Except(exclusions.VillainList).ToList();
-                if (mastermindCompareList.Count > 0)
-                {
-                    var villainName = mastermindCompareList[new Random().Next(mastermindCompareList.Count)];
-                    villain = _villains.First(x => x.VillainName == villainName);
-                    break;
-                }
-                masterminds.RemoveAt(i);
-            }
-
-            if(villain == null)
-            {
-                villain = _villains[new Random().Next(_villains.Count)];
-            }
-
-            VillainName = villain.VillainName;
-            SetName = villain.VillainSetName;
-            VillainInfo = villain;
-        }
-
-        public Villain(string villainName)
-        {
-            var villain = _villains.First(x => x.VillainName == villainName);
+            var villainInfo = _villains.FirstOrDefault(v => v.VillainName == villain);
 
             VillainName = villainName;
-            SetName = villain.VillainSetName;
-            VillainInfo = villain;
+            SetName = villainInfo.VillainSetName;
+            VillainInfo = villainInfo;
+
+            return this;
         }
 
         public Villain(List<VillainInfo> villains)
@@ -271,7 +254,32 @@ namespace MarvelLegendary
 
         public List<string> GetListOfVillains()
         {
-            return _villains.ToList().Select(x => x.VillainName).ToList();
+            var allVillainsQuery = "SELECT [VillainName] FROM [Villains]";
+            var allVillains = new SqlHelper().GetList(allVillainsQuery);
+            return allVillains;
+        }
+
+        public string GetRandomVillain()
+        {
+            var allVillains = GetListOfVillains();
+            var villain = allVillains[new Random().Next(allVillains.Count)];
+            return villain;
+        }
+
+        public List<string> GetListOfVillainsByX(string cardType, string name)
+        {
+            //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
+            var villainByTable = $"VillainBy{cardType}";
+            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+            var updatedName = name.Contains("'") ? name.Replace("'", "''") : name;
+
+            var allVillainsBy = $@"select v.VillainName from Villains v
+                    inner join {villainByTable} vb ON v.Id = vb.VillainId
+                    inner join {tableName} t ON t.Id = vb.{cardType}Id
+                    where t.{cardType}Name = '{updatedName}'";
+
+            var allVillainsByX = new SqlHelper().GetList(allVillainsBy);
+            return allVillainsByX;
         }
     }
 }

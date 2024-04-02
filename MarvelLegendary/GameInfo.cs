@@ -175,7 +175,7 @@ namespace MarvelLegendary
 
             if (Scheme.SchemeInfo.IsMonsterPitDeck)
             {
-                MonsterPitVillains.Add(new Villain("Monsters Unleashed"));
+                MonsterPitVillains.Add(new Villain().GetNewVillain("Monsters Unleashed"));
             }
 
             if (Scheme.SchemeInfo.IncludeExtraAlwaysLeadsVillains && Scheme.SchemeInfo.DrainedMastermind.DoesLeadVillain)
@@ -191,7 +191,7 @@ namespace MarvelLegendary
 
             if (villainNames != null)
             {
-                Villains.AddRange(from item in villainNames select new Villain(item));
+                Villains.AddRange(from item in villainNames select new Villain().GetNewVillain(item));
             }
 
             Villains = GetVillains(Scheme.NumberOfVillains, Scheme.RequiredVillains, Villains);
@@ -200,7 +200,7 @@ namespace MarvelLegendary
 
             foreach (var schemeRequiredVillain in Scheme.RequiredVillains)
             {
-                AllVillainsInGame.Add(new Villain(schemeRequiredVillain));
+                AllVillainsInGame.Add(new Villain().GetNewVillain(schemeRequiredVillain));
             }
         }
 
@@ -342,44 +342,6 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        private static List<Mastermind> GetMasterminds(Scheme scheme, Mastermind mainMastermind, bool useSql)
-        {
-            var returnList = new List<Mastermind>();
-            /*var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
-            var extraMasterminds = new List<string>();
-            
-            //Get Masterminds
-            var mastermindList = new Mastermind().GetListOfMasterminds();
-            //Get Masterminds that have played with the scheme
-            var schemesByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", mainMastermind.MastermindName);
-
-            //Remove all Masterminds that have played with the scheme from the list
-            var remainingMasterminds2 = mastermindList.Except(schemesByMastermind).ToList();
-
-            //Remove the current Mastermind from the list
-            remainingMasterminds2 = remainingMasterminds2.Except(mastermindsInGame).ToList();
-
-            for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
-            {
-                var exclusions = DetermineMastermindList(mastermindsInGame);
-                var mastermindsToChooseFrom = remainingMasterminds.Except(exclusions).ToList();
-
-                var newMastermind = mastermindsToChooseFrom[new Random().Next(mastermindsToChooseFrom.Count)];
-                mastermindsInGame.Add(newMastermind);
-                extraMasterminds.Add(newMastermind);
-            }
-
-            returnList.AddRange(from item in extraMasterminds
-                                select new Mastermind().GetNewMastermind(item));
-
-            if (scheme.SchemeInfo.IsDrainedMastermind)
-            {
-                scheme.SchemeInfo.DrainedMastermind = new Mastermind().GetNewMastermind(extraMasterminds.First());
-            }*/
-
-            return returnList;
-        }
-
         private static List<string> DetermineMastermindList(List<string> mastermindsInGame)
         {
             var mastermindsToExcludeWith = new List<string>(mastermindsInGame);
@@ -415,15 +377,15 @@ namespace MarvelLegendary
             allVillainsInGame.AddRange(from item in MonsterPitVillains select item);
 
             //There is one scheme that brings in two villains, so this will actually allow 2 villain groups in a solo game
-            villainList.AddRange(from item in requiredVillains select new Villain(item));
-            allVillainsInGame.AddRange(from item in requiredVillains select new Villain(item));
+            villainList.AddRange(from item in requiredVillains select new Villain().GetNewVillain(item));
+            allVillainsInGame.AddRange(from item in requiredVillains select new Villain().GetNewVillain(item));
 
             //If this is a solo game, then the Mastermind Leads is ignored
             //If the number of villains required for the player count hasn't been reached, then it will add the mastermind leads villain group
             if (PlayerCount > 1 && Mastermind.DoesLeadVillain && numberOfVillains > villainList.Count)
             {
                 //If the masterminds leads one of the villains brought in through the scheme, it won't be added twice
-                var mastermindLeadsVillain = new Villain(Mastermind.LeadsVillain);
+                var mastermindLeadsVillain = new Villain().GetNewVillain(Mastermind.LeadsVillain);
                 var mastermindLeadsVillainName = mastermindLeadsVillain.VillainName;
                 if (allVillainsInGame.All(x => x.VillainName != mastermindLeadsVillainName))
                 {
@@ -432,9 +394,12 @@ namespace MarvelLegendary
                 }
             }
 
+            //This will trigger if a mastermind is chosen that doesn't lead a villain group
+            //and a scheme that doesn't bring in any villians
             if (villainList.Count == 0)
             {
-                var villain = new Villain(AllMastermindsInGame);
+                //var villain = new Villain(AllMastermindsInGame);
+                var villain = new Villain().GetNewVillain(AllMastermindsInGame, Scheme);
                 villainList.Add(villain);
                 allVillainsInGame.Add(villain);
             }
@@ -462,7 +427,7 @@ namespace MarvelLegendary
             }
 
             returnList.AddRange(from item in villainsInGame
-                                select new Villain(item));
+                                select new Villain().GetNewVillain(item));
 
             return returnList;
         }
