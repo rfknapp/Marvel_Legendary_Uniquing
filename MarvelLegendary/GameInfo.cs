@@ -413,17 +413,11 @@ namespace MarvelLegendary
 
             var returnList = new List<Villain>();
             var villainsInGame = new List<string>(villainList.Select(x => x.VillainName));
-            var allVillains = new Villain().GetListOfVillains();
 
             for (int i = 0; i < numRemainingVillains; i++)
             {
-                var exclusions = DetermineVillainList(villainsInGame, AllMastermindsInGame);
-            
-                var remainingVillains = allVillains.Except(villainsInGame).ToList();
-                var villainsToChooseFrom = remainingVillains.Except(exclusions).ToList();
-            
-                var newVillain = villainsToChooseFrom[new Random().Next(villainsToChooseFrom.Count)];
-                villainsInGame.Add(newVillain);
+                var villain = new Villain().GetNewVillain(AllMastermindsInGame, Scheme, villainsInGame);
+                villainsInGame.Add(villain.VillainName);
             }
 
             returnList.AddRange(from item in villainsInGame
@@ -432,11 +426,12 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        private static List<string> DetermineVillainList(List<string> villainsInGame, List<Mastermind> mastermindsInGame)
+        private static List<string> DetermineVillainList(List<string> villainsInGame, List<Mastermind> mastermindsInGame, Scheme scheme)
         {
             var masterminds = mastermindsInGame.Select(x => x.MastermindName).ToList();
             var villainList = new Villain().GetListOfVillains();
             var getExclusions = new GetExclusions();
+            var schemeName = scheme.SchemeName;
 
             for (int i = masterminds.Count - 1; i >= 0; i--)
             {

@@ -161,38 +161,6 @@ namespace MarvelLegendary
 
         public Villain() {}
 
-        public Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme)
-        {
-            //Get Villains
-            var villainList = GetListOfVillains();
-
-            //Get Villains that have played with the Scheme
-            var villainsByScheme = GetListOfVillainsByX("Scheme", scheme.SchemeName);
-
-            //Remove all Villains that have played with the scheme from the list
-            var remainingVillains = villainList.Except(villainsByScheme).ToList();
-
-            //Get Villains that have played with each of the Masterminds with
-            foreach (var mastermind in allMastermindsInGame)
-            {
-                var villainsByMastermind = GetListOfVillainsByX("Mastermind", mastermind.MastermindName);
-                //Remove all Villains that have played with the Mastermind(s)
-                remainingVillains = remainingVillains.Except(villainsByMastermind).ToList();
-            }
-
-            //Select Villain from remaining list
-            var villainName = remainingVillains[new Random().Next(remainingVillains.Count)];
-            var villainInfo = _villains.First(v => v.VillainName == villainName);
-            //Set VillainName
-            VillainName = villainName;
-            //Set SetName
-            SetName = villainInfo.VillainSetName;
-            //Set VillainInfo
-            VillainInfo = villainInfo;
-
-            return this;
-        }
-
         public Villain GetNewVillain(string villainName = "")
         {
             var villain = villainName;
@@ -206,6 +174,50 @@ namespace MarvelLegendary
 
             VillainName = villainName;
             SetName = villainInfo.VillainSetName;
+            VillainInfo = villainInfo;
+
+            return this;
+        }
+
+        public Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme, List<string> villainsInGame = null)
+        {
+            //Set villains to be empty if it is coming in as null
+            if (villainsInGame == null)
+            {
+                villainsInGame = new List<string>();
+            }
+
+            //Get Villains
+            var villainList = GetListOfVillains();
+
+            //Remove all Villains currently in the game from the list
+            var remainingVillains = villainList.Except(villainsInGame).ToList();
+
+            //Get Villains that have played with the Scheme
+            var villainsByScheme = GetListOfVillainsByX("Scheme", scheme.SchemeName);
+
+            //Remove all Villains that have played with the scheme from the list
+            remainingVillains = remainingVillains.Except(villainsByScheme).ToList();
+
+            //Get Villains that have played with each of the Masterminds with
+            foreach (var mastermind in allMastermindsInGame)
+            {
+                var villainsByMastermind = GetListOfVillainsByX("Mastermind", mastermind.MastermindName);
+                //Remove all Villains that have played with the Mastermind(s)
+                remainingVillains = remainingVillains.Except(villainsByMastermind).ToList();
+            }
+
+            //Select Villain from remaining list
+            var villainName = remainingVillains[new Random().Next(remainingVillains.Count)];
+            var villainInfo = _villains.First(v => v.VillainName == villainName);
+            
+            //Set VillainName
+            VillainName = villainName;
+            
+            //Set SetName
+            SetName = villainInfo.VillainSetName;
+            
+            //Set VillainInfo
             VillainInfo = villainInfo;
 
             return this;
