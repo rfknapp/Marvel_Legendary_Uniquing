@@ -16,13 +16,19 @@ namespace MarvelLegendary
             {
                 MastermindName = "",
                 SetName = GameInfo.Set.Core,
+                RequiredVillain = "",
                 LeadsVillain = "",
                 LeadsHenchmen = "",
+                AlwaysLeadsOnSolo = false,
                 DoesLeadHenchmen = false,
                 DoesLeadVillain = false,
                 IncludeBindings = false,
                 IncludeMadameHydra = false,
-                IncludeHorrors = false
+                IncludeHorrors = false,
+                IsZombieSoloVillain = false,
+                RequireVillain = false,
+                IncludeExtraHero = false,
+                MastermindNumberOfHeroes = 0
             };
         }
 
@@ -72,6 +78,16 @@ namespace MarvelLegendary
             return this;
         }
 
+        public MastermindInfoBuilder LeadsVillainsByKind(List<string> villainKinds)
+        {
+            var henchmenList = new Henchmen().GetListOfHenchmen();
+            var henchmenNames = (henchmenList.Where(item => item.Contains(henchmenKind))).ToList();
+
+            _mastermindInfo.LeadsHenchmen = henchmenNames[new Random().Next(henchmenNames.Count)];
+            _mastermindInfo.DoesLeadHenchmen = true;
+            return this;
+        }
+
         public MastermindInfoBuilder IncludeBindings()
         {
             _mastermindInfo.IncludeBindings = true;
@@ -87,6 +103,25 @@ namespace MarvelLegendary
         public MastermindInfoBuilder IncludeHorrors()
         {
             _mastermindInfo.IncludeHorrors = true;
+            return this;
+        }
+
+        public MastermindInfoBuilder AlwaysLeadsOnSolo()
+        {
+            _mastermindInfo.AlwaysLeadsOnSolo = true;
+            return this;
+        }
+
+        public MastermindInfoBuilder SetZombieSoloVillains()
+        {
+            _mastermindInfo.IsZombieSoloVillain = true;
+            return this;
+        }
+
+        public MastermindInfoBuilder IncludeExtraHero()
+        {
+            _mastermindInfo.IncludeExtraHero = true;
+            _mastermindInfo.MastermindNumberOfHeroes = 1;
             return this;
         }
 

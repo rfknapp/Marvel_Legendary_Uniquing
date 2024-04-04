@@ -234,7 +234,54 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Drain Mutants' Powers To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(11).SetVeiledScheme().Build(),
             new SchemeInfoBuilder().SetSchemeName("Hack Cerebro Servers To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(10).SetVeiledScheme().Build(),
             new SchemeInfoBuilder().SetSchemeName("Hire Singularity Investigations To...").SetSchemeSet(GameInfo.Set.Messiah).SetSchemeTwists(9).SetVeiledScheme().Build(),
-            new SchemeInfoBuilder().SetSchemeName("Raid Gene Banks To...").SetSchemeSet(GameInfo.Set.Messiah).SetVeiledScheme().Build()
+            new SchemeInfoBuilder().SetSchemeName("Raid Gene Banks To...").SetSchemeSet(GameInfo.Set.Messiah).SetVeiledScheme().Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Claim Souls for Demons").SetSchemeSet(GameInfo.Set.Strange).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Cursed Pages of the Darkhold Tome").SetSchemeSet(GameInfo.Set.Strange).SetSchemeTwists(11).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Duels of Science and Magic").SetSchemeSet(GameInfo.Set.Strange).SetSchemeTwists(new List<int>{10,9,11,10,11}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("War for the Dream Dimension").SetSchemeSet(GameInfo.Set.Strange).SetSchemeTwists(7).AddAdditionalVillain(1).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Inescapable \"Kyln\" Space Prison").SetSchemeSet(GameInfo.Set.Guardians).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Provoke the Sovereign War Fleet").SetSchemeSet(GameInfo.Set.Guardians).SetSchemeTwists(11).AddAdditionalVillain(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Star-Lord's Awesome Mix Tape").SetSchemeSet(GameInfo.Set.Guardians).SetSchemeTwists(7).SetHeroCount(7).DoubleHenchmen().DoubleVillains().IncludeHeroTeams(1, HeroTeam.GuardiansOfTheGalaxy).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Unleash the Abilisk Space Monster").SetSchemeSet(GameInfo.Set.Guardians).SetSchemeTwists(9).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Plunder Wakanda's Vibranium").SetSchemeSet(GameInfo.Set.BlackPanther).SetSchemeTwists(10).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Poison Lakes with Nanite Microbots").SetSchemeSet(GameInfo.Set.BlackPanther).SetSchemeTwists(new List<int>{5,6,7,8,9}).SetWoundCount(false, 30).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Provoke a Clash of Nations").SetSchemeSet(GameInfo.Set.BlackPanther).SetSchemeTwists(11).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Seize the Wakandan Throne").SetSchemeSet(GameInfo.Set.BlackPanther).SetSchemeTwists(6).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Corrupt the Spy Agencies").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(7).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Frame Heroes for Murder").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(7).SetHeroCount(6).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Sniper Rifle Assassins").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(new List<int>{10,9,8,7,6}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Train Black Widows in the Red Room").SetSchemeSet(GameInfo.Set.BlackWidow).SetSchemeTwists(new List<int>{7,6,5,4,3}).SetVillainOfficers(8).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Halve All Life in the Universe").SetSchemeSet(GameInfo.Set.InfinitySaga).SetSchemeTwists(5).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Sacrifice for the Soul Stone").SetSchemeSet(GameInfo.Set.InfinitySaga).SetSchemeTwists(new List<int>{5,6,7,8,9}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Time Heist").SetSchemeSet(GameInfo.Set.InfinitySaga).SetSchemeTwists(11).SetHeroCount(8).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Warp Reality Into a TV Show").SetSchemeSet(GameInfo.Set.InfinitySaga).SetSchemeTwists(11).Build(),
+
+-->            new SchemeInfoBuilder().SetSchemeName("Midnight Massacre").SetSchemeSet(GameInfo.Set.MidnightSons).SetSchemeTwists(11).SetNumberOfHeroWithNameLike(1, "Deadpool").HeroesInVillainDeckWithNameLike(1, "Blade").HeroesInVillainDeck("Blade").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Ritual Sacrifice to Summon Chthon").SetSchemeSet(GameInfo.Set.MidnightSons).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Sire Vampires at the Blood Bank").SetSchemeSet(GameInfo.Set.MidnightSons).SetSchemeTwists(10).SetVampireNaniteHenchmen().Build(),
+            new SchemeInfoBuilder().SetSchemeName("Wager at Blackjack for Heroes' Souls").SetSchemeSet(GameInfo.Set.MidnightSons).SetSchemeTwists(11).AddAdditionalHero(2).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Breach the Nexus of All Realities").SetSchemeSet(GameInfo.Set.WhatIf).SetVillainCount(new List<int>{ 3, 3, 3, 3, 4 }).SetSchemeTwists(new List<int>{6,6,6,6,8}).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Collect an Interstellar Zoo").SetSchemeSet(GameInfo.Set.WhatIf).SetSchemeTwists(11).Build(),
+            //Need to bring in keyword information on heroes
+-->            new SchemeInfoBuilder().SetSchemeName("Marvel Zombies").SetSchemeSet(GameInfo.Set.WhatIf).SetSchemeTwists(4).SetBystanderCount(new List<int>{ 4, 5, 8, 8, 12 }).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Trash Earth with Hugest Party Ever").SetSchemeSet(GameInfo.Set.WhatIf).SetSchemeTwists(6).SetRequiredHeroes("Party Thor").SetRequiredVillains("Intergalactic Party Animals").Build(),
+
+            //Need to set up Shrink Tech deck by bringing in keyword information on heroes
+-->            new SchemeInfoBuilder().SetSchemeName("Auction Shrink Tech to Highest Bidder").SetSchemeSet(GameInfo.Set.AntmanWasp).SetSchemeTwists(11).HeroesInVillainDeck("Blade").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Escape an Imprisoning Dimension").SetSchemeSet(GameInfo.Set.AntmanWasp).SetSchemeTwists(5).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Safeguard Dark Secrets").SetSchemeSet(GameInfo.Set.AntmanWasp).SetSchemeTwists(5).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Siphon Energy from the Quantum Realm").SetSchemeSet(GameInfo.Set.AntmanWasp).SetSchemeTwists(9).IncludeQuantumRealmDeck().Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Become President of the United States").SetSchemeSet(GameInfo.Set.TwentyNintyNine).SetSchemeTwists(11).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Befoul Earth Into a Polluted Wasteland").SetSchemeSet(GameInfo.Set.TwentyNintyNine).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Pull Reality Into Cyberspace").SetSchemeSet(GameInfo.Set.TwentyNintyNine).SetSchemeTwists(7).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Subjugate Earth with Mega-Corporations").SetSchemeSet(GameInfo.Set.TwentyNintyNine).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
         };
 
         public Scheme() {}
@@ -300,7 +347,7 @@ namespace MarvelLegendary
             SchemeName = schemeInfo.SchemeName;
             SetName = schemeInfo.SetName;
             Twists = schemeInfo.SchemeTwists[playerCount - 1];
-            NumberOfSchemeTwists = schemeInfo.SchemeTwists[playerCount - 1];
+            NumberOfSchemeTwists = SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith" ? 1 : schemeInfo.SchemeTwists[playerCount - 1];
             SchemeInfo = schemeInfo;
             IsSchemeTwistsNextToScheme = schemeInfo.IsSchemeTwistsNextToScheme;
             NumberTwistsNextToScheme = schemeInfo.NumberTwistsNextToScheme;
@@ -309,7 +356,16 @@ namespace MarvelLegendary
             NumberOfMasterminds = schemeInfo.NumberOfMasterminds;
 
             NumberOfVillains = schemeInfo.Villains[playerCount - 1];
+            
+            //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is Lilith
+            if (SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith")
+                NumberOfVillains++;
+            
             RequiredVillains = schemeInfo.RequiredVillains;
+
+            //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is not Lilith
+            if (SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName != "Lilith")
+                RequiredVillains.Add("Lilin");
 
             NumberOfHenchmen = schemeInfo.Henchmen[playerCount - 1];
             RequiredHenchmen = schemeInfo.RequiredHenchmen;

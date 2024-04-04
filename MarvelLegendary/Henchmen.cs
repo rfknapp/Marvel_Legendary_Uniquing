@@ -39,7 +39,7 @@ namespace MarvelLegendary
         public string HenchmenName;
         public HenchmenInfo HenchmenInfo { get; set; }
 
-        private readonly List<HenchmenInfo> _hechmen = new List<HenchmenInfo>()
+        private readonly List<HenchmenInfo> _henchmen = new List<HenchmenInfo>()
         {
             new HenchmenInfo("Doombot Legion", GameInfo.Set.Core, "Ten Ring Fantatics"),
             new HenchmenInfo("Hand Ninjas", GameInfo.Set.Core, "HYDRA Piots"),
@@ -90,23 +90,31 @@ namespace MarvelLegendary
             new HenchmenInfo("Universal Church of Truth", GameInfo.Set.Cosmos),
 
             new HenchmenInfo("Mr. Sinister Clones", GameInfo.Set.Messiah),
-            new HenchmenInfo("Sentinel Squad O*N*E*", GameInfo.Set.Messiah)
+            new HenchmenInfo("Sentinel Squad O*N*E*", GameInfo.Set.Messiah),
+
+            new HenchmenInfo("Giants of Jotunheim", GameInfo.Set.WhatIf),
+            new HenchmenInfo("Ultron Sentries", GameInfo.Set.WhatIf),
+            new HenchmenInfo("Vibranium Liberator Drones", GameInfo.Set.WhatIf),
+
+            new HenchmenInfo("Quantonauts", GameInfo.Set.AntmanWasp),
+            new HenchmenInfo("Quantum Hounds", GameInfo.Set.AntmanWasp),
+            new HenchmenInfo("Tardigrade", GameInfo.Set.AntmanWasp)
         };
 
         public Henchmen()
         {
-            var henchmen = _hechmen[new Random().Next(_hechmen.Count)];
+            var henchmen = _henchmen[new Random().Next(_henchmen.Count)];
             if(henchmen.HenchmenName.Contains('('))
             {
-                henchmen = _hechmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
             }
 
             while (henchmen == null)
             {
-                henchmen = _hechmen[new Random().Next(_hechmen.Count)];
+                henchmen = _henchmen[new Random().Next(_henchmen.Count)];
                 if (henchmen.HenchmenName.Contains('('))
                 {
-                    henchmen = _hechmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                    henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
                 }
             }
 
@@ -115,63 +123,81 @@ namespace MarvelLegendary
             HenchmenInfo = henchmen;
         }
 
-        public Henchmen(string henchmenName)
+        /*public Henchmen(string henchmenName)
         {
-            var henchmen = henchmenName != "" ? _hechmen.FirstOrDefault(x=>x.HenchmenName==henchmenName) : _hechmen[new Random().Next(_hechmen.Count)];
+            var henchmen = henchmenName != "" ? _henchmen.FirstOrDefault(x=>x.HenchmenName==henchmenName) : _henchmen[new Random().Next(_henchmen.Count)];
 
             if (henchmen != null && henchmen.HenchmenName.Contains('('))
             {
-                henchmen = _hechmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
             }
 
             while (henchmen == null)
             {
-                henchmen = _hechmen[new Random().Next(_hechmen.Count)];
+                henchmen = _henchmen[new Random().Next(_henchmen.Count)];
                 if (henchmen.HenchmenName.Contains('('))
                 {
-                    henchmen = _hechmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                    henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
                 }
             }
 
             HenchmenName = henchmen.HenchmenName;
             HenchmenSet = henchmen.HenchmenSetName;
             HenchmenInfo = henchmen;
+        }*/
+
+        public Henchmen GetNewHenchmen(string henchmenName = "")
+        {
+            var henchmen = henchmenName;
+            if (string.IsNullOrEmpty(henchmen))
+            {
+                var allHenchmen = GetListOfHenchmen();
+                henchmen = allHenchmen[new Random().Next(allHenchmen.Count)];
+            }
+
+            var henchmenInfo = _henchmen.FirstOrDefault(h => h.HenchmenName == henchmen);
+
+            HenchmenName = henchmen;
+            HenchmenSet = henchmenInfo.HenchmenSetName;
+            HenchmenInfo = henchmenInfo;
+
+            return this;
         }
 
         public Henchmen(List<string> exclusionHenchmen)
         {
-            var henchmen = _hechmen[new Random().Next(_hechmen.Count)];
+            var henchmen = _henchmen[new Random().Next(_henchmen.Count)];
             if (henchmen.HenchmenName.Contains('('))
             {
-                henchmen = _hechmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
             }
 
             while (henchmen == null)
             {
-                henchmen = _hechmen[new Random().Next(_hechmen.Count)];
+                henchmen = _henchmen[new Random().Next(_henchmen.Count)];
                 if (henchmen.HenchmenName.Contains('('))
                 {
-                    henchmen = _hechmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                    henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
                 }
             }
             
-            if (exclusionHenchmen.Count < _hechmen.Count)
+            if (exclusionHenchmen.Count < _henchmen.Count)
             {
                 while (exclusionHenchmen.Any(x => x == henchmen.HenchmenName.Split('_').First()))
                 {
-                    henchmen = _hechmen[new Random().Next(_hechmen.Count)];
+                    henchmen = _henchmen[new Random().Next(_henchmen.Count)];
                     if (henchmen.HenchmenName.Contains('('))
                     {
                         var tempName = henchmen.HenchmenName.Split('(')[1].Split(')')[0];
-                        henchmen = _hechmen.FirstOrDefault(x => x.HenchmenName == tempName);
+                        henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == tempName);
                     }
 
                     while (henchmen == null)
                     {
-                        henchmen = _hechmen[new Random().Next(_hechmen.Count)];
+                        henchmen = _henchmen[new Random().Next(_henchmen.Count)];
                         if (henchmen.HenchmenName.Contains('('))
                         {
-                            henchmen = _hechmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                            henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
                         }
                     }
                 }
@@ -180,6 +206,47 @@ namespace MarvelLegendary
             HenchmenName = henchmen.HenchmenName;
             HenchmenSet = henchmen.HenchmenSetName;
             HenchmenInfo = henchmen;
+        }
+
+        public Henchmen GetNewHenchmen(List<string> exclusionHenchmen)
+        {
+            var henchmenName = GetRandomHenchmen();
+            var henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmenName);
+
+            //In Phase 1 there were Henchmen that were clones of the Henchmen released in the base game.
+            //This will choose the base game versions of those Henchmen
+            if (henchmenName.Contains('('))
+            {
+                henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+            }
+
+            if (exclusionHenchmen.Count < _henchmen.Count)
+            {
+                while (exclusionHenchmen.Any(x => x == henchmen.HenchmenName.Split('_').First()))
+                {
+                    henchmen = _henchmen[new Random().Next(_henchmen.Count)];
+                    if (henchmen.HenchmenName.Contains('('))
+                    {
+                        var tempName = henchmen.HenchmenName.Split('(')[1].Split(')')[0];
+                        henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == tempName);
+                    }
+
+                    while (henchmen == null)
+                    {
+                        henchmen = _henchmen[new Random().Next(_henchmen.Count)];
+                        if (henchmen.HenchmenName.Contains('('))
+                        {
+                            henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                        }
+                    }
+                }
+            }
+
+            HenchmenName = henchmen.HenchmenName;
+            HenchmenSet = henchmen.HenchmenSetName;
+            HenchmenInfo = henchmen;
+
+            return this;
         }
 
         public Henchmen(List<HenchmenInfo> henchmenInfoList)
@@ -208,7 +275,7 @@ namespace MarvelLegendary
 
         public List<HenchmenInfo> ModifyHenchmenList(List<string> henchmenExclusions)
         {
-            var returnList = new List<HenchmenInfo>(_hechmen);
+            var returnList = new List<HenchmenInfo>(_henchmen);
 
             foreach (var henchmenExclusion in henchmenExclusions)
             {
@@ -224,7 +291,16 @@ namespace MarvelLegendary
 
         public List<string> GetListOfHenchmen()
         {
-            return _hechmen.ToList().Select(x => x.HenchmenName).ToList();
+            var allHenchmenQuery = "SELECT [HenchmenName] FROM [Henchmen]";
+            var allHenchmen = new SqlHelper().GetList(allHenchmenQuery);
+            return allHenchmen;
+        }
+
+        public string GetRandomHenchmen()
+        {
+            var allHenchmen = GetListOfHenchmen();
+            var henchmen = allHenchmen[new Random().Next(allHenchmen.Count)];
+            return henchmen;
         }
     }
 }

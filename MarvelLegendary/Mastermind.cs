@@ -156,7 +156,55 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Exodus").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Acolytes").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Exodus").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Acolytes").Build(),
             new MastermindInfoBuilder().SetMastermindName("Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build()
+            new MastermindInfoBuilder().SetMastermindName("Epic Lady Deathstrike").SetMastermindSet(GameInfo.Set.Messiah).LeadsVillain("Reavers").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Dormammu").SetMastermindSet(GameInfo.Set.Strange).LeadsVillain("Lords of the Netherworld").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Dormammu").SetMastermindSet(GameInfo.Set.Strange).LeadsVillain("Lords of the Netherworld").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Nightmare").SetMastermindSet(GameInfo.Set.Strange).LeadsVillain("Fear Lords").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Nightmare").SetMastermindSet(GameInfo.Set.Strange).LeadsVillain("Fear Lords").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Ego, the Living Planet").SetMastermindSet(GameInfo.Set.Guardians).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Ego, the Living Planet").SetMastermindSet(GameInfo.Set.Guardians).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Ronan the Accuser").SetMastermindSet(GameInfo.Set.Guardians).LeadsVillain("Followers of Ronan").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Ronan the Accuser").SetMastermindSet(GameInfo.Set.Guardians).LeadsVillain("Followers of Ronan").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Killmonger").SetMastermindSet(GameInfo.Set.BlackPanther).LeadsVillain("Killmonger's League").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Killmonger").SetMastermindSet(GameInfo.Set.BlackPanther).LeadsVillain("Killmonger's League").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Klaw").SetMastermindSet(GameInfo.Set.BlackPanther).LeadsVillain("Enemies of Wakanda").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Klaw").SetMastermindSet(GameInfo.Set.BlackPanther).LeadsVillain("Enemies of Wakanda").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Indestructible Man").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Elite Assassins").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Indestructible Man").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Elite Assassins").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Taskmaster").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Taskmaster's Thunderbolts").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Taskmaster").SetMastermindSet(GameInfo.Set.BlackWidow).LeadsVillain("Taskmaster's Thunderbolts").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Ebony Maw").SetMastermindSet(GameInfo.Set.InfinitySaga).LeadsVillain("Children of Thanos").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Ebony Maw").SetMastermindSet(GameInfo.Set.InfinitySaga).LeadsVillain("Children of Thanos").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Thanos (Infinity Saga)").SetMastermindSet(GameInfo.Set.InfinitySaga).LeadsVillain("Infinity Stones").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Thanos (Infinity Saga)").SetMastermindSet(GameInfo.Set.InfinitySaga).LeadsVillain("Infinity Stones").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Lilith, Mother of Demons").SetMastermindSet(GameInfo.Set.MidnightSons).LeadsVillain("Lilin").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Lilith, Mother of Demons").SetMastermindSet(GameInfo.Set.MidnightSons).LeadsVillain("Lilin").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Zarathos").SetMastermindSet(GameInfo.Set.MidnightSons).LeadsVillain("The Fallen").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Zarathos").SetMastermindSet(GameInfo.Set.MidnightSons).LeadsVillain("The Fallen").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Hank Pym, Yellowjacket").SetMastermindSet(GameInfo.Set.WhatIf).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Hank Pym, Yellowjacket").SetMastermindSet(GameInfo.Set.WhatIf).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Killmonger, The Betrayer").SetMastermindSet(GameInfo.Set.WhatIf).LeadsHenchmen("Vibranium Liberator Drones").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Killmonger, The Betrayer").SetMastermindSet(GameInfo.Set.WhatIf).LeadsHenchmen("Vibranium Liberator Drones").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Ultron Infinity").SetMastermindSet(GameInfo.Set.WhatIf).LeadsHenchmen("Ultron Sentries").AlwaysLeadsOnSolo().Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Ultron Infinity").SetMastermindSet(GameInfo.Set.WhatIf).LeadsHenchmen("Ultron Sentries").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Zombie Scarlet Witch").SetMastermindSet(GameInfo.Set.WhatIf).LeadsVillain("Zombie Avengers").SetZombieSoloVillains().Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Zombie Scarlet Witch").SetMastermindSet(GameInfo.Set.WhatIf).LeadsVillain("Zombie Avengers").SetZombieSoloVillains().Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Hank Pym, Yellowjacket").SetMastermindSet(GameInfo.Set.WhatIf).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Hank Pym, Yellowjacket").SetMastermindSet(GameInfo.Set.WhatIf).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Killmonger, The Betrayer").SetMastermindSet(GameInfo.Set.WhatIf).LeadsHenchmen("Vibranium Liberator Drones").Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Alchemax Executives").SetMastermindSet(GameInfo.Set.TwentyNintyNine).LeadsVillain("Alchemax Executives").IncludeExtraHero().Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Alchemax Executives").SetMastermindSet(GameInfo.Set.TwentyNintyNine).LeadsVillain("Alchemax Executives").IncludeExtraHero().Build(),
+            new MastermindInfoBuilder().SetMastermindName("Sinister Six 2099").SetMastermindSet(GameInfo.Set.TwentyNintyNine).LeadsVillainsByKind(new List<string> {"Alchemax", "Sinister" }).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Sinister Six 2099").SetMastermindSet(GameInfo.Set.TwentyNintyNine).LeadsVillainsByKind(new List<string> {"Alchemax", "Sinister" }).Build(),
         };
 
         public Mastermind(){}
@@ -283,7 +331,7 @@ namespace MarvelLegendary
             var extraMasterminds = new List<string>();
 
             //Get Masterminds
-            var mastermindList = GetListOfMasterminds();
+            var mastermindList = new Mastermind().GetListOfMasterminds();
 
             //Get Masterminds that have played with the scheme
             var schemesByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", mainMastermind.MastermindName);

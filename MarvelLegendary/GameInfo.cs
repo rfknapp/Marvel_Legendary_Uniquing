@@ -25,6 +25,7 @@ namespace MarvelLegendary
         public List<Villain> Villains { get; set; }
         public List<Villain> MonsterPitVillains { get; set; }
         public List<Villain> AllVillainsInGame { get; set; }
+        public List<Villain> QuantumRealmVillains { get; set; }
 
         public List<Henchmen> Henchmen { get; set; }
         public List<Henchmen> SchemeHenchmen { get; set; }
@@ -106,7 +107,25 @@ namespace MarvelLegendary
             [Description("Annihilation")]
             Annihilation,
             [Description("Messiah Complex")]
-            Messiah
+            Messiah,
+            [Description("Doctor Strange and the Shadows of Nightmare")]
+            Strange,
+            [Description("Marvel Studios' Guardians of the Galaxy")]
+            Guardians,
+            [Description("Black Panther")]
+            BlackPanther,
+            [Description("Black Widow")]
+            BlackWidow,
+            [Description("Marvel Studios' The Infinity Saga")]
+            InfinitySaga,
+            [Description("Midnight Sons")]
+            MidnightSons,
+            [Description("Marvel Studios' What If...?")]
+            WhatIf,
+            [Description("Ant-Man and the Wasp")]
+            AntmanWasp,
+            [Description("2099")]
+            TwentyNintyNine
         }
 
         public GameInfo(int players)
@@ -178,6 +197,11 @@ namespace MarvelLegendary
                 MonsterPitVillains.Add(new Villain().GetNewVillain("Monsters Unleashed"));
             }
 
+            if (Scheme.SchemeName == "Siphon Energy from the Quantum Realm")
+            {
+                QuantumRealmVillains.Add(new Villain().GetNewVillain("Quantum Realm"));
+            }
+
             if (Scheme.SchemeInfo.IncludeExtraAlwaysLeadsVillains && Scheme.SchemeInfo.DrainedMastermind.DoesLeadVillain)
             {
                 Scheme.RequiredVillains.Add(Scheme.SchemeInfo.DrainedMastermind.LeadsVillain);
@@ -212,7 +236,7 @@ namespace MarvelLegendary
 
             if (Scheme.SchemeInfo.IsInfectedDeck)
             {
-                InfectedHenchmen.Add(new Henchmen("Cytoplasm Spikes"));
+                InfectedHenchmen.Add(new Henchmen().GetNewHenchmen("Cytoplasm Spikes"));
             }
 
             //This is for Symbiotic Absorbtion
@@ -226,10 +250,10 @@ namespace MarvelLegendary
                 Scheme.SchemeInfo.IsInfectedDeck ? "Cytoplasm Spikes" : null;
             if (henchmen != null)
             {
-                SchemeHenchmen.Add(new Henchmen(henchmen));
+                SchemeHenchmen.Add(new Henchmen().GetNewHenchmen(henchmen));
             }
 
-            if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen)
+            if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
             {
                 SchemeHenchmen.Add(new Henchmen(exclusions.HenchmenList));
                 Scheme.NumberOfHenchmen += 1;
@@ -237,14 +261,14 @@ namespace MarvelLegendary
 
             if (henchmenNames != null)
             {
-                Henchmen.AddRange(from item in henchmenNames select new Henchmen(item));
+                Henchmen.AddRange(from item in henchmenNames select new Henchmen().GetNewHenchmen(item));
             }
 
             Henchmen = GetHenchmen(Scheme.RequiredHenchmen, SchemeHenchmen, Mastermind, Henchmen);
             AllHenchmenInGame = new List<Henchmen>(Henchmen).Concat(SchemeHenchmen).ToList();
             foreach (var schemeRequiredHenchmen in Scheme.RequiredHenchmen)
             {
-                AllHenchmenInGame.Add(new Henchmen(schemeRequiredHenchmen));
+                AllHenchmenInGame.Add(new Henchmen().GetNewHenchmen(schemeRequiredHenchmen));
             }
         }
 
@@ -475,7 +499,7 @@ namespace MarvelLegendary
             var allHenchmenInGame = new List<Henchmen>();
             var requiredHenchmen = new List<Henchmen>();
             var numberOfHenchmen = Scheme.NumberOfHenchmen;
-            requiredHenchmen.AddRange(from item in requiredHenchmenString select new Henchmen(item));
+            requiredHenchmen.AddRange(from item in requiredHenchmenString select new Henchmen().GetNewHenchmen(item));
 
             henchmenList.AddRange(from item in currentHenchmen select item);
             allHenchmenInGame.AddRange(from item in currentHenchmen select item);
@@ -489,10 +513,10 @@ namespace MarvelLegendary
 
             //If the scheme didn't bring in any henchmen or there are more than one henchmen group included we then include from the Mastermind
             //If this is a solo game, then the Mastermind Leads is ignored
-            if (PlayerCount != 1 && numberOfHenchmen > henchmenList.Count && mastermind.DoesLeadHenchmen)
+            if ((PlayerCount != 1 || mastermind.MastermindInfo.AlwaysLeadsOnSolo) && numberOfHenchmen > henchmenList.Count && mastermind.DoesLeadHenchmen)
             {
                 //If the masterminds leads one of the henchmen brought in through the scheme twist, it won't be added twice
-                var mastermindLeadsHenchmen = new Henchmen(mastermind.LeadsHenchmen);
+                var mastermindLeadsHenchmen = new Henchmen().GetNewHenchmen(mastermind.LeadsHenchmen);
                 if (allHenchmenInGame.All(x => x.HenchmenName != mastermindLeadsHenchmen.HenchmenName))
                 {
                     henchmenList.Add(mastermindLeadsHenchmen);
@@ -523,7 +547,7 @@ namespace MarvelLegendary
             }
 
             returnList.AddRange(from item in henchmenInGame
-                                select new Henchmen(item));
+                                select new Henchmen().GetNewHenchmen(item));
 
             return returnList;
         }
@@ -691,7 +715,10 @@ namespace MarvelLegendary
         public List<Hero> GetHeroes(List<string> exclusionHeroes, List<Hero> schemeHeroGroups, List<Hero> currentHeroes, List<string> availableHeroes, IGetExclusions getExclusions)
         {
             var heroList = new List<Hero>(currentHeroes);
-            var numberOfHeroes = Scheme.NumberOfHeroes;
+
+            //The second variable will only be a non-zero number if Alchemax Executives are the Mastermind
+            var numberOfHeroes = Scheme.NumberOfHeroes + Mastermind.MastermindInfo.MastermindNumberOfHeroes;
+
             var excludedHeroes = new List<string>();
 
             AllHeroesInGame.AddRange(from item in schemeHeroGroups select item);

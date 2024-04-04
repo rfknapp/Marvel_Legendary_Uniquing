@@ -10,12 +10,18 @@ namespace MarvelLegendary
     {
         public string MastermindName { get; set; }
         public GameInfo.Set SetName { get; set; }
+        public string RequiredVillain { get; set; }
         public string LeadsVillain { get; set; }
         public string LeadsHenchmen { get; set; }
+        public bool AlwaysLeadsOnSolo { get; set; }
         public bool DoesLeadVillain { get; set; }
         public bool DoesLeadHenchmen { get; set; }
         public bool IncludeBindings { get; set; }
         public bool IncludeMadameHydra { get; set; }
         public bool IncludeHorrors { get; set; }
+        public bool IsZombieSoloVillain { get; set; }
+        public bool RequireVillain { get; set; }
+        public bool IncludeExtraHero { get; set; }
+        public int MastermindNumberOfHeroes { get; set; }
     }
 }

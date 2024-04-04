@@ -157,6 +157,38 @@ namespace MarvelLegendary
             new VillainInfo("Clan Yashida", GameInfo.Set.Messiah),
             new VillainInfo("Purifiers", GameInfo.Set.Messiah),
             new VillainInfo("Reavers", GameInfo.Set.Messiah),
+
+            new VillainInfo("Fear Lords", GameInfo.Set.Strange),
+            new VillainInfo("Lords of the Nether Realm", GameInfo.Set.Strange),
+
+            new VillainInfo("Followers of Ronan", GameInfo.Set.Guardians),
+            new VillainInfo("Ravagers", GameInfo.Set.Guardians),
+
+            new VillainInfo("Enemies of Wakanda", GameInfo.Set.BlackPanther),
+            new VillainInfo("Killmonger's League", GameInfo.Set.BlackPanther),
+
+            new VillainInfo("Elite Assassins", GameInfo.Set.BlackWidow),
+            new VillainInfo("Taskmaster's Thunderbolts", GameInfo.Set.BlackWidow),
+
+            new VillainInfo("Children of Thanos", GameInfo.Set.InfinitySaga),
+            new VillainInfo("Infinity Stones", GameInfo.Set.InfinitySaga),
+
+            new VillainInfo("The Fallen", GameInfo.Set.MidnightSons),
+            new VillainInfo("Lilin", GameInfo.Set.MidnightSons),
+
+            new VillainInfo("Black Order Guards", GameInfo.Set.WhatIf),
+            new VillainInfo("Intergalactic Party Animals", GameInfo.Set.WhatIf),
+            new VillainInfo("Rival Overlords", GameInfo.Set.WhatIf),
+            new VillainInfo("Strange's Demons", GameInfo.Set.WhatIf),
+            new VillainInfo("Zombie Avengers", GameInfo.Set.WhatIf),
+
+            new VillainInfo("Armada of Kang", GameInfo.Set.AntmanWasp),
+            new VillainInfo("Cross Technologies", GameInfo.Set.AntmanWasp),
+            new VillainInfo("Ghost Chasers", GameInfo.Set.AntmanWasp),
+            new VillainInfo("Quantum Realm", GameInfo.Set.AntmanWasp),
+
+            new VillainInfo("Alchemax Enforcers", GameInfo.Set.TwentyNintyNine),
+            new VillainInfo("False Aesir of Alchemax", GameInfo.Set.TwentyNintyNine),
         };
 
         public Villain() {}

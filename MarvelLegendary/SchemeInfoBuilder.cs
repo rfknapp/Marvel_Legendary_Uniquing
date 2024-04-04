@@ -64,6 +64,7 @@ namespace MarvelLegendary
                 IsHenchmenNextToScheme = false,
                 IsSmugglerHenchmen = false,
                 IsXerogenHenchmen = false,
+                IsVampireNeonaniteHenchmen = false,
 
                 //Villains
                 Villains = new List<int> { 1, 2, 3, 3, 4 },
@@ -71,6 +72,7 @@ namespace MarvelLegendary
                 VillainCardNextToScheme = "",
                 IsVillainCardNextToScheme = false,
                 IsMonsterPitDeck = false,
+                IsQuantumRealmDeck = false,
                 VillainsNotAllowed = new List<string>(),
 
                 //Masterminds
@@ -125,6 +127,12 @@ namespace MarvelLegendary
             return this;
         }
 
+        public SchemeInfoBuilder SetVeiledScheme()
+        {
+            _schemeInfo.isVeiled = true;
+            return this;
+        }
+
         public SchemeInfoBuilder SetSchemeSet(GameInfo.Set set)
         {
             _schemeInfo.SetName = EnumDescription.GetDescription(set);
@@ -133,7 +141,7 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder SetSchemeTwists(int schemeTwists)
         {
-            _schemeInfo.SchemeTwists = new List<int> { schemeTwists, schemeTwists, schemeTwists, schemeTwists, schemeTwists };
+            _schemeInfo.SchemeTwists = Enumerable.Repeat(schemeTwists, 5).ToList();
             return this;
         }
 
@@ -149,11 +157,11 @@ namespace MarvelLegendary
 
             if(woundsPerPlayer)
             {
-                _schemeInfo.WoundPerPlayer = new List<int> { woundNumber, 2 * woundNumber, 3 * woundNumber, 4 * woundNumber, 5 * woundNumber };
+                _schemeInfo.WoundPerPlayer = Enumerable.Range(1, 5).Select(i => i * woundNumber).ToList();
             }
             else
             {
-                _schemeInfo.WoundPerPlayer = new List<int> { woundNumber, woundNumber, woundNumber, woundNumber, woundNumber };
+                _schemeInfo.WoundPerPlayer = Enumerable.Repeat(woundNumber, 5).ToList();
             }
             _schemeInfo.CustomWoundCount = true;
 
@@ -177,11 +185,11 @@ namespace MarvelLegendary
             _schemeInfo.BindingsPerPlayer = bindingsPerPlayer;
             if (bindingsPerPlayer)
             {
-                _schemeInfo.BindingPerPlayer = new List<int> { bindingNumber, 2 * bindingNumber, 3 * bindingNumber, 4 * bindingNumber, 5 * bindingNumber };
+                _schemeInfo.BindingPerPlayer = Enumerable.Range(1, 5).Select(i => i * bindingNumber).ToList();
             }
             else
             {
-                _schemeInfo.BindingPerPlayer = new List<int> { bindingNumber, bindingNumber, bindingNumber, bindingNumber, bindingNumber };
+                _schemeInfo.BindingPerPlayer = Enumerable.Repeat(bindingNumber, 5).ToList();
             }
 
             _schemeInfo.CustomBindingCount = true;
@@ -190,7 +198,13 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder SetBystanderCount(int bystanderNumber)
         {
-            _schemeInfo.Bystanders = new List<int> { bystanderNumber, bystanderNumber, bystanderNumber, bystanderNumber, bystanderNumber };
+            _schemeInfo.Bystanders = Enumerable.Repeat(bystanderNumber, 5).ToList();
+            return this;
+        }
+
+        public SchemeInfoBuilder SetBystanderCount(List<int> bystanderCount)
+        {
+            _schemeInfo.Bystanders = bystanderCount;
             return this;
         }
 
@@ -201,27 +215,6 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder AddAdditionalHenchmen(int additionalHenchmen)
-        {
-            _schemeInfo.Henchmen = new List<int> { 1+additionalHenchmen, 1 + additionalHenchmen, 1 + additionalHenchmen, 2 + additionalHenchmen, 2 + additionalHenchmen };
-            return this;
-        }
-
-        public SchemeInfoBuilder SetVillainCardNextToScheme(string villainName)
-        {
-            _schemeInfo.VillainCardNextToScheme = villainName;
-            _schemeInfo.IsVillainCardNextToScheme = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder NumberHenchmenNextToScheme(int henchmenNumber, string henchmenName)
-        {
-            _schemeInfo.HenchmenNextToSchemePerPlayer = new List<int> { henchmenNumber, 2 * henchmenNumber, 3 * henchmenNumber, 4 * henchmenNumber, 5 * henchmenNumber };
-            _schemeInfo.HenchmenNextToScheme = henchmenName;
-            _schemeInfo.IsHenchmenNextToScheme = true;
-            return this;
-        }
-
         public SchemeInfoBuilder SetBystandersNextToScheme(int numberOfBystanders)
         {
             _schemeInfo.BystandersNextToScheme = numberOfBystanders;
@@ -229,95 +222,9 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder HeroesInVillainDeck(string heroName)
+        public SchemeInfoBuilder IncreaseBystanders(int additionalBystanders)
         {
-            _schemeInfo.HeroesInVillainDeck = new List<string> { heroName };
-            _schemeInfo.NumberOfHeroesInVillainDeck = _schemeInfo.HeroesInVillainDeck.Count;
-            _schemeInfo.IsHeroesInVillainDeck = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder HeroesInVillainDeck(int numberOfHeroes)
-        {
-            _schemeInfo.NumberOfHeroesInVillainDeck = numberOfHeroes;
-            _schemeInfo.IsRandomHeroesInVillainDeck = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder AddAdditionalVillain(int additionalVillains)
-        {
-            var newVillainList = new List<int>();
-
-            foreach (var villainCount in _schemeInfo.Villains)
-            {
-                newVillainList.Add(villainCount + additionalVillains);
-            }
-
-            _schemeInfo.Villains = newVillainList;
-            return this;
-        }
-
-        public SchemeInfoBuilder AddAdditionalHero(int additionalHeroes)
-        {
-            var newHeroList = new List<int>();
-
-            foreach (var heroCount in _schemeInfo.Heroes)
-            {
-                newHeroList.Add(heroCount + additionalHeroes);
-            }
-
-            _schemeInfo.Heroes = newHeroList;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetVillainCount(List<int> villainList)
-        {
-            _schemeInfo.Villains = villainList;
-            return this;
-        }
-
-        public SchemeInfoBuilder AddDarkAllianceMastermind(int additionalMasterminds)
-        {
-            _schemeInfo.NumberExtraMasterminds = additionalMasterminds;
-            _schemeInfo.IsDarkAllianceMastermind = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder AddExtraMastermind(int additionalMasterminds)
-        {
-            _schemeInfo.NumberExtraMasterminds = additionalMasterminds;
-            _schemeInfo.IsExtraMasterminds = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetTyrantVillains()
-        {
-            _schemeInfo.NumberExtraMasterminds = 3;
-            _schemeInfo.IsExtraMasterminds = true;
-            _schemeInfo.IsTyrantVillain = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetSecretWarsMasterminds()
-        {
-            _schemeInfo.NumberExtraMasterminds = 3;
-            _schemeInfo.IsExtraMasterminds = true;
-            _schemeInfo.IsSecretWarsMasterminds = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetWorldWarHulkMasterminds()
-        {
-            _schemeInfo.NumberExtraMasterminds = 3;
-            _schemeInfo.IsWorldWarHulkMasterminds = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetDrainedMastermind()
-        {
-            _schemeInfo.NumberExtraMasterminds = 1;
-            _schemeInfo.IsDrainedMastermind = true;
-            _schemeInfo.IncludeExtraAlwaysLeadsVillains = true;
+            _schemeInfo.AdditionalBystanders = additionalBystanders;
             return this;
         }
 
@@ -325,26 +232,6 @@ namespace MarvelLegendary
         {
             _schemeInfo.ShardCount = shardCount;
             _schemeInfo.IsShardCount = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetRequiredHenchmen(string henchmenGroup)
-        {
-            _schemeInfo.RequiredHenchmen = new List<string> { henchmenGroup };
-            return this;
-        }
-
-        public SchemeInfoBuilder SetAnnihilationHenchmen()
-        {
-
-            _schemeInfo.HasAnnihilationHenchmen = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder SidekicksInVillainDeck(int villainSidekicks)
-        {
-            _schemeInfo.SidekicksInVillainDeck = villainSidekicks;
-            _schemeInfo.IsSidekickInVillainDeck = true;
             return this;
         }
 
@@ -360,84 +247,9 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder SetVillainOfficers(int villainOfficerCount)
-        {
-            _schemeInfo.VillainOfficerCount = villainOfficerCount;
-            _schemeInfo.IsVillainOfficer = true;
-            return this;
-        }
-
         public SchemeInfoBuilder CannotBeSolo()
         {
             _schemeInfo.CannotBeSolo = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetHeroCount(int heroCount)
-        {
-            _schemeInfo.Heroes = new List<int> { heroCount, heroCount, heroCount, heroCount, heroCount };
-            return this;
-        }
-
-        public SchemeInfoBuilder AvengersVsXmen()
-        {
-            _schemeInfo.Is3v3 = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder Is4v2()
-        {
-            _schemeInfo.Is4v2 = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetHeroCount(List<int> heroCount)
-        {
-            _schemeInfo.Heroes = heroCount;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetRequiredVillains(string villainGroup)
-        {
-            _schemeInfo.RequiredVillains = new List<string> { villainGroup };
-            return this;
-        }
-
-        public SchemeInfoBuilder SetRequiredVillains(List<string> villainGroup)
-        {
-            _schemeInfo.RequiredVillains = villainGroup;
-            return this;
-        }
-
-        public SchemeInfoBuilder SetRequiredVillains(List<string> villainList, int numberOfVillainsFromGroup)
-        {
-            int r = rnd.Next(villainList.Count);
-            var villain = villainList[r];
-            _schemeInfo.RequiredVillains = new List<string> { villain };
-            villainList.Remove(villain);
-            _schemeInfo.VillainsNotAllowed = villainList;
-
-            return this;
-        }
-
-        public SchemeInfoBuilder IncludeHenchmenInHeroDeck(int numberOfHenchmen)
-        {
-            _schemeInfo.NumberHenchmenInHeroDeck = numberOfHenchmen;
-            _schemeInfo.IsHenchmenInHeroDeck = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder IncludeHeroTeams(int numberOfHeroesFromTeam, HeroTeam heroTeam)
-        {
-            _schemeInfo.IncludeHeroTeam = heroTeam;
-            _schemeInfo.NumberOfHeroesFromTeam = numberOfHeroesFromTeam;
-            _schemeInfo.IsIncludeHeroTeam = true;
-            return this;
-        }
-
-        public SchemeInfoBuilder MastermindTacticsInVillainDeck()
-        {
-            _schemeInfo.IsTacticsInVillainDeck = true;
             return this;
         }
 
@@ -447,29 +259,21 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder IncludeSmugglerHenchmen()
-        {
-            _schemeInfo.IsSmugglerHenchmen = true;
-            return this;
-        }
-
         public SchemeInfoBuilder IncludeMonsterPitDeck()
         {
             _schemeInfo.IsMonsterPitDeck = true;
             return this;
         }
 
-        public SchemeInfoBuilder IncludeInfectedDeck()
+        public SchemeInfoBuilder IncludeQuantumRealmDeck()
         {
-            _schemeInfo.IsInfectedDeck = true;
+            _schemeInfo.IsQuantumRealmDeck = true;
             return this;
         }
 
-        public SchemeInfoBuilder SetNumberOfHeroWithNameLike(int numberOfHeroesWithNameString, string nameString)
+        public SchemeInfoBuilder IncludeInfectedDeck()
         {
-            _schemeInfo.IsHeroNameLimit = true;
-            _schemeInfo.NumberOfHeroesWithNameString = numberOfHeroesWithNameString;
-            _schemeInfo.CustomNameString = nameString;
+            _schemeInfo.IsInfectedDeck = true;
             return this;
         }
 
@@ -517,15 +321,243 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder SetVeiledScheme()
+        public SchemeInfoBuilder AddAdditionalHenchmen(int additionalHenchmen)
         {
-            _schemeInfo.isVeiled = true;
+            _schemeInfo.Henchmen = _schemeInfo.Henchmen.Select(henchmenCount => henchmenCount + additionalHenchmen).ToList();
             return this;
         }
 
-        public SchemeInfoBuilder IncreaseBystanders(int additionalBystanders)
+        public SchemeInfoBuilder NumberHenchmenNextToScheme(int henchmenNumber, string henchmenName)
         {
-            _schemeInfo.AdditionalBystanders = additionalBystanders;
+            _schemeInfo.HenchmenNextToSchemePerPlayer = Enumerable.Range(1, 5).Select(i => i * henchmenNumber).ToList();
+            _schemeInfo.HenchmenNextToScheme = henchmenName;
+            _schemeInfo.IsHenchmenNextToScheme = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetRequiredHenchmen(string henchmenGroup)
+        {
+            _schemeInfo.RequiredHenchmen = new List<string> { henchmenGroup };
+            return this;
+        }
+
+        public SchemeInfoBuilder SetAnnihilationHenchmen()
+        {
+
+            _schemeInfo.HasAnnihilationHenchmen = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder IncludeSmugglerHenchmen()
+        {
+            _schemeInfo.IsSmugglerHenchmen = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder DoubleHenchmen()
+        {
+            _schemeInfo.Henchmen = _schemeInfo.Henchmen.Select(x => x * 2).ToList();
+            return this;
+        }
+
+        public SchemeInfoBuilder SetVampireNaniteHenchmen()
+        {
+            _schemeInfo.IsVampireNeonaniteHenchmen = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetVillainCardNextToScheme(string villainName)
+        {
+            _schemeInfo.VillainCardNextToScheme = villainName;
+            _schemeInfo.IsVillainCardNextToScheme = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder AddAdditionalVillain(int additionalVillains)
+        {
+            _schemeInfo.Villains = _schemeInfo.Villains.Select(villainCount => villainCount + additionalVillains).ToList();
+            return this;
+        }
+
+        public SchemeInfoBuilder HeroesInVillainDeck(string heroName)
+        {
+            _schemeInfo.HeroesInVillainDeck = new List<string> { heroName };
+            _schemeInfo.NumberOfHeroesInVillainDeck = _schemeInfo.HeroesInVillainDeck.Count;
+            _schemeInfo.IsHeroesInVillainDeck = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder HeroesInVillainDeck(int numberOfHeroes)
+        {
+            _schemeInfo.NumberOfHeroesInVillainDeck = numberOfHeroes;
+            _schemeInfo.IsRandomHeroesInVillainDeck = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder HeroesInVillainDeckWithNameLike(int numberOfHeroesWithNameString, string nameString)
+        {
+            _schemeInfo.IsHeroNameLimit = true;
+            _schemeInfo.NumberOfHeroesWithNameString = numberOfHeroesWithNameString;
+            _schemeInfo.CustomNameString = nameString;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetVillainCount(List<int> villainList)
+        {
+            _schemeInfo.Villains = villainList;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetTyrantVillains()
+        {
+            _schemeInfo.NumberExtraMasterminds = 3;
+            _schemeInfo.IsExtraMasterminds = true;
+            _schemeInfo.IsTyrantVillain = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SidekicksInVillainDeck(int villainSidekicks)
+        {
+            _schemeInfo.SidekicksInVillainDeck = villainSidekicks;
+            _schemeInfo.IsSidekickInVillainDeck = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetVillainOfficers(int villainOfficerCount)
+        {
+            _schemeInfo.VillainOfficerCount = villainOfficerCount;
+            _schemeInfo.IsVillainOfficer = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetRequiredVillains(string villainGroup)
+        {
+            _schemeInfo.RequiredVillains = new List<string> { villainGroup };
+            return this;
+        }
+
+        public SchemeInfoBuilder SetRequiredVillains(List<string> villainGroup)
+        {
+            _schemeInfo.RequiredVillains = villainGroup;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetRequiredVillains(List<string> villainList, int numberOfVillainsFromGroup)
+        {
+            int r = rnd.Next(villainList.Count);
+            var villain = villainList[r];
+            _schemeInfo.RequiredVillains = new List<string> { villain };
+            villainList.Remove(villain);
+            _schemeInfo.VillainsNotAllowed = villainList;
+
+            return this;
+        }
+
+        public SchemeInfoBuilder MastermindTacticsInVillainDeck()
+        {
+            _schemeInfo.IsTacticsInVillainDeck = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder DoubleVillains()
+        {
+            _schemeInfo.Villains = _schemeInfo.Villains.Select(x => x * 2).ToList();
+            return this;
+        }
+
+        public SchemeInfoBuilder AddAdditionalHero(int additionalHeroes)
+        {
+            _schemeInfo.Heroes = _schemeInfo.Heroes.Select(heroCount => heroCount + additionalHeroes).ToList();
+            return this;
+        }
+
+        public SchemeInfoBuilder SetHeroCount(int heroCount)
+        {
+            _schemeInfo.Heroes = Enumerable.Repeat(heroCount, 5).ToList();
+            return this;
+        }
+
+        public SchemeInfoBuilder AvengersVsXmen()
+        {
+            _schemeInfo.Is3v3 = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder Is4v2()
+        {
+            _schemeInfo.Is4v2 = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetHeroCount(List<int> heroCount)
+        {
+            _schemeInfo.Heroes = heroCount;
+            return this;
+        }
+
+        public SchemeInfoBuilder IncludeHenchmenInHeroDeck(int numberOfHenchmen)
+        {
+            _schemeInfo.NumberHenchmenInHeroDeck = numberOfHenchmen;
+            _schemeInfo.IsHenchmenInHeroDeck = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder IncludeHeroTeams(int numberOfHeroesFromTeam, HeroTeam heroTeam)
+        {
+            _schemeInfo.IncludeHeroTeam = heroTeam;
+            _schemeInfo.NumberOfHeroesFromTeam = numberOfHeroesFromTeam;
+            _schemeInfo.IsIncludeHeroTeam = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetNumberOfHeroWithNameLike(int numberOfHeroesWithNameString, string nameString)
+        {
+            _schemeInfo.IsHeroNameLimit = true;
+            _schemeInfo.NumberOfHeroesWithNameString = numberOfHeroesWithNameString;
+            _schemeInfo.CustomNameString = nameString;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetRequiredHeroes(string heroGroup)
+        {
+            _schemeInfo.RequiredHeroes = new List<string> { heroGroup };
+            return this;
+        }
+
+        public SchemeInfoBuilder AddDarkAllianceMastermind(int additionalMasterminds)
+        {
+            _schemeInfo.NumberExtraMasterminds = additionalMasterminds;
+            _schemeInfo.IsDarkAllianceMastermind = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder AddExtraMastermind(int additionalMasterminds)
+        {
+            _schemeInfo.NumberExtraMasterminds = additionalMasterminds;
+            _schemeInfo.IsExtraMasterminds = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetSecretWarsMasterminds()
+        {
+            _schemeInfo.NumberExtraMasterminds = 3;
+            _schemeInfo.IsExtraMasterminds = true;
+            _schemeInfo.IsSecretWarsMasterminds = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetWorldWarHulkMasterminds()
+        {
+            _schemeInfo.NumberExtraMasterminds = 3;
+            _schemeInfo.IsWorldWarHulkMasterminds = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetDrainedMastermind()
+        {
+            _schemeInfo.NumberExtraMasterminds = 1;
+            _schemeInfo.IsDrainedMastermind = true;
+            _schemeInfo.IncludeExtraAlwaysLeadsVillains = true;
             return this;
         }
 
