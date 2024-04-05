@@ -100,12 +100,14 @@ namespace MarvelLegendary
             var zombieVillainsString = game.Mastermind.MastermindInfo.IsZombieSoloVillain ? "Treat the Villain group as having the Zombie keyword.\r\n" : "";
             var quantumRealmString = game.Scheme.SchemeInfo.IsQuantumRealmDeck ? $"Set aside the {game.QuantumRealmVillains.FirstOrDefault().VillainName} Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.\r\n" : "";
             var pastHeroDeck = game.Scheme.SchemeName == "The Time Heist" ? "Set half of the hero groups in the main city. The other half of the hero groups make a Past Hero Deck." : "";
+            var shrinkTechDeck = game.Scheme.SchemeInfo.IsShrinkTechHero ? $"Set aside all 14 cards of the {game.Scheme.SchemeInfo.ShrinkTechHero.HeroName} hero group as Shrink Tech.\r\n" : "";
 
             var returnString = playerCount + mastermindOutput + schemeOutput + villainOutput + villainHeroOutput + henchmenOutput + heroesOutput + twistsBystanderAndMasterStrikeOutput + woundsOutput
                 + twistsNextToScheme + heroBystandersOutput + heroesInVillainDeck + heroHenchmen + bindingsInGame + henchmenNextToScheme + villainCardNextToScheme
                 + bystandersNextToScheme + shardCount + betrayalDeck + annihilationHenchmen + villainSidekicks + darkAllianceMastermind + tyrantVillain + secretWarsMasterminds + ambitions
                 + villainOfficers + tacticsInVillainDeck + monumentDeck + smugglerHenchmen + monsterDeck + infectedDeck + mutationDeck + hulkDeck + worldWarHulkMasterminds + drainedMastermind
-                + hasBindings + hasNewRecruits + hasMadameHydra + hasHorrors + hasDarkLoyalty + isContestOfChampions + isInvasionHero + zombieVillainsString + pastHeroDeck + quantumRealmString + $"\r\n{sneakAttackString}\r\n";
+                + hasBindings + hasNewRecruits + hasMadameHydra + hasHorrors + hasDarkLoyalty + isContestOfChampions + isInvasionHero + zombieVillainsString + pastHeroDeck + quantumRealmString
+                + shrinkTechDeck + $"\r\n{sneakAttackString}\r\n";
 
             return returnString;
         }

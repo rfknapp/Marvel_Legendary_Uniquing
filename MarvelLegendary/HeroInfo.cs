@@ -69,7 +69,11 @@ namespace MarvelLegendary
         [Description("Inhumans")]
         Inhumans,
         [Description("X-Factor Investigations")]
-        XFactor
+        XFactor,
+        [Description("Wakanda")]
+        Wakanda,
+        [Description("Guardians of the Multiverse")]
+        Multiverse
     };
 
 

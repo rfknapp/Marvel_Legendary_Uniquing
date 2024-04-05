@@ -110,6 +110,8 @@ namespace MarvelLegendary
                 IsHulkDeck = false,
                 IsSoulsHero = false,
                 SoulsHero = null,
+                IsShrinkTechHero = false,
+                ShrinkTechHero = null,
                 RoyalWeddingHeroCount = 0,
 
                 //Sidekicks
@@ -306,6 +308,16 @@ namespace MarvelLegendary
             return this;
         }
 
+        public SchemeInfoBuilder SetShrinkTechDeck()
+        {
+            var keywordHeroes = new Hero().GetListOfHeroesWithKeyword(Keywords.Size);
+
+            var randomIndex = rnd.Next(keywordHeroes.Count);
+            _schemeInfo.ShrinkTechHero = new Hero().GetNewHero(keywordHeroes[randomIndex]);
+            _schemeInfo.IsShrinkTechHero = true;
+            return this;
+        }
+
         public SchemeInfoBuilder IncludeHorrors()
         {
             _schemeInfo.IncludeHorrors = true;
@@ -400,9 +412,17 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder HeroesInVillainDeckWithNameLike(int numberOfHeroesWithNameString, string nameString)
         {
-            _schemeInfo.IsHeroNameLimit = true;
-            _schemeInfo.NumberOfHeroesWithNameString = numberOfHeroesWithNameString;
-            _schemeInfo.CustomNameString = nameString;
+            var heroes = new Hero().GetListOfHeroes();
+            var namedHeroes = heroes.Where(x => x.Contains(nameString)).ToList();
+
+            while (_schemeInfo.HeroesInVillainDeck.Count < numberOfHeroesWithNameString && namedHeroes.Count > 0)
+            {
+                var randomIndex = rnd.Next(namedHeroes.Count);
+                _schemeInfo.HeroesInVillainDeck.Add(namedHeroes[randomIndex]);
+                namedHeroes.RemoveAt(randomIndex);
+            }
+            _schemeInfo.IsHeroesInVillainDeck = true;
+
             return this;
         }
 

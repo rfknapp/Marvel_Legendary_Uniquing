@@ -225,6 +225,11 @@ namespace MarvelLegendary
                 SchemeHeroes.Add(Scheme.SchemeInfo.SoulsHero);
             }
 
+            if (Scheme.SchemeInfo.IsShrinkTechHero)
+            {
+                SchemeHeroes.Add(Scheme.SchemeInfo.ShrinkTechHero);
+            }
+
             if (Scheme.SchemeInfo.IsDarkLoyalty)
             {
                 DarkLoyaltyHero = GetDarkLoyaltyHero(SchemeHeroes);

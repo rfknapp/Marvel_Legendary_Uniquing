@@ -290,6 +290,66 @@ namespace MarvelLegendary
             new HeroInfoBuilder().SetHeroName("Stepford Cuckoos").SetGameSet(Set.Messiah).SetHeroTeam(HeroTeam.XMen).Build(),
             new HeroInfoBuilder().SetHeroName("Strong Guy").SetGameSet(Set.Messiah).SetHeroTeam(HeroTeam.XFactor).Build(),
             new HeroInfoBuilder().SetHeroName("Warpath").SetGameSet(Set.Messiah).SetHeroTeam(HeroTeam.XForce).Build(),
+
+            new HeroInfoBuilder().SetHeroName("The Ancient One").SetGameSet(Set.Strange).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Clea").SetGameSet(Set.Strange).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Doctor Strange").SetGameSet(Set.Strange).Build(),
+            new HeroInfoBuilder().SetHeroName("Doctor Voodoo").SetGameSet(Set.Strange).Build(),
+            new HeroInfoBuilder().SetHeroName("The Vishanti").SetGameSet(Set.Strange).SetHeroTeam(HeroTeam.None).Build(),
+
+            new HeroInfoBuilder().SetHeroName("Drax").SetGameSet(Set.Guardians).SetHeroTeam(HeroTeam.GuardiansOfTheGalaxy).Build(),
+            new HeroInfoBuilder().SetHeroName("Gamora").SetGameSet(Set.Guardians).SetHeroTeam(HeroTeam.GuardiansOfTheGalaxy).Build(),
+            new HeroInfoBuilder().SetHeroName("Mantis").SetGameSet(Set.Guardians).SetHeroTeam(HeroTeam.GuardiansOfTheGalaxy).Build(),
+            new HeroInfoBuilder().SetHeroName("Rocket & Groot").SetGameSet(Set.Guardians).SetHeroTeam(HeroTeam.GuardiansOfTheGalaxy).Build(),
+            new HeroInfoBuilder().SetHeroName("Star-Lord").SetGameSet(Set.Guardians).SetHeroTeam(HeroTeam.GuardiansOfTheGalaxy).Build(),
+
+            new HeroInfoBuilder().SetHeroName("General Okoye").SetGameSet(Set.BlackPanther).SetHeroTeam(HeroTeam.Wakanda).Build(),
+            new HeroInfoBuilder().SetHeroName("King Black Panther").SetGameSet(Set.BlackPanther).SetHeroTeam(HeroTeam.Wakanda).Build(),
+            new HeroInfoBuilder().SetHeroName("Princess Shuri").SetGameSet(Set.BlackPanther).SetHeroTeam(HeroTeam.Wakanda).Build(),
+            new HeroInfoBuilder().SetHeroName("Queen Storm of Wakanda").SetGameSet(Set.BlackPanther).SetHeroTeam(HeroTeam.Wakanda).Build(),
+            new HeroInfoBuilder().SetHeroName("White Wolf").SetGameSet(Set.BlackPanther).SetHeroTeam(HeroTeam.Wakanda).Build(),
+
+            new HeroInfoBuilder().SetHeroName("Black Widow").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.SHIELD).Build(),
+            new HeroInfoBuilder().SetHeroName("Falcon and the Winter Soldier").SetGameSet(Set.BlackWidow).Build(),
+            new HeroInfoBuilder().SetHeroName("Red Guardian").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("White Tiger").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Yelena Belova").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.SHIELD).Build(),
+
+            new HeroInfoBuilder().SetHeroName("Black Panther").SetGameSet(Set.InfinitySaga).Build(),
+            new HeroInfoBuilder().SetHeroName("Bruce Banner").SetGameSet(Set.InfinitySaga).Build(),
+            new HeroInfoBuilder().SetHeroName("Captain Marvel").SetGameSet(Set.InfinitySaga).Build(),
+            new HeroInfoBuilder().SetHeroName("Doctor Strange").SetGameSet(Set.InfinitySaga).Build(),
+            new HeroInfoBuilder().SetHeroName("Wanda & Vision").SetGameSet(Set.InfinitySaga).Build(),
+
+            new HeroInfoBuilder().SetHeroName("Blade, Daywalker").SetGameSet(Set.MidnightSons).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Elsa Bloodstone").SetGameSet(Set.MidnightSons).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Morbius").SetGameSet(Set.MidnightSons).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Werewolf by Night").SetGameSet(Set.MidnightSons).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Wong,Master of the Mystic Arts").SetGameSet(Set.MidnightSons).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+
+            new HeroInfoBuilder().SetHeroName("Apocalyptic Black Widow").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
+            new HeroInfoBuilder().SetHeroName("Captain Carter (Guardians of the Multiverse)").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
+            new HeroInfoBuilder().SetHeroName("Doctor Strange Supreme").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
+            new HeroInfoBuilder().SetHeroName("Gamora, Destroyer of Thanos").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
+            new HeroInfoBuilder().SetHeroName("Killmonger, Special Ops").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
+            new HeroInfoBuilder().SetHeroName("Party Thor").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
+            new HeroInfoBuilder().SetHeroName("T'Challa Star-Lord").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
+            new HeroInfoBuilder().SetHeroName("The Watcher").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
+
+            new HeroInfoBuilder().SetHeroName("Ant Army").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.None).SetKeywords(new List<Keywords>{ Keywords.Size, Keywords.Antics, Keywords.Heist }).Build(),
+            new HeroInfoBuilder().SetHeroName("Ant-Man").SetGameSet(Set.AntmanWasp).SetKeywords(new List<Keywords>{ Keywords.Size, Keywords.Antics, Keywords.Heist }).Build(),
+            new HeroInfoBuilder().SetHeroName("Cassie Lang").SetGameSet(Set.AntmanWasp).SetKeywords(new List<Keywords>{ Keywords.Size }).Build(),
+            new HeroInfoBuilder().SetHeroName("Freedom Fighters").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Janet Van Dyne").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.None).SetKeywords(new List<Keywords>{ Keywords.Size, Keywords.Explore }).Build(),
+            new HeroInfoBuilder().SetHeroName("Jentorra").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Scott Lang, Cat Burglar").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.CrimeSyndicate).Build(),
+            new HeroInfoBuilder().SetHeroName("Wasp").SetGameSet(Set.AntmanWasp).SetKeywords(new List<Keywords>{ Keywords.Size }).Build(),
+
+            new HeroInfoBuilder().SetHeroName("Doctor Doom 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Ghost Rider 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Hulk 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Ravage 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Spider-Man 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.SpiderFriends).Build(),
         };
 
         public List<string> GetHeroNameList(List<int> indicies)
@@ -349,6 +409,25 @@ namespace MarvelLegendary
             SetName = heroInfo.SetName;
             HeroTeam = heroInfo.HeroTeam;
             HeroInfo = heroInfo;
+        }
+
+        public Hero GetNewHero(string heroName = "")
+        {
+            var hero = heroName;
+            if (string.IsNullOrEmpty(hero))
+            {
+                var allHeroes = GetListOfHeroes();
+                hero = allHeroes[new Random().Next(allHeroes.Count)];
+            }
+
+            var heroInfo = _heroes.FirstOrDefault(h => h.HeroName == hero);
+
+            HeroName = heroInfo.HeroName;
+            SetName = heroInfo.SetName;
+            HeroTeam = heroInfo.HeroTeam;
+            HeroInfo = heroInfo;
+
+            return this;
         }
 
         public Hero(string heroName)
@@ -524,6 +603,15 @@ namespace MarvelLegendary
         public List<string> GetListOfHeroes()
         {
             return _heroes.ToList().Select(x => x.HeroName).ToList();
+        }
+
+        public List<string> GetListOfHeroesWithKeyword(Keywords keyword)
+        {
+            var returnList = _heroes
+                .Where(hero => hero.KeywordsList.Contains(keyword))
+                .Select(hero => hero.HeroName).ToList();
+
+            return returnList;
         }
 
         public List<HeroInfo> SetHeroList(List<string> heroNames)

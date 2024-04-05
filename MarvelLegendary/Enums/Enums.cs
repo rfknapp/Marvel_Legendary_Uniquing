@@ -109,6 +109,12 @@ namespace MarvelLegendary.Enums
         Demolish,
         [Description("Empowered")]
         Empowered,
+        [Description("Antics")]
+        Antics,
+        [Description("Heist")]
+        Heist,
+        [Description("Explore")]
+        Explore,
     }
 
 }

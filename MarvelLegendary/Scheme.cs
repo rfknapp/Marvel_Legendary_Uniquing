@@ -262,7 +262,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("The Time Heist").SetSchemeSet(Set.InfinitySaga).SetSchemeTwists(11).SetHeroCount(8).Build(),
             new SchemeInfoBuilder().SetSchemeName("Warp Reality Into a TV Show").SetSchemeSet(Set.InfinitySaga).SetSchemeTwists(11).Build(),
 
--->            new SchemeInfoBuilder().SetSchemeName("Midnight Massacre").SetSchemeSet(Set.MidnightSons).SetSchemeTwists(11).HeroesInVillainDeckWithNameLike(1, "Blade").HeroesInVillainDeck("Blade").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Midnight Massacre").SetSchemeSet(Set.MidnightSons).SetSchemeTwists(11).HeroesInVillainDeckWithNameLike(1, "Blade").Build(),
             new SchemeInfoBuilder().SetSchemeName("Ritual Sacrifice to Summon Chthon").SetSchemeSet(Set.MidnightSons).Build(),
             new SchemeInfoBuilder().SetSchemeName("Sire Vampires at the Blood Bank").SetSchemeSet(Set.MidnightSons).SetSchemeTwists(10).SetVampireNaniteHenchmen().Build(),
             new SchemeInfoBuilder().SetSchemeName("Wager at Blackjack for Heroes' Souls").SetSchemeSet(Set.MidnightSons).SetSchemeTwists(11).AddAdditionalHero(2).Build(),
@@ -272,8 +272,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Marvel Zombies").SetSchemeSet(Set.WhatIf).SetSchemeTwists(4).HeroesInVillainDeck(1).MarvelZombieVillains(1, Keywords.LivingDead).SetBystanderCount(new List<int>{ 4, 5, 8, 8, 12 }).Build(),
             new SchemeInfoBuilder().SetSchemeName("Trash Earth with Hugest Party Ever").SetSchemeSet(Set.WhatIf).SetSchemeTwists(6).SetRequiredHeroes("Party Thor").SetRequiredVillains("Intergalactic Party Animals").Build(),
 
-            //Need to set up Shrink Tech deck by bringing in keyword information on heroes
--->            new SchemeInfoBuilder().SetSchemeName("Auction Shrink Tech to Highest Bidder").SetSchemeSet(Set.AntmanWasp).SetSchemeTwists(11).HeroesInVillainDeck("Blade").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Auction Shrink Tech to Highest Bidder").SetSchemeSet(Set.AntmanWasp).SetSchemeTwists(11).SetShrinkTechDeck().Build(),
             new SchemeInfoBuilder().SetSchemeName("Escape an Imprisoning Dimension").SetSchemeSet(Set.AntmanWasp).SetSchemeTwists(5).Build(),
             new SchemeInfoBuilder().SetSchemeName("Safeguard Dark Secrets").SetSchemeSet(Set.AntmanWasp).SetSchemeTwists(5).Build(),
             new SchemeInfoBuilder().SetSchemeName("Siphon Energy from the Quantum Realm").SetSchemeSet(Set.AntmanWasp).SetSchemeTwists(9).IncludeQuantumRealmDeck().Build(),

@@ -101,6 +101,8 @@ namespace MarvelLegendary
         public bool IsDarkLoyalty { get; set; }
         public bool IsSoulsHero { get; set; }
         public Hero SoulsHero { get; set; }
+        public bool IsShrinkTechHero { get; set; }
+        public Hero ShrinkTechHero { get; set; }
         public int RoyalWeddingHeroCount { get; set; }
 
         //Sidekicks
