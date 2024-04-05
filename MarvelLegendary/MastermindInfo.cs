@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MarvelLegendary.Enums;
 
 namespace MarvelLegendary
 {
     public class MastermindInfo
     {
         public string MastermindName { get; set; }
-        public GameInfo.Set SetName { get; set; }
+        public Set SetName { get; set; }
         public string RequiredVillain { get; set; }
         public string LeadsVillain { get; set; }
         public string LeadsHenchmen { get; set; }

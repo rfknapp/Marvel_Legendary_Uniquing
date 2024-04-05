@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarvelLegendary.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace MarvelLegendary
             {
                 SchemeName = "",
                 SchemeTwists = new List<int> { 8, 8, 8, 8, 8 },
-                SetName = GameInfo.Set.Core.GetDescription(),
+                SetName = Set.Core.GetDescription(),
                 CannotBeSolo = false,
                 ShardCount = 0,
                 IsShardCount = false,
@@ -74,6 +75,9 @@ namespace MarvelLegendary
                 IsMonsterPitDeck = false,
                 IsQuantumRealmDeck = false,
                 VillainsNotAllowed = new List<string>(),
+                IsMarvelZombies = false,
+                MarvelZombiesGroup = new List<string>(),
+                VillainsNotIncluded = new List<string>(),
 
                 //Masterminds
                 NumberOfMasterminds = 1,
@@ -133,7 +137,7 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder SetSchemeSet(GameInfo.Set set)
+        public SchemeInfoBuilder SetSchemeSet(Set set)
         {
             _schemeInfo.SetName = EnumDescription.GetDescription(set);
             return this;
@@ -444,8 +448,8 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder SetRequiredVillains(List<string> villainList, int numberOfVillainsFromGroup)
         {
-            int r = rnd.Next(villainList.Count);
-            var villain = villainList[r];
+            var randomIndex = rnd.Next(villainList.Count);
+            var villain = villainList[randomIndex];
             _schemeInfo.RequiredVillains = new List<string> { villain };
             villainList.Remove(villain);
             _schemeInfo.VillainsNotAllowed = villainList;
@@ -462,6 +466,22 @@ namespace MarvelLegendary
         public SchemeInfoBuilder DoubleVillains()
         {
             _schemeInfo.Villains = _schemeInfo.Villains.Select(x => x * 2).ToList();
+            return this;
+        }
+
+        public SchemeInfoBuilder MarvelZombieVillains(int numberOfVillains, Keywords keyword)
+        {
+            var keywordVillains = new Villain().GetListOfVillainsWithKeyword(keyword);
+
+            while (_schemeInfo.MarvelZombiesGroup.Count < numberOfVillains && keywordVillains.Count > 0)
+            {
+                var randomIndex = rnd.Next(keywordVillains.Count);
+                _schemeInfo.MarvelZombiesGroup.Add(keywordVillains[randomIndex]);
+                keywordVillains.RemoveAt(randomIndex);
+            }
+
+            _schemeInfo.IsMarvelZombies = true;
+            _schemeInfo.VillainsNotAllowed = keywordVillains;
             return this;
         }
 

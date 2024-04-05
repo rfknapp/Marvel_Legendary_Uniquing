@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MarvelLegendary.Enums;
 
 namespace MarvelLegendary
 {
@@ -15,7 +16,7 @@ namespace MarvelLegendary
             _mastermindInfo = new MastermindInfo
             {
                 MastermindName = "",
-                SetName = GameInfo.Set.Core,
+                SetName = Set.Core,
                 RequiredVillain = "",
                 LeadsVillain = "",
                 LeadsHenchmen = "",
@@ -38,7 +39,7 @@ namespace MarvelLegendary
             return this;
         }
 
-        public MastermindInfoBuilder SetMastermindSet(GameInfo.Set set)
+        public MastermindInfoBuilder SetMastermindSet(Set set)
         {
             _mastermindInfo.SetName = set;
             return this;
@@ -80,11 +81,15 @@ namespace MarvelLegendary
 
         public MastermindInfoBuilder LeadsVillainsByKind(List<string> villainKinds)
         {
-            var henchmenList = new Henchmen().GetListOfHenchmen();
-            var henchmenNames = (henchmenList.Where(item => item.Contains(henchmenKind))).ToList();
+            var villainsList = new Villain().GetListOfVillains();
+            var listOfVillains = new List<string>();
+            foreach (var villainKind in villainKinds)
+            {
+                listOfVillains.AddRange((villainsList.Where(item => item.Contains(villainKind))).ToList());
+            }
 
-            _mastermindInfo.LeadsHenchmen = henchmenNames[new Random().Next(henchmenNames.Count)];
-            _mastermindInfo.DoesLeadHenchmen = true;
+            _mastermindInfo.LeadsVillain = listOfVillains[new Random().Next(listOfVillains.Count)];
+            _mastermindInfo.DoesLeadVillain = true;
             return this;
         }
 

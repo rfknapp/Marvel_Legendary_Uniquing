@@ -63,6 +63,9 @@ namespace MarvelLegendary
         public bool IsVillainCardNextToScheme { get; set; }
         public bool IsMonsterPitDeck { get; set; }
         public bool IsQuantumRealmDeck { get; set; }
+        public bool IsMarvelZombies { get; set; }
+        public List<string> MarvelZombiesGroup { get; set; }
+        public List<string> VillainsNotIncluded { get; set; }
 
         //Masterminds
         public int NumberOfMasterminds { get; set; }

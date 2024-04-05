@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MarvelLegendary.Enums;
 
 namespace MarvelLegendary
 {
     public class HenchmenInfo
     {
         public string HenchmenName { get; set; }
-        public GameInfo.Set HenchmenSetName { get; set; }
+        public Set HenchmenSetName { get; set; }
         public bool IsDuplicate { get; set; }
         public string DuplicateName { get; set; }
         public bool IncludeNewRecruits { get; set; }
 
-        public HenchmenInfo(string name, GameInfo.Set set, bool includeNewRecruits = false)
+        public HenchmenInfo(string name, Set set, bool includeNewRecruits = false)
         {
             HenchmenName = name;
             HenchmenSetName = set;
@@ -23,7 +24,7 @@ namespace MarvelLegendary
             IncludeNewRecruits = includeNewRecruits;
         }
 
-        public HenchmenInfo(string name, GameInfo.Set set, string duplicateMatch, bool includeNewRecruits = false)
+        public HenchmenInfo(string name, Set set, string duplicateMatch, bool includeNewRecruits = false)
         {
             HenchmenName = name;
             HenchmenSetName = set;
@@ -35,70 +36,70 @@ namespace MarvelLegendary
 
     public class Henchmen
     {
-        public GameInfo.Set HenchmenSet;
+        public Set HenchmenSet;
         public string HenchmenName;
         public HenchmenInfo HenchmenInfo { get; set; }
 
         private readonly List<HenchmenInfo> _henchmen = new List<HenchmenInfo>()
         {
-            new HenchmenInfo("Doombot Legion", GameInfo.Set.Core, "Ten Ring Fantatics"),
-            new HenchmenInfo("Hand Ninjas", GameInfo.Set.Core, "HYDRA Piots"),
-            new HenchmenInfo("Savage Land Mutates", GameInfo.Set.Core, "HYDRA Spies"),
-            new HenchmenInfo("Sentinels", GameInfo.Set.Core, "Hammer Drone Army"),
+            new HenchmenInfo("Doombot Legion", Set.Core, "Ten Ring Fantatics"),
+            new HenchmenInfo("Hand Ninjas", Set.Core, "HYDRA Piots"),
+            new HenchmenInfo("Savage Land Mutates", Set.Core, "HYDRA Spies"),
+            new HenchmenInfo("Sentinels", Set.Core, "Hammer Drone Army"),
             
-            new HenchmenInfo("Maggia Goons", GameInfo.Set.Dc),
-            new HenchmenInfo("Phalanx", GameInfo.Set.Dc),
+            new HenchmenInfo("Maggia Goons", Set.Dc),
+            new HenchmenInfo("Phalanx", Set.Dc),
             
-            new HenchmenInfo("Asgardian Warriors", GameInfo.Set.Villains),
-            new HenchmenInfo("Cops", GameInfo.Set.Villains, true),
-            new HenchmenInfo("Multiple Man", GameInfo.Set.Villains),
-            new HenchmenInfo("S.H.I.E.L.D. Assault Squad", GameInfo.Set.Villains),
+            new HenchmenInfo("Asgardian Warriors", Set.Villains),
+            new HenchmenInfo("Cops", Set.Villains, true),
+            new HenchmenInfo("Multiple Man", Set.Villains),
+            new HenchmenInfo("S.H.I.E.L.D. Assault Squad", Set.Villains),
              
-            new HenchmenInfo("Ghost Racers", GameInfo.Set.Sw1),
-            new HenchmenInfo("M.O.D.O.K.s", GameInfo.Set.Sw1),
-            new HenchmenInfo("Thor Corps", GameInfo.Set.Sw1),
+            new HenchmenInfo("Ghost Racers", Set.Sw1),
+            new HenchmenInfo("M.O.D.O.K.s", Set.Sw1),
+            new HenchmenInfo("Thor Corps", Set.Sw1),
              
-            new HenchmenInfo("Khonshu Guardians", GameInfo.Set.Sw2),
-            new HenchmenInfo("Magma Men", GameInfo.Set.Sw2),
-            new HenchmenInfo("Spider-Infected", GameInfo.Set.Sw2),
+            new HenchmenInfo("Khonshu Guardians", Set.Sw2),
+            new HenchmenInfo("Magma Men", Set.Sw2),
+            new HenchmenInfo("Spider-Infected", Set.Sw2),
              
-            new HenchmenInfo("Cape-killers", GameInfo.Set.Cw),
-            new HenchmenInfo("Mandroids", GameInfo.Set.Cw),
+            new HenchmenInfo("Cape-killers", Set.Cw),
+            new HenchmenInfo("Mandroids", Set.Cw),
              
-            new HenchmenInfo("Circus of Crime", GameInfo.Set.ThreeD),
-            new HenchmenInfo("Spider-Slayer", GameInfo.Set.ThreeD),
+            new HenchmenInfo("Circus of Crime", Set.ThreeD),
+            new HenchmenInfo("Spider-Slayer", Set.ThreeD),
             
-            new HenchmenInfo("The Brood", GameInfo.Set.XMen),
-            new HenchmenInfo("Hellfire Cult", GameInfo.Set.XMen),
-            new HenchmenInfo("Sapien League", GameInfo.Set.XMen),
-            new HenchmenInfo("Shi'ar Death Commandos", GameInfo.Set.XMen),
-            new HenchmenInfo("Shi'ar Patrol Craft", GameInfo.Set.XMen),
+            new HenchmenInfo("The Brood", Set.XMen),
+            new HenchmenInfo("Hellfire Cult", Set.XMen),
+            new HenchmenInfo("Sapien League", Set.XMen),
+            new HenchmenInfo("Shi'ar Death Commandos", Set.XMen),
+            new HenchmenInfo("Shi'ar Patrol Craft", Set.XMen),
              
-            new HenchmenInfo("Cytoplasm Spikes", GameInfo.Set.Wwh),
-            new HenchmenInfo("Death's Heads", GameInfo.Set.Wwh),
-            new HenchmenInfo("Sakaaran Hivelings", GameInfo.Set.Wwh),
+            new HenchmenInfo("Cytoplasm Spikes", Set.Wwh),
+            new HenchmenInfo("Death's Heads", Set.Wwh),
+            new HenchmenInfo("Sakaaran Hivelings", Set.Wwh),
             
-            new HenchmenInfo("Hammer Drone Army (Sentinels)", GameInfo.Set.P1, "Sentinels"),
-            new HenchmenInfo("HYDRA Pilots (Hand Ninjas)", GameInfo.Set.P1, "Hand Ninjas"),
-            new HenchmenInfo("HYDRA Spies (Savage Land Mutates)", GameInfo.Set.P1, "Savage Land Mutates"),
-            new HenchmenInfo("Ten Rings Fanatics (Doombot Legion)", GameInfo.Set.P1, "Doombot Legion"),
+            new HenchmenInfo("Hammer Drone Army (Sentinels)", Set.P1, "Sentinels"),
+            new HenchmenInfo("HYDRA Pilots (Hand Ninjas)", Set.P1, "Hand Ninjas"),
+            new HenchmenInfo("HYDRA Spies (Savage Land Mutates)", Set.P1, "Savage Land Mutates"),
+            new HenchmenInfo("Ten Rings Fanatics (Doombot Legion)", Set.P1, "Doombot Legion"),
             
-            new HenchmenInfo("HYDRA Base", GameInfo.Set.Revelations),
-            new HenchmenInfo("Mandarin's Rings", GameInfo.Set.Revelations),
+            new HenchmenInfo("HYDRA Base", Set.Revelations),
+            new HenchmenInfo("Mandarin's Rings", Set.Revelations),
 
-            new HenchmenInfo("Sidera Maris, Bridge Builders", GameInfo.Set.Cosmos),
-            new HenchmenInfo("Universal Church of Truth", GameInfo.Set.Cosmos),
+            new HenchmenInfo("Sidera Maris, Bridge Builders", Set.Cosmos),
+            new HenchmenInfo("Universal Church of Truth", Set.Cosmos),
 
-            new HenchmenInfo("Mr. Sinister Clones", GameInfo.Set.Messiah),
-            new HenchmenInfo("Sentinel Squad O*N*E*", GameInfo.Set.Messiah),
+            new HenchmenInfo("Mr. Sinister Clones", Set.Messiah),
+            new HenchmenInfo("Sentinel Squad O*N*E*", Set.Messiah),
 
-            new HenchmenInfo("Giants of Jotunheim", GameInfo.Set.WhatIf),
-            new HenchmenInfo("Ultron Sentries", GameInfo.Set.WhatIf),
-            new HenchmenInfo("Vibranium Liberator Drones", GameInfo.Set.WhatIf),
+            new HenchmenInfo("Giants of Jotunheim", Set.WhatIf),
+            new HenchmenInfo("Ultron Sentries", Set.WhatIf),
+            new HenchmenInfo("Vibranium Liberator Drones", Set.WhatIf),
 
-            new HenchmenInfo("Quantonauts", GameInfo.Set.AntmanWasp),
-            new HenchmenInfo("Quantum Hounds", GameInfo.Set.AntmanWasp),
-            new HenchmenInfo("Tardigrade", GameInfo.Set.AntmanWasp)
+            new HenchmenInfo("Quantonauts", Set.AntmanWasp),
+            new HenchmenInfo("Quantum Hounds", Set.AntmanWasp),
+            new HenchmenInfo("Tardigrade", Set.AntmanWasp)
         };
 
         public Henchmen()
