@@ -65,7 +65,6 @@ namespace MarvelLegendary
         public bool IsQuantumRealmDeck { get; set; }
         public bool IsMarvelZombies { get; set; }
         public List<string> MarvelZombiesGroup { get; set; }
-        public List<string> VillainsNotIncluded { get; set; }
 
         //Masterminds
         public int NumberOfMasterminds { get; set; }
@@ -78,7 +77,6 @@ namespace MarvelLegendary
         public bool IsWorldWarHulkMasterminds { get; set; }
         public bool IsDrainedMastermind { get; set; }
         public Mastermind DrainedMastermind { get; set; }
-        public bool IncludeExtraAlwaysLeadsVillains { get; set; }
 
         //Heroes
         public List<int> Heroes { get; set; }

@@ -77,7 +77,6 @@ namespace MarvelLegendary
                 VillainsNotAllowed = new List<string>(),
                 IsMarvelZombies = false,
                 MarvelZombiesGroup = new List<string>(),
-                VillainsNotIncluded = new List<string>(),
 
                 //Masterminds
                 NumberOfMasterminds = 1,
@@ -89,7 +88,6 @@ namespace MarvelLegendary
                 IsExtraMasterminds = false,
                 IsWorldWarHulkMasterminds = false,
                 IsDrainedMastermind = false,
-                IncludeExtraAlwaysLeadsVillains = false,
 
                 //Heroes
                 Heroes = new List<int> { 3, 5, 5, 5, 6 },
@@ -597,7 +595,6 @@ namespace MarvelLegendary
         {
             _schemeInfo.NumberExtraMasterminds = 1;
             _schemeInfo.IsDrainedMastermind = true;
-            _schemeInfo.IncludeExtraAlwaysLeadsVillains = true;
             return this;
         }
 

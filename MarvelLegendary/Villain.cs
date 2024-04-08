@@ -220,14 +220,8 @@ namespace MarvelLegendary
             return this;
         }
 
-        public Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme, List<string> villainsInGame = null)
+        public Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme, List<string> villainsInGame)
         {
-            //Set villains to be empty if it is coming in as null
-            if (villainsInGame == null)
-            {
-                villainsInGame = new List<string>();
-            }
-
             //Get Villains
             var villainList = GetListOfVillains();
 
@@ -262,15 +256,6 @@ namespace MarvelLegendary
             VillainInfo = villainInfo;
 
             return this;
-        }
-
-        public Villain(List<VillainInfo> villains)
-        {
-            var villainInfo = villains[new Random().Next(villains.Count)];
-
-            VillainName = villainInfo.VillainName;
-            SetName = villainInfo.VillainSetName;
-            VillainInfo = villainInfo;
         }
 
         public string ToString(List<Villain> villainList)

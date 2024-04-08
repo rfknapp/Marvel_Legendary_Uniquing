@@ -194,13 +194,13 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Killmonger, The Betrayer").SetMastermindSet(Set.WhatIf).LeadsHenchmen("Vibranium Liberator Drones").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Killmonger, The Betrayer").SetMastermindSet(Set.WhatIf).LeadsHenchmen("Vibranium Liberator Drones").Build(),
             new MastermindInfoBuilder().SetMastermindName("Ultron Infinity").SetMastermindSet(Set.WhatIf).LeadsHenchmen("Ultron Sentries").AlwaysLeadsOnSolo().Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Ultron Infinity").SetMastermindSet(Set.WhatIf).LeadsHenchmen("Ultron Sentries").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Ultron Infinity").SetMastermindSet(Set.WhatIf).LeadsHenchmen("Ultron Sentries").AlwaysLeadsOnSolo().Build(),
             new MastermindInfoBuilder().SetMastermindName("Zombie Scarlet Witch").SetMastermindSet(Set.WhatIf).LeadsVillain("Zombie Avengers").SetZombieSoloVillains().Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Zombie Scarlet Witch").SetMastermindSet(Set.WhatIf).LeadsVillain("Zombie Avengers").SetZombieSoloVillains().Build(),
 
-            new MastermindInfoBuilder().SetMastermindName("Hank Pym, Yellowjacket").SetMastermindSet(Set.WhatIf).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Hank Pym, Yellowjacket").SetMastermindSet(Set.WhatIf).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Killmonger, The Betrayer").SetMastermindSet(Set.WhatIf).LeadsHenchmen("Vibranium Liberator Drones").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Darrin Cross").SetMastermindSet(Set.AntmanWasp).LeadsVillain("Cross Technologies").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Ghost, Master Thief").SetMastermindSet(Set.AntmanWasp).LeadsVillain("Ghost Chasers").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Kang, Quantum Conqueror").SetMastermindSet(Set.AntmanWasp).LeadsVillain("Armada of Kang").Build(),
 
             new MastermindInfoBuilder().SetMastermindName("Alchemax Executives").SetMastermindSet(Set.TwentyNintyNine).LeadsVillain("Alchemax Executives").IncludeExtraHero().Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Alchemax Executives").SetMastermindSet(Set.TwentyNintyNine).LeadsVillain("Alchemax Executives").IncludeExtraHero().Build(),
