@@ -66,6 +66,7 @@ namespace MarvelLegendary
                 IsSmugglerHenchmen = false,
                 IsXerogenHenchmen = false,
                 IsVampireNeonaniteHenchmen = false,
+                NumberExtraHenchmenGroups = 0,
 
                 //Villains
                 Villains = new List<int> { 1, 2, 3, 3, 4 },
@@ -325,6 +326,7 @@ namespace MarvelLegendary
         public SchemeInfoBuilder AddXerogenHenchmen()
         {
             _schemeInfo.IsXerogenHenchmen = true;
+            _schemeInfo.NumberExtraHenchmenGroups = 1;
             return this;
         }
 
@@ -365,6 +367,7 @@ namespace MarvelLegendary
         public SchemeInfoBuilder IncludeSmugglerHenchmen()
         {
             _schemeInfo.IsSmugglerHenchmen = true;
+            _schemeInfo.NumberExtraHenchmenGroups = 1;
             return this;
         }
 
@@ -377,6 +380,7 @@ namespace MarvelLegendary
         public SchemeInfoBuilder SetVampireNaniteHenchmen()
         {
             _schemeInfo.IsVampireNeonaniteHenchmen = true;
+            _schemeInfo.NumberExtraHenchmenGroups = 1;
             return this;
         }
 

@@ -54,6 +54,7 @@ namespace MarvelLegendary
         public bool IsSmugglerHenchmen { get; set; }
         public bool IsXerogenHenchmen { get; set; }
         public bool IsVampireNeonaniteHenchmen { get; set; }
+        public int NumberExtraHenchmenGroups { get; set; }
 
         //Villains
         public List<int> Villains { get; set; }

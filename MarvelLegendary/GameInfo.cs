@@ -175,28 +175,20 @@ namespace MarvelLegendary
             if (Scheme.SchemeInfo.IsInfectedDeck)
             {
                 InfectedHenchmen.Add(new Henchmen().GetNewHenchmen("Cytoplasm Spikes"));
+                SchemeHenchmen.Add(new Henchmen().GetNewHenchmen("Cytoplasm Spikes"));
             }
 
-            // NEED TO INVESTIGATE THIS
+            if (Scheme.SchemeInfo.IsHenchmenNextToScheme)
+            {
+                SchemeHenchmen.Add(new Henchmen().GetNewHenchmen(Scheme.SchemeInfo.HenchmenNextToScheme));
+            }
+
             //This is for Symbiotic Absorption
             if (Scheme.SchemeInfo.IsDrainedMastermind && Scheme.SchemeInfo.DrainedMastermind.DoesLeadHenchmen)
             {
                 Scheme.RequiredHenchmen.Add(ExtraMasterminds.First().LeadsHenchmen);
                 Scheme.NumberOfHenchmen += 1;
-            }
-
-            var henchmen = Scheme.SchemeInfo.IsHenchmenNextToScheme ? Scheme.SchemeInfo.HenchmenNextToScheme :
-                Scheme.SchemeInfo.IsInfectedDeck ? "Cytoplasm Spikes" : null;
-            
-            if (henchmen != null)
-            {
-                SchemeHenchmen.Add(new Henchmen().GetNewHenchmen(henchmen));
-            }
-
-            if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
-            {
-                SchemeHenchmen.Add(new Henchmen(exclusions.HenchmenList));
-                Scheme.NumberOfHenchmen += 1;
+                Henchmen.Add(new Henchmen().GetNewHenchmen(ExtraMasterminds.First().LeadsHenchmen));
             }
 
             if (henchmenNames != null)
@@ -204,7 +196,24 @@ namespace MarvelLegendary
                 Henchmen.AddRange(from item in henchmenNames select new Henchmen().GetNewHenchmen(item));
             }
 
-            Henchmen = GetHenchmen(Scheme.RequiredHenchmen, SchemeHenchmen, Mastermind, Henchmen);
+            //Henchmen is the list of henchmen in the villain deck
+            Henchmen = GetHenchmen(Scheme.NumberOfHenchmen, Henchmen, SchemeHenchmen);
+
+            //Smuggler adds an extra henchmen to the deck
+            //HenchmenInHeroDeck adds a henchmen group to the hero deck
+            //AnnihilationHenchmen adds a henchmen group to the KO pile
+            //IsXerogenHenchmen adds an extra henchmen to the deck
+            //IsVampireNeonaniteHenchmen adds an extra henchmen to the deck
+            if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen
+                || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
+            {
+                var extraHenchmen = GetHenchmen(1, Henchmen, SchemeHenchmen).FirstOrDefault();
+                SchemeHenchmen.Add(extraHenchmen);
+
+                if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
+                    Henchmen.Add(extraHenchmen);
+            }
+
             AllHenchmenInGame = new List<Henchmen>(Henchmen).Concat(SchemeHenchmen).ToList();
             foreach (var schemeRequiredHenchmen in Scheme.RequiredHenchmen)
             {
@@ -349,6 +358,9 @@ namespace MarvelLegendary
             //This will remove all the villians not allowed by the scheme from the list of villians to choose from
             allVillains = allVillains.Except(villainsNotAllowed).ToList();
 
+            //This will remove all the villains coming from the schemes from the list of villains to choose from
+            allVillains = allVillains.Except(schemeVillains).ToList();
+
             villainList.AddRange(from item in currentVillains select item);
 
             //If the game isn't a solo game or the Mastermind has his Leads Villain even when solo
@@ -391,34 +403,34 @@ namespace MarvelLegendary
         #endregion
 
         #region Henchmen
-        private List<Henchmen> GetHenchmen(List<string> requiredHenchmenString, List<Henchmen> schemeHenchmenGroups, Mastermind mastermind, List<Henchmen> currentHenchmen)
+        //schemeHenchmenGroups is the list of henchmen that are set aside but needed to avoid being added to the list of henchmen
+        //to include in the henchmen deck
+        //currentHenchmen is the list of henchmen to be included in the henchmen deck
+        private List<Henchmen> GetHenchmen(int numberOfHenchmen, List<Henchmen> currentHenchmen, List<Henchmen> schemeHenchmen)
         {
+            var schemeHenchmenNames = schemeHenchmen.Select(x => x.HenchmenName).ToList();
+
+            //This will be the list of henchmen to include in the villain deck
             var henchmenList = new List<Henchmen>();
-            var allHenchmenInGame = new List<Henchmen>();
-            var requiredHenchmen = new List<Henchmen>();
-            var numberOfHenchmen = Scheme.NumberOfHenchmen;
-            requiredHenchmen.AddRange(from item in requiredHenchmenString select new Henchmen().GetNewHenchmen(item));
+
+            var allHenchmen = new Henchmen().GetListOfHenchmen();
 
             henchmenList.AddRange(from item in currentHenchmen select item);
-            allHenchmenInGame.AddRange(from item in currentHenchmen select item);
 
-            henchmenList.AddRange(from schemeHenchmen in schemeHenchmenGroups select schemeHenchmen);
-            allHenchmenInGame.AddRange(from schemeHenchmen in schemeHenchmenGroups select schemeHenchmen);
-
-            //Adds all required henchmen from the scheme to the list
-            henchmenList.AddRange(from item in requiredHenchmen select item);
-            allHenchmenInGame.AddRange(from item in requiredHenchmen select item);
+            //This will remove all the henchmen that come in from the scheme from the list of henchmen to choose
+            allHenchmen = allHenchmen.Except(schemeHenchmenNames).ToList();
 
             //If the scheme didn't bring in any henchmen or there are more than one henchmen group included we then include from the Mastermind
             //If this is a solo game, then the Mastermind Leads is ignored
-            if ((PlayerCount != 1 || mastermind.MastermindInfo.AlwaysLeadsOnSolo) && numberOfHenchmen > henchmenList.Count && mastermind.DoesLeadHenchmen)
+            if ((Mastermind.MastermindInfo.AlwaysLeadsOnSolo || PlayerCount > 1) && Mastermind.DoesLeadHenchmen
+                && numberOfHenchmen > henchmenList.Count)
             {
                 //If the masterminds leads one of the henchmen brought in through the scheme twist, it won't be added twice
-                var mastermindLeadsHenchmen = new Henchmen().GetNewHenchmen(mastermind.LeadsHenchmen);
-                if (allHenchmenInGame.All(x => x.HenchmenName != mastermindLeadsHenchmen.HenchmenName))
+                var mastermindLeadsHenchmen = new Henchmen().GetNewHenchmen(Mastermind.LeadsHenchmen);
+                var mastermindLeadsHenchmenName = mastermindLeadsHenchmen.HenchmenName;
+                if (henchmenList.All(x => x.HenchmenName != mastermindLeadsHenchmenName))
                 {
                     henchmenList.Add(mastermindLeadsHenchmen);
-                    allHenchmenInGame.Add(mastermindLeadsHenchmen);
                 }
             }
 
@@ -431,17 +443,12 @@ namespace MarvelLegendary
 
             var returnList = new List<Henchmen>();
             var henchmenInGame = new List<string>(henchmenList.Select(x => x.HenchmenName));
-            var allHenchmen = new Henchmen().GetListOfHenchmen();
 
-            for (int i = 0; i < numRemainingHenchmen; i++)
+            while(numRemainingHenchmen > 0)
             {
-                var exclusions = DetermineHenchmen.DetermineHenchmenList(Villains, AllMastermindsInGame, henchmenInGame, Scheme);
-                
-                var exclusionsWithoutHenchmenInGame = allHenchmen.Except(henchmenInGame).ToList();
-                var henchmenToChooseFrom = exclusionsWithoutHenchmenInGame.Except(exclusions).ToList();
-                var henchmenName = henchmenToChooseFrom[new Random().Next(henchmenToChooseFrom.Count)];
-
-                henchmenInGame.Add(henchmenName);
+                var henchmen = new Henchmen().GetNewHenchmen(AllMastermindsInGame, Scheme, Villains, henchmenInGame);
+                henchmenInGame.Add(henchmen.HenchmenName);
+                numRemainingHenchmen--;
             }
 
             returnList.AddRange(from item in henchmenInGame

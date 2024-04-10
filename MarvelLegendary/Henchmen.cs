@@ -250,6 +250,55 @@ namespace MarvelLegendary
             return this;
         }
 
+        public Henchmen GetNewHenchmen(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villains, List<string> henchmenInGame)
+        {
+            //Get Henchmen
+            var henchmenList = GetListOfHenchmen();
+
+            //Remove all Henchmen currently in the game from the list
+            var remainingHenchmen = henchmenList.Except(henchmenInGame).ToList();
+
+            //Get Henchmen that have played with the Scheme
+            var henchmenByScheme = GetListOfHenchmenByX("Scheme", scheme.SchemeName);
+
+            //Remove all Henchmen that have played with the scheme from the list
+            remainingHenchmen = remainingHenchmen.Except(henchmenByScheme).ToList();
+
+            //Get Henchmen that have played with each of the Masterminds with
+            foreach (var mastermind in allMastermindsInGame)
+            {
+                var henchmenByMastermind = GetListOfHenchmenByX("Mastermind", mastermind.MastermindName);
+                //Remove all Henchmen that have played with the Mastermind(s)
+                remainingHenchmen = remainingHenchmen.Except(henchmenByMastermind).ToList();
+            }
+
+            //Get Henchmen that have played with each of the Villains with
+            foreach (var villain in villains)
+            {
+                var henchmenByVillain = GetListOfHenchmenByX("Villain", villain.VillainName);
+                //Remove all Henchmen that have played with the Villains
+                remainingHenchmen = remainingHenchmen.Except(henchmenByVillain).ToList();
+            }
+
+            //Get Henchmen that have played with each of the Henchmen with
+            foreach (var henchmen in henchmenInGame)
+            {
+                var henchmenByHenchmen = GetListOfHenchmenByX("Henchmen", henchmen);
+                //Remove all Henchmen that have played with the Henchmen
+                remainingHenchmen = remainingHenchmen.Except(henchmenByHenchmen).ToList();
+            }
+
+            //Select Villain from remaining list
+            var henchmenName = remainingHenchmen[new Random().Next(remainingHenchmen.Count)];
+            var henchmenInfo = _henchmen.First(h => h.HenchmenName == henchmenName);
+
+            HenchmenName = henchmenName;
+            HenchmenSet = henchmenInfo.HenchmenSetName;
+            HenchmenInfo = henchmenInfo;
+
+            return this;
+        }
+
         public Henchmen(List<HenchmenInfo> henchmenInfoList)
         {
             var henchmen = henchmenInfoList[new Random().Next(henchmenInfoList.Count)];
@@ -302,6 +351,22 @@ namespace MarvelLegendary
             var allHenchmen = GetListOfHenchmen();
             var henchmen = allHenchmen[new Random().Next(allHenchmen.Count)];
             return henchmen;
+        }
+
+        public List<string> GetListOfHenchmenByX(string cardType, string name)
+        {
+            //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
+            var henchmenByTable = $"HenchmenBy{cardType}";
+            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+            var updatedName = name.Contains("'") ? name.Replace("'", "''") : name;
+
+            var allHenchmenBy = $@"select h.HenchmenName from Henchmen h
+                    inner join {henchmenByTable} hb ON h.Id = hb.HenchmenId
+                    inner join {tableName} t ON t.Id = hb.{cardType}Id
+                    where t.{cardType}Name = '{updatedName}'";
+
+            var allHenchmenByX = new SqlHelper().GetList(allHenchmenBy);
+            return allHenchmenByX;
         }
     }
 }
