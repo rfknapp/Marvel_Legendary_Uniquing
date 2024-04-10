@@ -158,9 +158,6 @@ namespace MarvelLegendary
             new HeroInfoBuilder().SetHeroName("Vision").SetGameSet(Set.Cw).SetHeroTeam(HeroTeam.Avengers).SetKeywords(new List<Keywords>{Keywords.Phasing, Keywords.Size, Keywords.Divided}).Build(),
             new HeroInfoBuilder().SetHeroName("Wiccan").SetGameSet(Set.Cw).SetHeroTeam(HeroTeam.Avengers).Build(),
             
-            new HeroInfoBuilder().SetHeroName("Howard the Duck").SetGameSet(Set.ThreeD).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
-            new HeroInfoBuilder().SetHeroName("Man-Thing").SetGameSet(Set.ThreeD).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
-            
             new HeroInfoBuilder().SetHeroName("Bob, Agent of HYDRA").SetGameSet(Set.Deadpool).SetHeroTeam(HeroTeam.HYDRA).Build(),
             new HeroInfoBuilder().SetHeroName("Deadpool (Mercs for Money)").SetGameSet(Set.Deadpool).SetHeroTeam(HeroTeam.MercsForMoney).Build(),
             new HeroInfoBuilder().SetHeroName("Slapstick").SetGameSet(Set.Deadpool).SetHeroTeam(HeroTeam.MercsForMoney).Build(),
@@ -228,8 +225,10 @@ namespace MarvelLegendary
             new HeroInfoBuilder().SetHeroName("Venom Rocket").SetGameSet(Set.Venom).SetHeroTeam(HeroTeam.Venomverse).Build(),
             new HeroInfoBuilder().SetHeroName("Venomized Dr. Strange").SetGameSet(Set.Venom).SetHeroTeam(HeroTeam.Venomverse).Build(),
             new HeroInfoBuilder().SetHeroName("Venompool").SetGameSet(Set.Venom).SetHeroTeam(HeroTeam.Venomverse).Build(),
-            
+
+            new HeroInfoBuilder().SetHeroName("Howard the Duck").SetGameSet(Set.Dimensions).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
             new HeroInfoBuilder().SetHeroName("Jessica Jones").SetGameSet(Set.Dimensions).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
+            new HeroInfoBuilder().SetHeroName("Man-Thing").SetGameSet(Set.Dimensions).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
             new HeroInfoBuilder().SetHeroName("Ms. America").SetGameSet(Set.Dimensions).SetHeroTeam(HeroTeam.Avengers).Build(),
             new HeroInfoBuilder().SetHeroName("Squirrel Girl").SetGameSet(Set.Dimensions).SetHeroTeam(HeroTeam.Avengers).Build(),
             
@@ -366,7 +365,7 @@ namespace MarvelLegendary
                 heroes.Add(availableHeroes.First(x => x == "Nul, Breaker of Worlds"));
             }
 
-            var returnList = (from item in heroes select new Hero(item)).ToList();
+            var returnList = (from item in heroes select GetNewHero(item)).ToList();
 
             return returnList;
         }
@@ -401,15 +400,7 @@ namespace MarvelLegendary
             return heroesForTeams.Count >= heroesPerTeam;
         }
 
-        public Hero()
-        {
-            var heroInfo = _heroes[new Random().Next(_heroes.Count)];
-
-            HeroName = heroInfo.HeroName;
-            SetName = heroInfo.SetName;
-            HeroTeam = heroInfo.HeroTeam;
-            HeroInfo = heroInfo;
-        }
+        public Hero() {}
 
         public Hero GetNewHero(string heroName = "")
         {
@@ -430,30 +421,22 @@ namespace MarvelLegendary
             return this;
         }
 
-        public Hero(string heroName)
+        public Hero GetNewHero(List<string> excludedHeroes)
         {
-            var heroInfo = _heroes.First(x => x.HeroName == heroName);
-
-            HeroName = heroName;
-            SetName = heroInfo.SetName;
-            HeroTeam = heroInfo.HeroTeam;
-            HeroInfo = heroInfo;
-        }
-
-        public Hero(List<string> exclusionHeroes)
-        {
-            var heroList = _heroes.Select(x => x.HeroName).ToList();
-            heroList.Except(exclusionHeroes);
+            var heroList = GetListOfHeroes();
+            heroList.Except(excludedHeroes);
             var heroName = heroList[new Random().Next(heroList.Count)];
-            var hero = _heroes.First(x => x.HeroName == heroName);
+            var hero = _heroes.FirstOrDefault(x => x.HeroName == heroName);
 
             HeroName = hero.HeroName;
             SetName = hero.SetName;
             HeroTeam = hero.HeroTeam;
             HeroInfo = hero;
+
+            return this;
         }
 
-        public Hero(bool contains, string heroNamePart, List<string> availableHeroes)
+        public Hero GetNewHeroByContainsString(string heroNamePart, List<string> availableHeroes)
         {
             var heroList = availableHeroes.Where(x => x.Contains(heroNamePart)).ToList();
 
@@ -463,17 +446,19 @@ namespace MarvelLegendary
             }
 
             var heroInfo = heroList[new Random().Next(heroList.Count)];
-            var hero = new Hero(heroInfo);
+            var hero = GetNewHero(heroInfo);
 
             HeroName = hero.HeroName;
             SetName = hero.SetName;
             HeroTeam = hero.HeroTeam;
             HeroInfo = hero.HeroInfo;
+
+            return this;
         }
 
-        public Hero(HeroTeam heroTeam, List<string> availableHeroes, bool inTeam = true)
+        public Hero GetNewHeroByTeam(HeroTeam heroTeam, List<string> availableHeroes, bool inTeam = true)
         {
-            var heroes = (from item in availableHeroes select new Hero(item)).ToList();
+            var heroes = (from item in availableHeroes select GetNewHero(item)).ToList();
             var heroInfoList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
             var heroInfo = heroInfoList[new Random().Next(heroInfoList.Count)];
 
@@ -481,16 +466,8 @@ namespace MarvelLegendary
             SetName = heroInfo.SetName;
             HeroTeam = heroInfo.HeroTeam;
             HeroInfo = heroInfo.HeroInfo;
-        }
 
-        public Hero(List<HeroInfo> newHeroList)
-        {
-            var heroInfo = newHeroList[new Random().Next(newHeroList.Count)];
-
-            HeroName = heroInfo.HeroName;
-            SetName = heroInfo.SetName;
-            HeroTeam = heroInfo.HeroTeam;
-            HeroInfo = heroInfo;
+            return this;
         }
 
         public List<HeroTeam> GetHeroTeams(int numberOfHeroTeams, bool is3v3 = false)
@@ -528,7 +505,7 @@ namespace MarvelLegendary
             return _heroes.Count;
         }
 
-        public List<HeroInfo> ModifyHeroList(IEnumerable<string> heroExclusions)
+        /*public List<HeroInfo> ModifyHeroList(IEnumerable<string> heroExclusions)
         {
             var returnList = new List<HeroInfo>(_heroes);
 
@@ -568,7 +545,7 @@ namespace MarvelLegendary
             }
 
             return returnList;
-        }
+        }*/
 
         public int GetHeroTeamMemberCount(HeroTeam heroTeam)
         {

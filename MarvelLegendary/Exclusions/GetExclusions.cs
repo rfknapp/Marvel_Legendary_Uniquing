@@ -546,7 +546,7 @@ namespace MarvelLegendary.Exclusions
         {
             var spreadsheet = new GetSpreadsheet();
             var spreadsheetInfo = spreadsheet.GetSpreadsheetInfo("By Hero");
-            var henchmen = new Hero(heroGroup);
+            var henchmen = new Hero().GetNewHero(heroGroup);
             heroGroup = henchmen.HeroName;
 
             var listOfHenchmen = spreadsheetInfo.First();

@@ -260,7 +260,7 @@ namespace MarvelLegendary
 
             if (Scheme.SchemeInfo.IsMutationDeck || Scheme.SchemeInfo.IsHulkDeck)
             {
-                var hero = new Hero(true, "Hulk", allHeroes);
+                var hero = new Hero().GetNewHeroByContainsString("Hulk", allHeroes);
                 SchemeHeroes.Add(hero);
             }
 
@@ -272,12 +272,12 @@ namespace MarvelLegendary
 
                 var test = GetHeroes(Scheme.SchemeInfo.RoyalWeddingHeroCount, SchemeHeroes, allHeroes, excludedHeroes, getExclusions);
 
-                SchemeHeroes.AddRange(from item in test select new Hero(item));
+                SchemeHeroes.AddRange(from item in test select new Hero().GetNewHero(item));
             }
 
             if (heroNames != null)
             {
-                Heroes.AddRange(from item in heroNames select new Hero(item));
+                Heroes.AddRange(from item in heroNames select new Hero().GetNewHero(item));
             }
 
             if (Scheme.SchemeInfo.Is4v2 || Scheme.SchemeInfo.Is3v3)
@@ -466,7 +466,7 @@ namespace MarvelLegendary
             {
                 heroes.Add(heroInGame.HeroName);
             }
-            var newHero = new Hero(heroes);
+            var newHero = new Hero().GetNewHero(heroes);
 
             return newHero;
         }
@@ -476,7 +476,7 @@ namespace MarvelLegendary
             var heroList = new List<Hero>();
             var getExclusions = new GetExclusions();
 
-            var hero = new Hero(exclusionHeroes);
+            var hero = new Hero().GetNewHero(exclusionHeroes);
             heroList.Add(hero);
 
             var heroByHeroExclusions = getExclusions.GetHeroByHeroExclusions(heroList.First().HeroName);
@@ -485,11 +485,11 @@ namespace MarvelLegendary
             {
                 for (int i = 0; i < randomHeroesInVillainDeck; i++)
                 {
-                    hero = new Hero(heroByHeroExclusions);
+                    hero = new Hero().GetNewHero(heroByHeroExclusions);
                     var heroName = hero.HeroName;
                     while (heroList.Any(x => x.HeroName == heroName) || (heroByHeroExclusions.Count < new Hero().GetNumberOfHeroes() - 1 && heroByHeroExclusions.Any(x => x == heroName)))
                     {
-                        hero = new Hero(heroByHeroExclusions);
+                        hero = new Hero().GetNewHero(heroByHeroExclusions);
                         heroName = hero.HeroName;
                     }
                     heroList.Add(hero);
@@ -505,7 +505,7 @@ namespace MarvelLegendary
 
             foreach (var hero in heroesInVillainDeck)
             {
-                heroList.Add(new Hero(hero));
+                heroList.Add(new Hero().GetNewHero(hero));
             }
 
             return heroList;
@@ -513,6 +513,7 @@ namespace MarvelLegendary
 
         private List<Hero> getHeroes(int numberOfHeroes, HeroTeam heroTeam, List<string> exclusionList, List<string> availableHeroes)
         {
+            var hero = new Hero();
             var returnList = new List<Hero>();
 
             var currentHeroCount = 0;
@@ -520,15 +521,15 @@ namespace MarvelLegendary
             {
                 for (int i = currentHeroCount; i < numberOfHeroes; i++)
                 {
-                    var hero = new Hero(heroTeam, availableHeroes);
-                    var heroName = hero.HeroName;
+                    var newHero = hero.GetNewHeroByTeam(heroTeam, availableHeroes);
+                    var heroName = newHero.HeroName;
                     //This will make sure there are no duplicate heroes in the list. It will also ignore any heroes that will be included in the villain deck
                     while (returnList.Any(x => x.HeroName == heroName || exclusionList.Contains(heroName)))
                     {
-                        hero = new Hero(heroTeam, availableHeroes);
-                        heroName = hero.HeroName;
+                        newHero = hero.GetNewHeroByTeam(heroTeam, availableHeroes);
+                        heroName = newHero.HeroName;
                     }
-                    returnList.Add(hero);
+                    returnList.Add(newHero);
                 }
             }
 
@@ -537,6 +538,7 @@ namespace MarvelLegendary
 
         private List<Hero> getHeroesNotInTeam(int numberOfHeroes, HeroTeam heroTeam, List<string> exclusionList, List<string> availableHeroes)
         {
+            var hero = new Hero();
             var returnList = new List<Hero>();
 
             var currentHeroCount = 0;
@@ -544,15 +546,15 @@ namespace MarvelLegendary
             {
                 for (int i = currentHeroCount; i < numberOfHeroes; i++)
                 {
-                    var hero = new Hero(heroTeam, availableHeroes, false);
-                    var heroName = hero.HeroName;
+                    var newHero = hero.GetNewHeroByTeam(heroTeam, availableHeroes, false);
+                    var heroName = newHero.HeroName;
                     //This will make sure there are no duplicate heroes in the list. It will also ignore any heroes that will be included in the villain deck
                     while (returnList.Any(x => x.HeroName == heroName || exclusionList.Contains(heroName)))
                     {
-                        hero = new Hero(heroTeam, availableHeroes, false);
-                        heroName = hero.HeroName;
+                        newHero = hero.GetNewHeroByTeam(heroTeam, availableHeroes, false);
+                        heroName = newHero.HeroName;
                     }
-                    returnList.Add(hero);
+                    returnList.Add(newHero);
                 }
             }
 
@@ -561,17 +563,18 @@ namespace MarvelLegendary
 
         private List<Hero> GetHeroesByTeam(List<string> exclusionHeroes, List<string> availableHeroes)
         {
+            var hero = new Hero();
             var returnList = new List<Hero>();
 
             if (Scheme.SchemeInfo.Is4v2)
             {
                 var heroTeams = Enum.GetValues(typeof(HeroTeam));
                 var randomHeroTeam = (HeroTeam) heroTeams.GetValue(new Random().Next(heroTeams.Length));
-                while (new Hero().GetHeroTeamMemberCount(randomHeroTeam) < 4 || randomHeroTeam == HeroTeam.Unaffiliated)
+                while (hero.GetHeroTeamMemberCount(randomHeroTeam) < 4 || randomHeroTeam == HeroTeam.Unaffiliated)
                 {
                     randomHeroTeam = (HeroTeam)heroTeams.GetValue(new Random().Next(heroTeams.Length));
                 }
-                var enoughHeroes = new Hero().IsEnoughHeroes(new List<HeroTeam>{randomHeroTeam}, 4, exclusionHeroes);
+                var enoughHeroes = hero.IsEnoughHeroes(new List<HeroTeam>{randomHeroTeam}, 4, exclusionHeroes);
                 var exclusionCompare = enoughHeroes ? exclusionHeroes : new List<string>();
 
                 var heroList = getHeroes(4, randomHeroTeam, exclusionCompare, availableHeroes);
@@ -583,7 +586,7 @@ namespace MarvelLegendary
                 }
                 
 
-                enoughHeroes = new Hero().IsEnoughHeroesWithout(randomHeroTeam, 2, exclusionHeroes);
+                enoughHeroes = hero.IsEnoughHeroesWithout(randomHeroTeam, 2, exclusionHeroes);
                 exclusionCompare = enoughHeroes ? exclusionHeroes : new List<string>();
 
                 heroList = getHeroesNotInTeam(2, randomHeroTeam, exclusionCompare, availableHeroes);
@@ -598,8 +601,8 @@ namespace MarvelLegendary
 
             else
             {
-                var heroTeams = new Hero().GetHeroTeams(2, true);
-                var enoughHeroes = new Hero().IsEnoughHeroes(heroTeams, 3, exclusionHeroes);
+                var heroTeams = hero.GetHeroTeams(2, true);
+                var enoughHeroes = hero.IsEnoughHeroes(heroTeams, 3, exclusionHeroes);
                 var exclusionCompare = enoughHeroes ? exclusionHeroes : new List<string>();
 
                 foreach (var heroTeam in heroTeams)
@@ -663,7 +666,7 @@ namespace MarvelLegendary
             var heroes = GetHeroes(numRemainingHeroes, heroList, availableHeroes, excludedHeroes, getExclusions);
 
             //returnList.AddRange(from item in heroesInGame select new Hero(item));
-            returnList.AddRange(from item in heroes select new Hero(item));
+            returnList.AddRange(from item in heroes select new Hero().GetNewHero(item));
 
             return returnList;
         }

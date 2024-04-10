@@ -302,7 +302,7 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder SetSoulsDeck(string heroName)
         {
-            _schemeInfo.SoulsHero = new Hero(heroName);
+            _schemeInfo.SoulsHero = new Hero().GetNewHero(heroName);
             _schemeInfo.IsSoulsHero = true;
             return this;
         }

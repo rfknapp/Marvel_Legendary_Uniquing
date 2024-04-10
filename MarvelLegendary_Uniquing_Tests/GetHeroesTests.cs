@@ -45,7 +45,7 @@ namespace MarvelLegendary_Uniquing_Tests
             newGameInfo.Scheme = new Scheme().GetNewScheme(1, newGameInfo.Mastermind, "Steal the Weaponized Plutonium");
             newGameInfo.Villains = new List<Villain>() { new Villain().GetNewVillain("Enemies of Asgard"), new Villain().GetNewVillain("HYDRA") };
             newGameInfo.Henchmen = new List<Henchmen>() { new Henchmen().GetNewHenchmen("Doombot Legion") };
-            newGameInfo.Heroes = new List<Hero>() { new Hero("Spider-Man"), new Hero("Angel") };
+            newGameInfo.Heroes = new List<Hero>() { new Hero().GetNewHero("Spider-Man"), new Hero().GetNewHero("Angel") };
 
             var mastermindStrings = new List<string>();
             foreach (var item in newGameInfo.AllMastermindsInGame)
@@ -85,7 +85,7 @@ namespace MarvelLegendary_Uniquing_Tests
             var allHeroes = new Hero().GetHeroNameList(new List<int>() { 1, 2, 3, 28 });
             var mastermindExclusionHeroes = new List<string>() { "Black Widow" };
             var schemeExclusionHeroes = new List<string>() { "Captain America" };
-            var schemeHeroes = new List<Hero>() { new Hero("Jean Grey") };
+            var schemeHeroes = new List<Hero>() { new Hero().GetNewHero("Jean Grey") };
             var heroListString = new List<string>();
 
             var testMoq = new Mock<IGetExclusions>();
