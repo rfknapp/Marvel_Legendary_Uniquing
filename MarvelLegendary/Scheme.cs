@@ -59,6 +59,7 @@ namespace MarvelLegendary
         public int BystandersInVillainDeck { get; set; }
         public int BystandersInHeroDeck { get; set; }
         public bool IsBystandersInHeroDeck { get; set; }
+        private Random random;
 
         private readonly List<SchemeInfo> _schemes = new List<SchemeInfo>()
         {
@@ -283,7 +284,10 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Subjugate Earth with Mega-Corporations").SetSchemeSet(Set.TwentyNintyNine).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
         };
 
-        public Scheme() {}
+        public Scheme() 
+        {
+            random = new Random();
+        }
 
         public Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName="")
         {
@@ -321,11 +325,11 @@ namespace MarvelLegendary
             if (mastermindSchemeNameList.Count <= schemeNameList.Count)
             {
                 var remainingSchemes = schemeNameList.Except(mastermindSchemeNameList).ToList();
-                schemeName = remainingSchemes[new Random().Next(remainingSchemes.Count)];
+                schemeName = remainingSchemes[random.Next(remainingSchemes.Count)];
             }
             else
             {
-                schemeName = schemeNameList[new Random().Next(schemeNameList.Count)];
+                schemeName = schemeNameList[random.Next(schemeNameList.Count)];
             }
 
             return _schemes.First(x => x.SchemeName == schemeName);
@@ -397,7 +401,7 @@ namespace MarvelLegendary
         {
             //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
             var schemeByTable = $"SchemeBy{cardType}";
-            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+            var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
             var updatedName = name.Replace("'", "''");
 
             var allSchemesBy = $@"select s.SchemeName from Schemes s

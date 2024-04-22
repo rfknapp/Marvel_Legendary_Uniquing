@@ -36,6 +36,7 @@ namespace MarvelLegendary
 
     public class Henchmen
     {
+        private Random random;
         public Set HenchmenSet;
         public string HenchmenName;
         public HenchmenInfo HenchmenInfo { get; set; }
@@ -102,7 +103,10 @@ namespace MarvelLegendary
             new HenchmenInfo("Tardigrade", Set.AntmanWasp)
         };
 
-        public Henchmen() {}
+        public Henchmen()
+        {
+            random = new Random();
+        }
 
         public Henchmen GetNewHenchmen(string henchmenName = "")
         {
@@ -111,7 +115,7 @@ namespace MarvelLegendary
             if (string.IsNullOrEmpty(henchmen))
             {
                 var allHenchmen = GetListOfHenchmen();
-                henchmen = allHenchmen[new Random().Next(allHenchmen.Count)];
+                henchmen = allHenchmen[random.Next(allHenchmen.Count)];
             }
 
             var henchmenInfo = _henchmen.FirstOrDefault(h => h.HenchmenName == henchmen);
@@ -140,7 +144,7 @@ namespace MarvelLegendary
             {
                 while (exclusionHenchmen.Any(x => x == henchmen.HenchmenName.Split('_').First()))
                 {
-                    henchmen = _henchmen[new Random().Next(_henchmen.Count)];
+                    henchmen = _henchmen[random.Next(_henchmen.Count)];
                     if (henchmen.HenchmenName.Contains('('))
                     {
                         var tempName = henchmen.HenchmenName.Split('(')[1].Split(')')[0];
@@ -149,7 +153,7 @@ namespace MarvelLegendary
 
                     while (henchmen == null)
                     {
-                        henchmen = _henchmen[new Random().Next(_henchmen.Count)];
+                        henchmen = _henchmen[random.Next(_henchmen.Count)];
                         if (henchmen.HenchmenName.Contains('('))
                         {
                             henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
@@ -206,7 +210,7 @@ namespace MarvelLegendary
             }
 
             //Select Villain from remaining list
-            var henchmenName = remainingHenchmen[new Random().Next(remainingHenchmen.Count)];
+            var henchmenName = remainingHenchmen[random.Next(remainingHenchmen.Count)];
             var henchmenInfo = _henchmen.First(h => h.HenchmenName == henchmenName);
 
             newHenchmen.HenchmenName = henchmenName;
@@ -257,7 +261,7 @@ namespace MarvelLegendary
         public string GetRandomHenchmen()
         {
             var allHenchmen = GetListOfHenchmen();
-            var henchmen = allHenchmen[new Random().Next(allHenchmen.Count)];
+            var henchmen = allHenchmen[random.Next(allHenchmen.Count)];
             return henchmen;
         }
 
@@ -265,7 +269,7 @@ namespace MarvelLegendary
         {
             //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
             var henchmenByTable = $"HenchmenBy{cardType}";
-            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+            var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
             var updatedName = name.Contains("'") ? name.Replace("'", "''") : name;
 
             var allHenchmenBy = $@"select h.HenchmenName from Henchmen h

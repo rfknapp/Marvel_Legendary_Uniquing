@@ -25,6 +25,7 @@ namespace MarvelLegendary
         public HeroTeam HeroTeam { get; set; }
         public HeroInfo HeroInfo { get; set; }
         public int Order { get; set; }
+        private Random random;
 
         private readonly List<HeroInfo> _heroes = new List<HeroInfo>()
         {
@@ -290,11 +291,11 @@ namespace MarvelLegendary
             new HeroInfoBuilder().SetHeroName("Strong Guy").SetGameSet(Set.Messiah).SetHeroTeam(HeroTeam.XFactor).Build(),
             new HeroInfoBuilder().SetHeroName("Warpath").SetGameSet(Set.Messiah).SetHeroTeam(HeroTeam.XForce).Build(),
 
-            new HeroInfoBuilder().SetHeroName("The Ancient One").SetGameSet(Set.Strange).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("The Ancient One").SetGameSet(Set.Strange).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
             new HeroInfoBuilder().SetHeroName("Clea").SetGameSet(Set.Strange).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
             new HeroInfoBuilder().SetHeroName("Doctor Strange").SetGameSet(Set.Strange).Build(),
             new HeroInfoBuilder().SetHeroName("Doctor Voodoo").SetGameSet(Set.Strange).Build(),
-            new HeroInfoBuilder().SetHeroName("The Vishanti").SetGameSet(Set.Strange).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("The Vishanti").SetGameSet(Set.Strange).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
 
             new HeroInfoBuilder().SetHeroName("Drax").SetGameSet(Set.Guardians).SetHeroTeam(HeroTeam.GuardiansOfTheGalaxy).Build(),
             new HeroInfoBuilder().SetHeroName("Gamora").SetGameSet(Set.Guardians).SetHeroTeam(HeroTeam.GuardiansOfTheGalaxy).Build(),
@@ -310,7 +311,7 @@ namespace MarvelLegendary
 
             new HeroInfoBuilder().SetHeroName("Black Widow").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.SHIELD).Build(),
             new HeroInfoBuilder().SetHeroName("Falcon and the Winter Soldier").SetGameSet(Set.BlackWidow).Build(),
-            new HeroInfoBuilder().SetHeroName("Red Guardian").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Red Guardian").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
             new HeroInfoBuilder().SetHeroName("White Tiger").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
             new HeroInfoBuilder().SetHeroName("Yelena Belova").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.SHIELD).Build(),
 
@@ -335,19 +336,19 @@ namespace MarvelLegendary
             new HeroInfoBuilder().SetHeroName("T'Challa Star-Lord").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
             new HeroInfoBuilder().SetHeroName("The Watcher").SetGameSet(Set.WhatIf).SetHeroTeam(HeroTeam.Multiverse).Build(),
 
-            new HeroInfoBuilder().SetHeroName("Ant Army").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.None).SetKeywords(new List<Keywords>{ Keywords.Size, Keywords.Antics, Keywords.Heist }).Build(),
+            new HeroInfoBuilder().SetHeroName("Ant Army").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.Unaffiliated).SetKeywords(new List<Keywords>{ Keywords.Size, Keywords.Antics, Keywords.Heist }).Build(),
             new HeroInfoBuilder().SetHeroName("Ant-Man (Ant-Man and the Wasp)").SetGameSet(Set.AntmanWasp).SetKeywords(new List<Keywords>{ Keywords.Size, Keywords.Antics, Keywords.Heist }).Build(),
             new HeroInfoBuilder().SetHeroName("Cassie Lang").SetGameSet(Set.AntmanWasp).SetKeywords(new List<Keywords>{ Keywords.Size }).Build(),
-            new HeroInfoBuilder().SetHeroName("Freedom Fighters").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.None).Build(),
-            new HeroInfoBuilder().SetHeroName("Janet Van Dyne").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.None).SetKeywords(new List<Keywords>{ Keywords.Size, Keywords.Explore }).Build(),
-            new HeroInfoBuilder().SetHeroName("Jentorra").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Freedom Fighters").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
+            new HeroInfoBuilder().SetHeroName("Janet Van Dyne").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.Unaffiliated).SetKeywords(new List<Keywords>{ Keywords.Size, Keywords.Explore }).Build(),
+            new HeroInfoBuilder().SetHeroName("Jentorra").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
             new HeroInfoBuilder().SetHeroName("Scott Lang, Cat Burglar").SetGameSet(Set.AntmanWasp).SetHeroTeam(HeroTeam.CrimeSyndicate).Build(),
             new HeroInfoBuilder().SetHeroName("Wasp (Ant-Man and the Wasp)").SetGameSet(Set.AntmanWasp).SetKeywords(new List<Keywords>{ Keywords.Size }).Build(),
 
-            new HeroInfoBuilder().SetHeroName("Doctor Doom 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Doctor Doom 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
             new HeroInfoBuilder().SetHeroName("Ghost Rider 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
             new HeroInfoBuilder().SetHeroName("Hulk 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
-            new HeroInfoBuilder().SetHeroName("Ravage 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.None).Build(),
+            new HeroInfoBuilder().SetHeroName("Ravage 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
             new HeroInfoBuilder().SetHeroName("Spider-Man 2099").SetGameSet(Set.TwentyNintyNine).SetHeroTeam(HeroTeam.SpiderFriends).Build(),
         };
 
@@ -400,7 +401,10 @@ namespace MarvelLegendary
             return heroesForTeams.Count >= heroesPerTeam;
         }
 
-        public Hero() {}
+        public Hero() 
+        {
+            random = new Random();
+        }
 
         public Hero GetNewHero(string heroName = "")
         {
@@ -488,7 +492,7 @@ namespace MarvelLegendary
             }
 
             //Select Hero from remaining list
-            var heroName = remainingHeroes[new Random().Next(remainingHeroes.Count)];
+            var heroName = remainingHeroes[random.Next(remainingHeroes.Count)];
             var heroInfo = _heroes.First(h => h.HeroName == heroName);
 
             //Set HeroName
@@ -724,7 +728,7 @@ namespace MarvelLegendary
         {
             //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
             var heroByTable = $"HeroBy{cardType}";
-            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+            var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
             var updatedName = name.Contains("'") ? name.Replace("'", "''") : name;
 
             var allHeroesBy = $@"select h.HeroName from Heroes h

@@ -15,6 +15,7 @@ namespace MarvelLegendary
         public bool DoesLeadVillain { get; set; }
         public MastermindInfo MastermindInfo { get; set; }
         public bool IncludeHorrors { get; set; }
+        private Random random;
 
         private readonly List<MastermindInfo> _masterminds = new List<MastermindInfo>()
         {
@@ -208,7 +209,10 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Epic Sinister Six 2099").SetMastermindSet(Set.TwentyNintyNine).LeadsVillainsByKind(new List<string> {"Alchemax", "Sinister" }).Build(),
         };
 
-        public Mastermind(){}
+        public Mastermind()
+        {
+            random = new Random();
+        }
 
         public Mastermind GetNewMastermind(string mastermindName = "")
         {
@@ -217,7 +221,7 @@ namespace MarvelLegendary
             if(string.IsNullOrEmpty(mastermind))
             {
                 var allMasterminds = GetListOfMasterminds();
-                mastermind = allMasterminds[new Random().Next(allMasterminds.Count)];
+                mastermind = allMasterminds[random.Next(allMasterminds.Count)];
             }
             
             var mastermindInfo = _masterminds.FirstOrDefault(m => m.MastermindName == mastermind);
@@ -307,7 +311,7 @@ namespace MarvelLegendary
         public string GetRandomMastermind()
         {
             var allMasterminds = GetListOfMasterminds();
-            var mastermind = allMasterminds[new Random().Next(allMasterminds.Count)];
+            var mastermind = allMasterminds[random.Next(allMasterminds.Count)];
             return mastermind;
         }
 
@@ -315,7 +319,7 @@ namespace MarvelLegendary
         {
             //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
             var mastermindByTable = $"MastermindBy{cardType}";
-            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+            var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
 
             var allMastermindsBy = $@"select m.MastermindName from Masterminds m
                     inner join {mastermindByTable} mb ON m.Id = mb.MastermindId
@@ -347,7 +351,7 @@ namespace MarvelLegendary
             for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
             {
                 //Get random mastermind from remaining list
-                var newMastermind = remainingMasterminds[new Random().Next(remainingMasterminds.Count)];
+                var newMastermind = remainingMasterminds[random.Next(remainingMasterminds.Count)];
 
                 //Get MastermindxMastermind
                 var mastermindByMastermind = GetListOfMastermindByX("Mastermind", newMastermind);

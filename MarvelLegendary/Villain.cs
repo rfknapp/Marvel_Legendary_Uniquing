@@ -37,6 +37,7 @@ namespace MarvelLegendary
         public string VillainName { get; set; }
         public Set SetName { get; set; }
         public VillainInfo VillainInfo { get; set; }
+        private Random random;
 
         private readonly List<VillainInfo> _villains = new List<VillainInfo>()
         {
@@ -200,7 +201,10 @@ namespace MarvelLegendary
             new VillainInfo("False Aesir of Alchemax", Set.TwentyNintyNine),
         };
 
-        public Villain() {}
+        public Villain()
+        {
+            random = new Random();
+        }
 
         public Villain GetNewVillain(string villainName = "")
         {
@@ -209,7 +213,7 @@ namespace MarvelLegendary
             if (string.IsNullOrEmpty(villain))
             {
                 var allVillains = GetListOfVillains();
-                villain = allVillains[new Random().Next(allVillains.Count)];
+                villain = allVillains[random.Next(allVillains.Count)];
             }
 
             var villainInfo = _villains.FirstOrDefault(v => v.VillainName == villain);
@@ -245,7 +249,7 @@ namespace MarvelLegendary
             }
 
             //Select Villain from remaining list
-            var villainName = remainingVillains[new Random().Next(remainingVillains.Count)];
+            var villainName = remainingVillains[random.Next(remainingVillains.Count)];
             var villainInfo = _villains.First(v => v.VillainName == villainName);
 
             //Set VillainName
@@ -311,7 +315,7 @@ namespace MarvelLegendary
         public string GetRandomVillain()
         {
             var allVillains = GetListOfVillains();
-            var villain = allVillains[new Random().Next(allVillains.Count)];
+            var villain = allVillains[random.Next(allVillains.Count)];
             return villain;
         }
 
@@ -319,7 +323,7 @@ namespace MarvelLegendary
         {
             //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
             var villainByTable = $"VillainBy{cardType}";
-            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+            var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
             var updatedName = name.Contains("'") ? name.Replace("'", "''") : name;
 
             var allVillainsBy = $@"select v.VillainName from Villains v
