@@ -298,8 +298,8 @@ namespace MarvelLegendary
                 schemeInfo = GetSchemeInfo(schemeName);
             }
 
-            ProcessSchemeInfo(playerCount, schemeInfo, mastermind);
-            return this;
+            var newScheme = ProcessSchemeInfo(playerCount, schemeInfo, mastermind);
+            return newScheme;
         }
 
         private SchemeInfo GetSchemeInfo(string schemeName)
@@ -331,8 +331,9 @@ namespace MarvelLegendary
             return _schemes.First(x => x.SchemeName == schemeName);
         }
 
-        private void ProcessSchemeInfo(int playerCount, SchemeInfo schemeInfo, Mastermind mastermind)
+        private Scheme ProcessSchemeInfo(int playerCount, SchemeInfo schemeInfo, Mastermind mastermind)
         {
+            var newScheme = new Scheme();
             if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)
             {
                 playerCount = 3;
@@ -343,44 +344,46 @@ namespace MarvelLegendary
                 playerCount = 4;
             }
 
-            SchemeName = schemeInfo.SchemeName;
-            SetName = schemeInfo.SetName;
-            Twists = schemeInfo.SchemeTwists[playerCount - 1];
-            NumberOfSchemeTwists = SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith" ? 1 : schemeInfo.SchemeTwists[playerCount - 1];
-            SchemeInfo = schemeInfo;
-            IsSchemeTwistsNextToScheme = schemeInfo.IsSchemeTwistsNextToScheme;
-            NumberTwistsNextToScheme = schemeInfo.NumberTwistsNextToScheme;
-            NumberOfPlayers = playerCount;
+            newScheme.SchemeName = schemeInfo.SchemeName;
+            newScheme.SetName = schemeInfo.SetName;
+            newScheme.Twists = schemeInfo.SchemeTwists[playerCount - 1];
+            newScheme.NumberOfSchemeTwists = SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith" ? 1 : schemeInfo.SchemeTwists[playerCount - 1];
+            newScheme.SchemeInfo = schemeInfo;
+            newScheme.IsSchemeTwistsNextToScheme = schemeInfo.IsSchemeTwistsNextToScheme;
+            newScheme.NumberTwistsNextToScheme = schemeInfo.NumberTwistsNextToScheme;
+            newScheme.NumberOfPlayers = playerCount;
 
-            NumberOfMasterminds = schemeInfo.NumberOfMasterminds;
+            newScheme.NumberOfMasterminds = schemeInfo.NumberOfMasterminds;
 
-            NumberOfVillains = schemeInfo.Villains[playerCount - 1];
+            newScheme.NumberOfVillains = schemeInfo.Villains[playerCount - 1];
             
             //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is Lilith
             if (SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith")
-                NumberOfVillains++;
-            
-            RequiredVillains = schemeInfo.RequiredVillains;
+                newScheme.NumberOfVillains++;
+
+            newScheme.RequiredVillains = schemeInfo.RequiredVillains;
 
             //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is not Lilith
             if (SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName != "Lilith")
-                RequiredVillains.Add("Lilin");
+                newScheme.RequiredVillains.Add("Lilin");
 
-            NumberOfHenchmen = schemeInfo.Henchmen[playerCount - 1];
-            RequiredHenchmen = schemeInfo.RequiredHenchmen;
+            newScheme.NumberOfHenchmen = schemeInfo.Henchmen[playerCount - 1];
+            newScheme.RequiredHenchmen = schemeInfo.RequiredHenchmen;
 
-            NumberOfHeroes = schemeInfo.Heroes[playerCount - 1];
-            RequiredHeroes = schemeInfo.RequiredHeroes;
-            HeroesInVillainDeck = schemeInfo.HeroesInVillainDeck;
-            RandomHeroesInVillainDeck = schemeInfo.NumberOfHeroesInVillainDeck;
+            newScheme.NumberOfHeroes = schemeInfo.Heroes[playerCount - 1];
+            newScheme.RequiredHeroes = schemeInfo.RequiredHeroes;
+            newScheme.HeroesInVillainDeck = schemeInfo.HeroesInVillainDeck;
+            newScheme.RandomHeroesInVillainDeck = schemeInfo.NumberOfHeroesInVillainDeck;
 
-            BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1] + schemeInfo.AdditionalBystanders;
-            BystandersInHeroDeck = schemeInfo.BystandersInHeroDeck[playerCount - 1];
-            IsBystandersInHeroDeck = schemeInfo.IsBystandersInHeroDeck;
+            newScheme.BystandersInVillainDeck = schemeInfo.Bystanders[playerCount - 1] + schemeInfo.AdditionalBystanders;
+            newScheme.BystandersInHeroDeck = schemeInfo.BystandersInHeroDeck[playerCount - 1];
+            newScheme.IsBystandersInHeroDeck = schemeInfo.IsBystandersInHeroDeck;
 
-            WoundsPerPlayer = schemeInfo.WoundsPerPlayer;
-            CustomWoundNumber = schemeInfo.CustomWoundCount;
-            Wounds = schemeInfo.WoundPerPlayer;
+            newScheme.WoundsPerPlayer = schemeInfo.WoundsPerPlayer;
+            newScheme.CustomWoundNumber = schemeInfo.CustomWoundCount;
+            newScheme.Wounds = schemeInfo.WoundPerPlayer;
+
+            return newScheme;
         }
 
         public List<string> GetListOfSchemes()

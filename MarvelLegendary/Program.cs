@@ -20,9 +20,9 @@ namespace MarvelLegendary
                 if (game.Scheme.SchemeInfo.NumberExtraMasterminds > 0)
                     game.SetExtraMasterminds();
 
-                game.SetVillains(new List<string>());
-                game.SetHenchmen(new List<string>());
-                game.SetHeroes(new List<string>());
+                game.SetVillains();
+                game.SetHenchmen();
+                game.SetHeroes();
 
                 var gameText = GameTextBuilder(game);
                 Console.Clear();

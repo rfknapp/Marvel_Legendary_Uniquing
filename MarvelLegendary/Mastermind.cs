@@ -123,7 +123,7 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Epic Mandarin").SetMastermindSet(Set.Revelations).LeadsHenchmen("Mandarin's Rings").Build(),
             
             new MastermindInfoBuilder().SetMastermindName("Hydra High Council").SetMastermindSet(Set.Shield).LeadsVillain("Hydra Elite").Build(),
-            new MastermindInfoBuilder().SetMastermindName("Hydra Sper-Adaptoid").SetMastermindSet(Set.Shield).LeadsHenchmen("A.I.M., Hydra Offshoot").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Hydra Super-Adaptoid").SetMastermindSet(Set.Shield).LeadsHenchmen("A.I.M., Hydra Offshoot").Build(),
             
             new MastermindInfoBuilder().SetMastermindName("Hela").SetMastermindSet(Set.Asgard).LeadsVillain("Omens of Ragnarok").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Hela").SetMastermindSet(Set.Asgard).LeadsVillain("Omens of Ragnarok").Build(),
@@ -212,6 +212,7 @@ namespace MarvelLegendary
 
         public Mastermind GetNewMastermind(string mastermindName = "")
         {
+            var newMastermind = new Mastermind();
             var mastermind = mastermindName;
             if(string.IsNullOrEmpty(mastermind))
             {
@@ -221,15 +222,15 @@ namespace MarvelLegendary
             
             var mastermindInfo = _masterminds.FirstOrDefault(m => m.MastermindName == mastermind);
 
-            MastermindName = mastermindInfo.MastermindName;
-            SetName = mastermindInfo.SetName;
-            LeadsHenchmen = mastermindInfo.LeadsHenchmen;
-            LeadsVillain = mastermindInfo.LeadsVillain;
-            DoesLeadHenchmen = mastermindInfo.DoesLeadHenchmen;
-            DoesLeadVillain = mastermindInfo.DoesLeadVillain;
-            MastermindInfo = mastermindInfo;
+            newMastermind.MastermindName = mastermindInfo.MastermindName;
+            newMastermind.SetName = mastermindInfo.SetName;
+            newMastermind.LeadsHenchmen = mastermindInfo.LeadsHenchmen;
+            newMastermind.LeadsVillain = mastermindInfo.LeadsVillain;
+            newMastermind.DoesLeadHenchmen = mastermindInfo.DoesLeadHenchmen;
+            newMastermind.DoesLeadVillain = mastermindInfo.DoesLeadVillain;
+            newMastermind.MastermindInfo = mastermindInfo;
 
-            return this;
+            return newMastermind;
         }
         
         public Mastermind(string mastermindName)

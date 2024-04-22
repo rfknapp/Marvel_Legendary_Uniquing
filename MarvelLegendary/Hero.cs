@@ -404,6 +404,7 @@ namespace MarvelLegendary
 
         public Hero GetNewHero(string heroName = "")
         {
+            var newHero = new Hero();
             var hero = heroName;
             if (string.IsNullOrEmpty(hero))
             {
@@ -413,31 +414,99 @@ namespace MarvelLegendary
 
             var heroInfo = _heroes.FirstOrDefault(h => h.HeroName == hero);
 
-            HeroName = heroInfo.HeroName;
-            SetName = heroInfo.SetName;
-            HeroTeam = heroInfo.HeroTeam;
-            HeroInfo = heroInfo;
+            newHero.HeroName = heroInfo.HeroName;
+            newHero.SetName = heroInfo.SetName;
+            newHero.HeroTeam = heroInfo.HeroTeam;
+            newHero.HeroInfo = heroInfo;
 
-            return this;
+            return newHero;
         }
 
         public Hero GetNewHero(List<string> excludedHeroes)
         {
+            var newHero = new Hero();
             var heroList = GetListOfHeroes();
             heroList.Except(excludedHeroes);
             var heroName = heroList[new Random().Next(heroList.Count)];
             var hero = _heroes.FirstOrDefault(x => x.HeroName == heroName);
 
-            HeroName = hero.HeroName;
-            SetName = hero.SetName;
-            HeroTeam = hero.HeroTeam;
-            HeroInfo = hero;
+            newHero.HeroName = hero.HeroName;
+            newHero.SetName = hero.SetName;
+            newHero.HeroTeam = hero.HeroTeam;
+            newHero.HeroInfo = hero;
 
-            return this;
+            return newHero;
         }
 
-        public Hero GetNewHeroByContainsString(string heroNamePart, List<string> availableHeroes)
+        //This is replacing the DetermineLists functionality
+        public Hero GetNewHero(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villainsInGame, List<Henchmen> henchmenInGame, List<Hero> heroesInGame)
         {
+            var newHero = new Hero();
+            
+            //Get Heroes
+            var heroList = GetListOfHeroes();
+
+            //Remove all Heroes currently in the game from the list
+            var remainingHeroes = heroList.Except(heroesInGame.Select(hero => hero.HeroName)).ToList();
+
+            //Get Heroes that have played with the Scheme
+            var heroesByScheme = GetListOfHeroesByX("Scheme", scheme.SchemeName);
+
+            //Remove all Heroes that have played with the scheme from the list
+            remainingHeroes = remainingHeroes.Except(heroesByScheme).ToList();
+
+            //Get Heroes that have played with each of the Masterminds
+            foreach (var mastermind in allMastermindsInGame)
+            {
+                var heroesByMastermind = GetListOfHeroesByX("Mastermind", mastermind.MastermindName);
+                //Remove all Heroes that have played with the Mastermind(s)
+                remainingHeroes = remainingHeroes.Except(heroesByMastermind).ToList();
+            }
+
+            //Get Heroes that have played with each of the Villains
+            foreach (var villain in villainsInGame)
+            {
+                var heroesByVillain = GetListOfHeroesByX("Villain", villain.VillainName);
+                //Remove all Heroes that have played with the Villains
+                remainingHeroes = remainingHeroes.Except(heroesByVillain).ToList();
+            }
+
+            //Get Heroes that have played with each of the Henchmen
+            foreach (var henchmen in henchmenInGame)
+            {
+                var heroesByHenchmen = GetListOfHeroesByX("Henchmen", henchmen.HenchmenName);
+                //Remove all Heroes that have played with the Henchmen
+                remainingHeroes = remainingHeroes.Except(heroesByHenchmen).ToList();
+            }
+
+            //Get Heroes that have played with each of the Heroes
+            foreach (var hero in heroesInGame)
+            {
+                var heroesByHero = GetListOfHeroesByX("Hero", hero.HeroName);
+                //Remove all Heroes that have played with the Hero
+                remainingHeroes = remainingHeroes.Except(heroesByHero).ToList();
+            }
+
+            //Select Hero from remaining list
+            var heroName = remainingHeroes[new Random().Next(remainingHeroes.Count)];
+            var heroInfo = _heroes.First(h => h.HeroName == heroName);
+
+            //Set HeroName
+            newHero.HeroName = heroName;
+
+            //Set SetName
+            newHero.SetName = heroInfo.SetName;
+
+            //Set HeroInfo
+            newHero.HeroInfo = heroInfo;
+
+            return newHero;
+        }
+
+        public Hero GetNewHeroByContainsString(string heroNamePart)
+        {
+            var newHero = new Hero();
+            var availableHeroes = GetListOfHeroes();
             var heroList = availableHeroes.Where(x => x.Contains(heroNamePart)).ToList();
 
             if (heroNamePart == "Hulk" && availableHeroes.Contains("Nul, Breaker of Worlds"))
@@ -448,26 +517,72 @@ namespace MarvelLegendary
             var heroInfo = heroList[new Random().Next(heroList.Count)];
             var hero = GetNewHero(heroInfo);
 
-            HeroName = hero.HeroName;
-            SetName = hero.SetName;
-            HeroTeam = hero.HeroTeam;
-            HeroInfo = hero.HeroInfo;
+            newHero.HeroName = hero.HeroName;
+            newHero.SetName = hero.SetName;
+            newHero.HeroTeam = hero.HeroTeam;
+            newHero.HeroInfo = hero.HeroInfo;
 
-            return this;
+            return newHero;
         }
 
         public Hero GetNewHeroByTeam(HeroTeam heroTeam, List<string> availableHeroes, bool inTeam = true)
         {
+            var newHero = new Hero();
             var heroes = (from item in availableHeroes select GetNewHero(item)).ToList();
             var heroInfoList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
             var heroInfo = heroInfoList[new Random().Next(heroInfoList.Count)];
 
-            HeroName = heroInfo.HeroName;
-            SetName = heroInfo.SetName;
-            HeroTeam = heroInfo.HeroTeam;
-            HeroInfo = heroInfo.HeroInfo;
+            newHero.HeroName = heroInfo.HeroName;
+            newHero.SetName = heroInfo.SetName;
+            newHero.HeroTeam = heroInfo.HeroTeam;
+            newHero.HeroInfo = heroInfo.HeroInfo;
 
-            return this;
+            return newHero;
+        }
+
+        public Hero GetNewHeroByTeam(HeroTeam heroTeam, List<string> availableHeroes, List<string> excludedHeroes, bool inTeam = true)
+        {
+            var newHero = new Hero();
+            var heroes = (from item in availableHeroes select GetNewHero(item)).ToList();
+            var heroInfoList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
+            var heroInfo = heroInfoList[new Random().Next(heroInfoList.Count)];
+
+            newHero.HeroName = heroInfo.HeroName;
+            newHero.SetName = heroInfo.SetName;
+            newHero.HeroTeam = heroInfo.HeroTeam;
+            newHero.HeroInfo = heroInfo.HeroInfo;
+
+            return newHero;
+        }
+
+        //This will return a hero team that contains at least the number of heroes
+        public HeroTeam GetHeroTeam(int numberOfHeroes, List<HeroTeam> includedTeams = null)
+        {
+            //This will set heroTeamsList to a list of HeroTeams while removing what is coming in from includedTeams
+            //If includedTeams is not passed, it will come in as null, so the ?? is checking to see if it is null
+            //If it is null, it will use an empty list in the Except LINQ statement
+            //If it is not null, it will either be empty or have data. Either way that will be used in the Except LINQ statement
+            //The Except LINQ statement will remove all items from includedTeams from the values coming back from GetListOfHeroTeams
+            var heroTeamsList = GetListOfHeroTeams().Except(includedTeams ?? new List<HeroTeam>()).ToList();
+
+            //This will chose a random HeroTeam
+            var heroTeam = heroTeamsList[new Random().Next(heroTeamsList.Count)];
+
+            //This will get the number of heroes that are in the team
+            var heroesByTeam = GetHeroTeamMemberCount(heroTeam);
+
+            //If the team doesn't have enough heroes
+            //the team will be removed from the list of teams
+            //a new team will be randomly chosen
+            //and it will get the number of heroes in the team
+            while(heroesByTeam < numberOfHeroes)
+            {
+                heroTeamsList.Remove(heroTeam);
+                heroTeam = heroTeamsList[new Random().Next(heroTeamsList.Count)];
+                heroesByTeam = GetHeroTeamMemberCount(heroTeam);
+            }
+
+            return heroTeam;
         }
 
         public List<HeroTeam> GetHeroTeams(int numberOfHeroTeams, bool is3v3 = false)
@@ -479,6 +594,7 @@ namespace MarvelLegendary
             while (returnList.Count < numberOfHeroTeams)
             {
                 var heroTeam = (HeroTeam)heroTeams.GetValue(new Random().Next(heroTeams.Length));
+                
                 while(returnList.Any(x=>x.Equals(heroTeam)))
                 {
                     heroTeam = (HeroTeam)heroTeams.GetValue(new Random().Next(heroTeams.Length));
@@ -554,6 +670,19 @@ namespace MarvelLegendary
             return returnList.Count();
         }
 
+        public List<HeroTeam> GetListOfHeroTeams()
+        {
+            var heroTeamsList = new List<HeroTeam>();
+            var heroTeams = Enum.GetValues(typeof(HeroTeam));
+
+            //This will convert the array to a list
+            foreach (var item in heroTeams)
+            {
+                heroTeamsList.Add((HeroTeam)item);
+            }
+            return heroTeamsList;
+        }
+
         public string ToString(List<Hero> heroList)
         {
             var returnString = "\r\n";
@@ -589,6 +718,22 @@ namespace MarvelLegendary
                 .Select(hero => hero.HeroName).ToList();
 
             return returnList;
+        }
+
+        public List<string> GetListOfHeroesByX(string cardType, string name)
+        {
+            //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
+            var heroByTable = $"HeroBy{cardType}";
+            var tableName = (cardType == "Hechmen") ? "Hechmen" : $"{cardType}s";
+            var updatedName = name.Contains("'") ? name.Replace("'", "''") : name;
+
+            var allHeroesBy = $@"select h.HeroName from Heroes h
+                    inner join {heroByTable} hb ON h.Id = hb.HeroId
+                    inner join {tableName} t ON t.Id = hb.{cardType}Id
+                    where t.{cardType}Name = '{updatedName}'";
+
+            var allHeroesByX = new SqlHelper().GetList(allHeroesBy);
+            return allHeroesByX;
         }
 
         public List<HeroInfo> SetHeroList(List<string> heroNames)

@@ -102,53 +102,11 @@ namespace MarvelLegendary
             new HenchmenInfo("Tardigrade", Set.AntmanWasp)
         };
 
-        public Henchmen()
-        {
-            var henchmen = _henchmen[new Random().Next(_henchmen.Count)];
-            if(henchmen.HenchmenName.Contains('('))
-            {
-                henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
-            }
-
-            while (henchmen == null)
-            {
-                henchmen = _henchmen[new Random().Next(_henchmen.Count)];
-                if (henchmen.HenchmenName.Contains('('))
-                {
-                    henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
-                }
-            }
-
-            HenchmenName = henchmen.HenchmenName;
-            HenchmenSet = henchmen.HenchmenSetName;
-            HenchmenInfo = henchmen;
-        }
-
-        /*public Henchmen(string henchmenName)
-        {
-            var henchmen = henchmenName != "" ? _henchmen.FirstOrDefault(x=>x.HenchmenName==henchmenName) : _henchmen[new Random().Next(_henchmen.Count)];
-
-            if (henchmen != null && henchmen.HenchmenName.Contains('('))
-            {
-                henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
-            }
-
-            while (henchmen == null)
-            {
-                henchmen = _henchmen[new Random().Next(_henchmen.Count)];
-                if (henchmen.HenchmenName.Contains('('))
-                {
-                    henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
-                }
-            }
-
-            HenchmenName = henchmen.HenchmenName;
-            HenchmenSet = henchmen.HenchmenSetName;
-            HenchmenInfo = henchmen;
-        }*/
+        public Henchmen() {}
 
         public Henchmen GetNewHenchmen(string henchmenName = "")
         {
+            var newHenchmen = new Henchmen();
             var henchmen = henchmenName;
             if (string.IsNullOrEmpty(henchmen))
             {
@@ -158,59 +116,16 @@ namespace MarvelLegendary
 
             var henchmenInfo = _henchmen.FirstOrDefault(h => h.HenchmenName == henchmen);
 
-            HenchmenName = henchmen;
-            HenchmenSet = henchmenInfo.HenchmenSetName;
-            HenchmenInfo = henchmenInfo;
+            newHenchmen.HenchmenName = henchmen;
+            newHenchmen.HenchmenSet = henchmenInfo.HenchmenSetName;
+            newHenchmen.HenchmenInfo = henchmenInfo;
 
-            return this;
-        }
-
-        public Henchmen(List<string> exclusionHenchmen)
-        {
-            var henchmen = _henchmen[new Random().Next(_henchmen.Count)];
-            if (henchmen.HenchmenName.Contains('('))
-            {
-                henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
-            }
-
-            while (henchmen == null)
-            {
-                henchmen = _henchmen[new Random().Next(_henchmen.Count)];
-                if (henchmen.HenchmenName.Contains('('))
-                {
-                    henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
-                }
-            }
-            
-            if (exclusionHenchmen.Count < _henchmen.Count)
-            {
-                while (exclusionHenchmen.Any(x => x == henchmen.HenchmenName.Split('_').First()))
-                {
-                    henchmen = _henchmen[new Random().Next(_henchmen.Count)];
-                    if (henchmen.HenchmenName.Contains('('))
-                    {
-                        var tempName = henchmen.HenchmenName.Split('(')[1].Split(')')[0];
-                        henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == tempName);
-                    }
-
-                    while (henchmen == null)
-                    {
-                        henchmen = _henchmen[new Random().Next(_henchmen.Count)];
-                        if (henchmen.HenchmenName.Contains('('))
-                        {
-                            henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
-                        }
-                    }
-                }
-            }
-
-            HenchmenName = henchmen.HenchmenName;
-            HenchmenSet = henchmen.HenchmenSetName;
-            HenchmenInfo = henchmen;
+            return newHenchmen;
         }
 
         public Henchmen GetNewHenchmen(List<string> exclusionHenchmen)
         {
+            var newHenchmen = new Henchmen();
             var henchmenName = GetRandomHenchmen();
             var henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmenName);
 
@@ -243,15 +158,17 @@ namespace MarvelLegendary
                 }
             }
 
-            HenchmenName = henchmen.HenchmenName;
-            HenchmenSet = henchmen.HenchmenSetName;
-            HenchmenInfo = henchmen;
+            newHenchmen.HenchmenName = henchmen.HenchmenName;
+            newHenchmen.HenchmenSet = henchmen.HenchmenSetName;
+            newHenchmen.HenchmenInfo = henchmen;
 
-            return this;
+            return newHenchmen;
         }
 
         public Henchmen GetNewHenchmen(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villains, List<string> henchmenInGame)
         {
+            var newHenchmen = new Henchmen();
+            
             //Get Henchmen
             var henchmenList = GetListOfHenchmen();
 
@@ -292,20 +209,11 @@ namespace MarvelLegendary
             var henchmenName = remainingHenchmen[new Random().Next(remainingHenchmen.Count)];
             var henchmenInfo = _henchmen.First(h => h.HenchmenName == henchmenName);
 
-            HenchmenName = henchmenName;
-            HenchmenSet = henchmenInfo.HenchmenSetName;
-            HenchmenInfo = henchmenInfo;
+            newHenchmen.HenchmenName = henchmenName;
+            newHenchmen.HenchmenSet = henchmenInfo.HenchmenSetName;
+            newHenchmen.HenchmenInfo = henchmenInfo;
 
-            return this;
-        }
-
-        public Henchmen(List<HenchmenInfo> henchmenInfoList)
-        {
-            var henchmen = henchmenInfoList[new Random().Next(henchmenInfoList.Count)];
-
-            HenchmenName = henchmen.HenchmenName;
-            HenchmenSet = henchmen.HenchmenSetName;
-            HenchmenInfo = henchmen;
+            return newHenchmen;
         }
 
         public string ToString(List<Henchmen> henchmenList)
