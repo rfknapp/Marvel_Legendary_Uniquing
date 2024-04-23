@@ -83,7 +83,7 @@ namespace MarvelLegendary
             var tacticsInVillainDeck = schemeInfo.IsTacticsInVillainDeck ? "Shuffle the Mastermind Tactics into the Villain deck.\r\n" : "";
             var monumentDeck = schemeInfo.IsMonumentDeck ? "Shuffle 18 Bystanders and 14 Wounds, then deal them evenly into eight decks.\r\n" : "";
             var smugglerHenchmen = schemeInfo.IsSmugglerHenchmen ? $"Include the following Henchmen as Smugglers with the Striker ability.{new Henchmen().ToString(game.SchemeHenchmen)}\r\n" : "";
-            var monsterDeck = schemeInfo.IsMonsterPitDeck ? $"Shuffle 8 of the Villains into a face-down \"Monster Pit\" deck.\r\n{game.MonsterPitVillains[0].VillainName}, {game.MonsterPitVillains[0].SetName}\r\n" : "";
+            var monsterDeck = schemeInfo.IsMonsterPitDeck ? $"Shuffle 8 of the Villains into a face-down \"Monster Pit\" deck.\r\n{game.SchemeVillains[0].VillainName}, {game.SchemeVillains[0].SetName}\r\n" : "";
             var infectedDeck = schemeInfo.IsInfectedDeck ? $"Shuffle together 20 Bystanders and 10 of the following Henchmen as an \"Infected Deck.\"{new Henchmen().ToString(game.SchemeHenchmen)}\r\n" : "";
             var mutationDeck = schemeInfo.IsMutationDeck ? $"Take 14 cards from the following hero and put them in a face-up \"Mutation Pile\".:{new Hero().ToString(game.SchemeHeroes)}\r\n" : "";
             var hulkDeck = schemeInfo.IsHulkDeck ? $"Take 14 cards from the following Hero and shuffle them into a \"Hulk Deck\":{new Hero().ToString(game.SchemeHeroes)}\r\n" : "";
@@ -98,7 +98,7 @@ namespace MarvelLegendary
             var isInvasionHero = game.Scheme.SchemeInfo.SchemeName.Contains("Skrull Shapeshifters") ? "Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.\r\n" : "";
             var sneakAttackString = game.Scheme.SchemeInfo.SchemeName == "Sneak Attack the Heroes" ? SneakAttackRuleGenerator(game.PlayerCount, game.Heroes) : "";
             var zombieVillainsString = game.Mastermind.MastermindInfo.IsZombieSoloVillain ? "Treat the Villain group as having the Zombie keyword.\r\n" : "";
-            var quantumRealmString = game.Scheme.SchemeInfo.IsQuantumRealmDeck ? $"Set aside the {game.QuantumRealmVillains.FirstOrDefault().VillainName} Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.\r\n" : "";
+            var quantumRealmString = game.Scheme.SchemeInfo.IsQuantumRealmDeck ? $"Set aside the {game.SchemeVillains.FirstOrDefault().VillainName} ({game.SchemeVillains[0].SetName}) Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.\r\n" : "";
             var pastHeroDeck = game.Scheme.SchemeName == "The Time Heist" ? "Set half of the hero groups in the main city. The other half of the hero groups make a Past Hero Deck." : "";
             var shrinkTechDeck = game.Scheme.SchemeInfo.IsShrinkTechHero ? $"Set aside all 14 cards of the {game.Scheme.SchemeInfo.ShrinkTechHero.HeroName} hero group as Shrink Tech.\r\n" : "";
 

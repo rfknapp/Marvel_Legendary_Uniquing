@@ -21,7 +21,6 @@ namespace MarvelLegendary
 
     public enum HeroTeam
     {
-        None,
         [Description("Avengers")]
         Avengers,
         [Description("X-Men")]

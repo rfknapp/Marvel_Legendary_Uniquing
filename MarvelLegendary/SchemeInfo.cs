@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using MarvelLegendary.Enums;
+
 
 namespace MarvelLegendary
 {
@@ -66,6 +68,9 @@ namespace MarvelLegendary
         public bool IsQuantumRealmDeck { get; set; }
         public bool IsMarvelZombies { get; set; }
         public List<string> MarvelZombiesGroup { get; set; }
+        public string SchemeVillainName { get; set; }
+        public Keywords ZombieKeyword { get; set; }
+        public int NumberOfSchemeVillains { get; set; }
 
         //Masterminds
         public int NumberOfMasterminds { get; set; }

@@ -78,6 +78,9 @@ namespace MarvelLegendary
                 VillainsNotAllowed = new List<string>(),
                 IsMarvelZombies = false,
                 MarvelZombiesGroup = new List<string>(),
+                SchemeVillainName = "",
+                ZombieKeyword = Keywords.None,
+                NumberOfSchemeVillains = 0,
 
                 //Masterminds
                 NumberOfMasterminds = 1,
@@ -267,12 +270,14 @@ namespace MarvelLegendary
         public SchemeInfoBuilder IncludeMonsterPitDeck()
         {
             _schemeInfo.IsMonsterPitDeck = true;
+            _schemeInfo.SchemeVillainName = "Monsters Unleashed";
             return this;
         }
 
         public SchemeInfoBuilder IncludeQuantumRealmDeck()
         {
             _schemeInfo.IsQuantumRealmDeck = true;
+            _schemeInfo.SchemeVillainName = "Quantum Realm";
             return this;
         }
 
@@ -493,17 +498,9 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder MarvelZombieVillains(int numberOfVillains, Keywords keyword)
         {
-            var keywordVillains = new Villain().GetListOfVillainsWithKeyword(keyword);
-
-            while (_schemeInfo.MarvelZombiesGroup.Count < numberOfVillains && keywordVillains.Count > 0)
-            {
-                var randomIndex = rnd.Next(keywordVillains.Count);
-                _schemeInfo.MarvelZombiesGroup.Add(keywordVillains[randomIndex]);
-                keywordVillains.RemoveAt(randomIndex);
-            }
-
+            _schemeInfo.NumberOfSchemeVillains = numberOfVillains;
             _schemeInfo.IsMarvelZombies = true;
-            _schemeInfo.VillainsNotAllowed = keywordVillains;
+            _schemeInfo.ZombieKeyword = keyword;
             return this;
         }
 

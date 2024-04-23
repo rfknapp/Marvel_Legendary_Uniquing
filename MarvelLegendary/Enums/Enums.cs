@@ -91,6 +91,7 @@ namespace MarvelLegendary.Enums
     
     public enum Keywords
     {
+        None,
         [Description("Rise of the Living Dead")]
         LivingDead,
         [Description("Cross-Dimensional Rampage")]
