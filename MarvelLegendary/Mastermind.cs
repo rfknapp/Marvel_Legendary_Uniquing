@@ -321,9 +321,13 @@ namespace MarvelLegendary
             var mastermindByTable = $"MastermindBy{cardType}";
             var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
 
+            //need to handle if this is MastermindxMastermind
+            //{tableSuffix}Id has to become {tableSuffix}2Id
+            var cardTypeId = cardType == "Mastermind" ? $"{cardType}2Id" : $"{cardType}Id";
+
             var allMastermindsBy = $@"select m.MastermindName from Masterminds m
                     inner join {mastermindByTable} mb ON m.Id = mb.MastermindId
-                    inner join {tableName} t ON t.Id = mb.{cardType}Id
+                    inner join {tableName} t ON t.Id = mb.{cardTypeId}
                     where t.{cardType}Name = '{name}'";
 
             var allMastermindsByX = new SqlHelper().GetList(allMastermindsBy);
@@ -332,21 +336,27 @@ namespace MarvelLegendary
 
         public List<Mastermind> GetExtraMasterminds(Scheme scheme, Mastermind mainMastermind)
         {
+            var sqlHelper = new SqlHelper();
             var returnList = new List<Mastermind>();
             var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
             var extraMasterminds = new List<string>();
 
             //Get Masterminds
-            var mastermindList = new Mastermind().GetListOfMasterminds();
+            var mastermindList = GetListOfMasterminds();
 
             //Get Masterminds that have played with the scheme
-            var schemesByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", mainMastermind.MastermindName);
+            //var mastermindsByScheme = GetListOfMastermindByX("Scheme", scheme.SchemeName);
+            var mastermindsByScheme = sqlHelper.GetListFromByTable("Mastermind", "Scheme", scheme.SchemeName);
 
             //Remove all Masterminds that have played with the scheme from the list
-            var remainingMasterminds = mastermindList.Except(schemesByMastermind).ToList();
+            var remainingMasterminds = mastermindList.Except(mastermindsByScheme).ToList();
 
             //Remove the current Mastermind from the list
             remainingMasterminds = remainingMasterminds.Except(mastermindsInGame).ToList();
+
+            //Get all the masterminds that have played with the main mastermind
+            //var mastermindByMastermind = GetListOfMastermindByX("Mastermind", mainMastermind.MastermindName);
+            var mastermindByMastermind = sqlHelper.GetListFromByTable("Mastermind", "Mastermind", mainMastermind.MastermindName);
 
             for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
             {
@@ -354,10 +364,12 @@ namespace MarvelLegendary
                 var newMastermind = remainingMasterminds[random.Next(remainingMasterminds.Count)];
 
                 //Get MastermindxMastermind
-                var mastermindByMastermind = GetListOfMastermindByX("Mastermind", newMastermind);
+                //mastermindByMastermind = GetListOfMastermindByX("Mastermind", newMastermind);
+                mastermindByMastermind = sqlHelper.GetListFromByTable("Mastermind", "Mastermind", mainMastermind.MastermindName);
 
                 //Get SchemexMastermind
-                var schemeByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", newMastermind);
+                //var schemeByMastermind = new Scheme().GetListOfSchemesByX("Mastermind", newMastermind);
+                var schemeByMastermind = sqlHelper.GetListFromByTable("Scheme", "Mastermind", newMastermind);
 
                 //Remove all from main list
                 remainingMasterminds = remainingMasterminds.Except(mastermindByMastermind).ToList();

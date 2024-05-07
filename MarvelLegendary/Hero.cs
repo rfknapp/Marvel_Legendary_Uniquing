@@ -310,7 +310,7 @@ namespace MarvelLegendary
             new HeroInfoBuilder().SetHeroName("White Wolf").SetGameSet(Set.BlackPanther).SetHeroTeam(HeroTeam.Wakanda).Build(),
 
             new HeroInfoBuilder().SetHeroName("Black Widow").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.SHIELD).Build(),
-            new HeroInfoBuilder().SetHeroName("Falcon and the Winter Soldier").SetGameSet(Set.BlackWidow).Build(),
+            new HeroInfoBuilder().SetHeroName("Falcon & Winter Soldier").SetGameSet(Set.BlackWidow).Build(),
             new HeroInfoBuilder().SetHeroName("Red Guardian").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.Unaffiliated).Build(),
             new HeroInfoBuilder().SetHeroName("White Tiger").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.MarvelKnights).Build(),
             new HeroInfoBuilder().SetHeroName("Yelena Belova").SetGameSet(Set.BlackWidow).SetHeroTeam(HeroTeam.SHIELD).Build(),
@@ -445,6 +445,7 @@ namespace MarvelLegendary
         //This is replacing the DetermineLists functionality
         public Hero GetNewHero(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villainsInGame, List<Henchmen> henchmenInGame, List<Hero> heroesInGame)
         {
+            var sqlHelper = new SqlHelper();
             var newHero = new Hero();
             
             //Get Heroes
@@ -454,7 +455,8 @@ namespace MarvelLegendary
             var remainingHeroes = heroList.Except(heroesInGame.Select(hero => hero.HeroName)).ToList();
 
             //Get Heroes that have played with the Scheme
-            var heroesByScheme = GetListOfHeroesByX("Scheme", scheme.SchemeName);
+            //var heroesByScheme = GetListOfHeroesByX("Scheme", scheme.SchemeName);
+            var heroesByScheme = sqlHelper.GetListFromByTable("Hero", "Scheme", scheme.SchemeName);
 
             //Remove all Heroes that have played with the scheme from the list
             remainingHeroes = remainingHeroes.Except(heroesByScheme).ToList();
@@ -462,7 +464,8 @@ namespace MarvelLegendary
             //Get Heroes that have played with each of the Masterminds
             foreach (var mastermind in allMastermindsInGame)
             {
-                var heroesByMastermind = GetListOfHeroesByX("Mastermind", mastermind.MastermindName);
+                //var heroesByMastermind = GetListOfHeroesByX("Mastermind", mastermind.MastermindName);
+                var heroesByMastermind = sqlHelper.GetListFromByTable("Hero", "Mastermind", mastermind.MastermindName);
                 //Remove all Heroes that have played with the Mastermind(s)
                 remainingHeroes = remainingHeroes.Except(heroesByMastermind).ToList();
             }
@@ -470,7 +473,8 @@ namespace MarvelLegendary
             //Get Heroes that have played with each of the Villains
             foreach (var villain in villainsInGame)
             {
-                var heroesByVillain = GetListOfHeroesByX("Villain", villain.VillainName);
+                //var heroesByVillain = GetListOfHeroesByX("Villain", villain.VillainName);
+                var heroesByVillain = sqlHelper.GetListFromByTable("Hero", "Villain", villain.VillainName);
                 //Remove all Heroes that have played with the Villains
                 remainingHeroes = remainingHeroes.Except(heroesByVillain).ToList();
             }
@@ -478,7 +482,8 @@ namespace MarvelLegendary
             //Get Heroes that have played with each of the Henchmen
             foreach (var henchmen in henchmenInGame)
             {
-                var heroesByHenchmen = GetListOfHeroesByX("Henchmen", henchmen.HenchmenName);
+                //var heroesByHenchmen = GetListOfHeroesByX("Henchmen", henchmen.HenchmenName);
+                var heroesByHenchmen = sqlHelper.GetListFromByTable("Hero", "Henchmen", henchmen.HenchmenName);
                 //Remove all Heroes that have played with the Henchmen
                 remainingHeroes = remainingHeroes.Except(heroesByHenchmen).ToList();
             }
@@ -486,7 +491,8 @@ namespace MarvelLegendary
             //Get Heroes that have played with each of the Heroes
             foreach (var hero in heroesInGame)
             {
-                var heroesByHero = GetListOfHeroesByX("Hero", hero.HeroName);
+                //var heroesByHero = GetListOfHeroesByX("Hero", hero.HeroName);
+                var heroesByHero = sqlHelper.GetListFromByTable("Hero", "Hero", hero.HeroName);
                 //Remove all Heroes that have played with the Hero
                 remainingHeroes = remainingHeroes.Except(heroesByHero).ToList();
             }
@@ -625,48 +631,6 @@ namespace MarvelLegendary
             return _heroes.Count;
         }
 
-        /*public List<HeroInfo> ModifyHeroList(IEnumerable<string> heroExclusions)
-        {
-            var returnList = new List<HeroInfo>(_heroes);
-
-            foreach (var heroExclusion in heroExclusions)
-            {
-                while (returnList.Any(x => x.HeroName.Split('_')[0] == heroExclusion))
-                {
-                    var itemToRemove = returnList.First(x => x.HeroName.Split('_')[0] == heroExclusion);
-                    returnList.Remove(itemToRemove);
-                }
-            }
-
-            return returnList;
-        }
-
-        public List<HeroInfo> ModifyHeroListOnlyHeroTeam(List<HeroInfo> heroExclusions, HeroTeam heroTeam)
-        {
-            var returnList = new List<HeroInfo>(heroExclusions);
-
-            while (returnList.Any(x => x.HeroTeam != heroTeam))
-            {
-                var itemToRemove = returnList.First(x => x.HeroTeam != heroTeam);
-                returnList.Remove(itemToRemove);
-            }
-
-            return returnList;
-        }
-
-        public List<HeroInfo> ModifyHeroListWithoutHeroTeam(List<HeroInfo> heroExclusions, HeroTeam heroTeam)
-        {
-            var returnList = new List<HeroInfo>(heroExclusions);
-
-            while (returnList.Any(x => x.HeroTeam == heroTeam))
-            {
-                var itemToRemove = returnList.First(x => x.HeroTeam == heroTeam);
-                returnList.Remove(itemToRemove);
-            }
-
-            return returnList;
-        }*/
-
         public int GetHeroTeamMemberCount(HeroTeam heroTeam)
         {
             var returnList = new List<HeroInfo>(_heroes).Where(x=>x.HeroTeam==heroTeam);
@@ -676,14 +640,8 @@ namespace MarvelLegendary
 
         public List<HeroTeam> GetListOfHeroTeams()
         {
-            var heroTeamsList = new List<HeroTeam>();
-            var heroTeams = Enum.GetValues(typeof(HeroTeam));
+            var heroTeamsList = Enum.GetValues(typeof(HeroTeam)).Cast<HeroTeam>().ToList();
 
-            //This will convert the array to a list
-            foreach (var item in heroTeams)
-            {
-                heroTeamsList.Add((HeroTeam)item);
-            }
             return heroTeamsList;
         }
 

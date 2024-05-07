@@ -546,11 +546,11 @@ namespace MarvelLegendary.Exclusions
         {
             var spreadsheet = new GetSpreadsheet();
             var spreadsheetInfo = spreadsheet.GetSpreadsheetInfo("By Hero");
-            var henchmen = new Hero().GetNewHero(heroGroup);
-            heroGroup = henchmen.HeroName;
+            var hero = new Hero().GetNewHero(heroGroup);
+            heroGroup = hero.HeroName;
 
-            var listOfHenchmen = spreadsheetInfo.First();
-            var henchmenIndex = listOfHenchmen.ItemArray.ToList().IndexOf(heroGroup);
+            var listOfHeroes = spreadsheetInfo.First();
+            var heroIndex = listOfHeroes.ItemArray.ToList().IndexOf(heroGroup);
 
             var combinations = spreadsheetInfo.ToList();
             combinations.RemoveAt(0);
@@ -584,7 +584,7 @@ namespace MarvelLegendary.Exclusions
                     mastermindSection = true;
                 }
 
-                if (combinationList[henchmenIndex].ToString() == "X")
+                if (combinationList[heroIndex].ToString() == "X")
                 {
                     if (schemeSection)
                         schemeList.Add(name);

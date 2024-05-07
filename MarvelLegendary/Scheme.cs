@@ -314,13 +314,9 @@ namespace MarvelLegendary
         private SchemeInfo GetRandomScheme(Mastermind mastermind)
         {
             var schemeName = "";
-            var allSchemesByMastermind = $@"select s.SchemeName from Schemes s
-                    inner join SchemeByMastermind sbm ON s.Id = sbm.SchemeId
-                    inner join Masterminds m ON m.Id = sbm.MastermindId
-                    where m.MastermindName = '{mastermind.MastermindName}'";
-
             var schemeNameList = GetListOfSchemes();
-            var mastermindSchemeNameList = new SqlHelper().GetList(allSchemesByMastermind);
+            var mastermindSchemeNameList = GetListOfSchemesByX("Mastermind", mastermind.MastermindName);
+            var test = new SqlHelper().GetListFromByTable("Scheme", "Mastermind", mastermind.MastermindName);
 
             if (mastermindSchemeNameList.Count <= schemeNameList.Count)
             {

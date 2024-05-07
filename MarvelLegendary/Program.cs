@@ -1,6 +1,9 @@
-﻿using System;
+using MarvelLegendary.Exclusions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using MarvelLegendary.Tools;
+using static MarvelLegendary.Exclusions.GetExclusions;
 
 namespace MarvelLegendary
 {
@@ -25,6 +28,7 @@ namespace MarvelLegendary
                 game.SetHeroes();
 
                 var gameText = GameTextBuilder(game);
+                
                 Console.Clear();
                 Console.Out.Write(gameText);
 
@@ -35,6 +39,8 @@ namespace MarvelLegendary
                     Console.ReadLine();
                     Console.WriteLine($"Unveiled scheme is\r\n1) {game.UnveiledScheme.SchemeName}, {game.UnveiledScheme.SetName}\r\n\r\n");
                 }
+
+                ConvertGames.ConvertTrackedGames();
 
                 try
                 {

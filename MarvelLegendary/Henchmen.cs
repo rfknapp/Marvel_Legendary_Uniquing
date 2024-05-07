@@ -171,6 +171,7 @@ namespace MarvelLegendary
 
         public Henchmen GetNewHenchmen(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villains, List<string> henchmenInGame)
         {
+            var sqlHelper = new SqlHelper();
             var newHenchmen = new Henchmen();
             
             //Get Henchmen
@@ -180,7 +181,8 @@ namespace MarvelLegendary
             var remainingHenchmen = henchmenList.Except(henchmenInGame).ToList();
 
             //Get Henchmen that have played with the Scheme
-            var henchmenByScheme = GetListOfHenchmenByX("Scheme", scheme.SchemeName);
+            //var henchmenByScheme = GetListOfHenchmenByX("Scheme", scheme.SchemeName);
+            var henchmenByScheme = sqlHelper.GetListFromByTable("Henchmen", "Scheme", scheme.SchemeName);
 
             //Remove all Henchmen that have played with the scheme from the list
             remainingHenchmen = remainingHenchmen.Except(henchmenByScheme).ToList();
@@ -188,7 +190,8 @@ namespace MarvelLegendary
             //Get Henchmen that have played with each of the Masterminds with
             foreach (var mastermind in allMastermindsInGame)
             {
-                var henchmenByMastermind = GetListOfHenchmenByX("Mastermind", mastermind.MastermindName);
+                //var henchmenByMastermind = GetListOfHenchmenByX("Mastermind", mastermind.MastermindName);
+                var henchmenByMastermind = sqlHelper.GetListFromByTable("Henchmen", "Mastermind", mastermind.MastermindName);
                 //Remove all Henchmen that have played with the Mastermind(s)
                 remainingHenchmen = remainingHenchmen.Except(henchmenByMastermind).ToList();
             }
@@ -196,7 +199,8 @@ namespace MarvelLegendary
             //Get Henchmen that have played with each of the Villains with
             foreach (var villain in villains)
             {
-                var henchmenByVillain = GetListOfHenchmenByX("Villain", villain.VillainName);
+                //var henchmenByVillain = GetListOfHenchmenByX("Villain", villain.VillainName);
+                var henchmenByVillain = sqlHelper.GetListFromByTable("Henchmen", "Villain", villain.VillainName);
                 //Remove all Henchmen that have played with the Villains
                 remainingHenchmen = remainingHenchmen.Except(henchmenByVillain).ToList();
             }
@@ -204,12 +208,13 @@ namespace MarvelLegendary
             //Get Henchmen that have played with each of the Henchmen with
             foreach (var henchmen in henchmenInGame)
             {
-                var henchmenByHenchmen = GetListOfHenchmenByX("Henchmen", henchmen);
+                //var henchmenByHenchmen = GetListOfHenchmenByX("Henchmen", henchmen);
+                var henchmenByHenchmen = sqlHelper.GetListFromByTable("Henchmen", "Henchmen", henchmen);
                 //Remove all Henchmen that have played with the Henchmen
                 remainingHenchmen = remainingHenchmen.Except(henchmenByHenchmen).ToList();
             }
 
-            //Select Villain from remaining list
+            //Select Henchmen from remaining list
             var henchmenName = remainingHenchmen[random.Next(remainingHenchmen.Count)];
             var henchmenInfo = _henchmen.First(h => h.HenchmenName == henchmenName);
 

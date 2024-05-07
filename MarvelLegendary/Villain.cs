@@ -227,15 +227,16 @@ namespace MarvelLegendary
 
         public Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme, List<string> villainsInGame)
         {
+            var sqlHelper = new SqlHelper();
             var newVillain = new Villain();
-            //Get Villains
             var villainList = GetListOfVillains();
 
             //Remove all Villains currently in the game from the list
             var remainingVillains = villainList.Except(villainsInGame).ToList();
 
             //Get Villains that have played with the Scheme
-            var villainsByScheme = GetListOfVillainsByX("Scheme", scheme.SchemeName);
+            //var villainsByScheme = GetListOfVillainsByX("Scheme", scheme.SchemeName);
+            var villainsByScheme = sqlHelper.GetListFromByTable("Villain", "Scheme", scheme.SchemeName);
 
             //Remove all Villains that have played with the scheme from the list
             remainingVillains = remainingVillains.Except(villainsByScheme).ToList();
@@ -243,9 +244,19 @@ namespace MarvelLegendary
             //Get Villains that have played with each of the Masterminds with
             foreach (var mastermind in allMastermindsInGame)
             {
-                var villainsByMastermind = GetListOfVillainsByX("Mastermind", mastermind.MastermindName);
+                //var villainsByMastermind = GetListOfVillainsByX("Mastermind", mastermind.MastermindName);
+                var villainsByMastermind = sqlHelper.GetListFromByTable("Villain", "Mastermind", mastermind.MastermindName);
                 //Remove all Villains that have played with the Mastermind(s)
                 remainingVillains = remainingVillains.Except(villainsByMastermind).ToList();
+            }
+
+            //Get Villains that have played with each of the Villains with
+            foreach (var villain in villainsInGame)
+            {
+                //var villainsByVillain = GetListOfVillainsByX("Villain", villain);
+                var villainsByVillain = sqlHelper.GetListFromByTable("Villain", "Villain", villain);
+                //Remove all Villains that have played with the Villains(s)
+                remainingVillains = remainingVillains.Except(villainsByVillain).ToList();
             }
 
             //Select Villain from remaining list
