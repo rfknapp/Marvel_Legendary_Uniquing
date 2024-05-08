@@ -110,7 +110,7 @@ namespace MarvelLegendary
             var allItemsBy = $@"select pt.{tablePrefix}Name from {prefixTableName} pt
                     inner join {byTable} bt ON pt.Id = bt.{tablePrefixId}
                     inner join {suffixTableName} st ON st.Id = bt.{tableSuffixId}
-                    where t.{tableSuffix}Name = '{updatedCardName}'";
+                    where st.{tableSuffix}Name = '{updatedCardName}'";
 
             var allItemsByX = new SqlHelper().GetList(allItemsBy);
             return allItemsByX;

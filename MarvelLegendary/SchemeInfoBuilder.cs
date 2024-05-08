@@ -18,7 +18,7 @@ namespace MarvelLegendary
             {
                 SchemeName = "",
                 SchemeTwists = new List<int> { 8, 8, 8, 8, 8 },
-                SetName = Set.Core.GetDescription(),
+                SetName = Set.Core,
                 CannotBeSolo = false,
                 ShardCount = 0,
                 IsShardCount = false,
@@ -143,7 +143,7 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder SetSchemeSet(Set set)
         {
-            _schemeInfo.SetName = EnumDescription.GetDescription(set);
+            _schemeInfo.SetName = set;
             return this;
         }
 

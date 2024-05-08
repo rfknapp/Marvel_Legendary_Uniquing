@@ -11,7 +11,7 @@ namespace MarvelLegendary
     public class UnveiledScheme
     {
         public string SchemeName { get; set; }
-        public string SetName { get; set; }
+        public Set SetName { get; set; }
 
         private readonly List<SchemeInfo> _unveiledSchemes = new List<SchemeInfo>()
         {
@@ -31,7 +31,7 @@ namespace MarvelLegendary
     public class Scheme
     {
         public string SchemeName { get; set; }
-        public string SetName { get; set; }
+        public Set SetName { get; set; }
         public int Twists { get; set; }
         public int NumberOfSchemeTwists { get; set; }
         public SchemeInfo SchemeInfo { get; set; }
@@ -287,6 +287,25 @@ namespace MarvelLegendary
         public Scheme() 
         {
             random = new Random();
+        }
+
+        //This function is only used in the ConverTrackedGames class
+        public Scheme GetNewScheme(string schemeName = "")
+        {
+            var newScheme = new Scheme();
+            var scheme = schemeName;
+            if (string.IsNullOrEmpty(scheme))
+            {
+                var allSchemes = GetListOfSchemes();
+                scheme = allSchemes[new Random().Next(allSchemes.Count)];
+            }
+
+            var schemeInfo = _schemes.FirstOrDefault(s => s.SchemeName == scheme);
+
+            newScheme.SchemeName = schemeInfo.SchemeName;
+            newScheme.SetName = newScheme.SetName;
+
+            return newScheme;
         }
 
         public Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName="")

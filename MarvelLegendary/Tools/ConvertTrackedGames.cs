@@ -20,6 +20,7 @@ namespace MarvelLegendary.Tools
         public static void ConvertTrackedGames()
         {
             ConvertMastermindGames();
+            ConvertSchemeGames();
             ConvertVillainGames();
             ConvertHenchmenGames();
             ConvertHeroGames();
@@ -27,57 +28,55 @@ namespace MarvelLegendary.Tools
 
         private static void ConvertMastermindGames()
         {
+            var mm = new Mastermind();
             var outputMbS = "";
             var outputMbV = "";
             var outputMbH = "";
             var outputMbHo = "";
             var outputMbM = "";
-            foreach (var mastermind in new Mastermind().GetListOfMasterminds())
+            var listOfMasterminds = mm.GetListOfMasterminds();
+
+            foreach (var mastermind in listOfMasterminds)
             {
-                var newMastermind = new Mastermind().GetNewMastermind(mastermind);
+                var newMastermind = mm.GetNewMastermind(mastermind);
                 var setName = newMastermind.SetName;
 
                 if (!targetSets.Contains(setName))
                 {
                     var getExclusions = new GetExclusions();
                     var exclusions = getExclusions.GetMastermindExclusion(mastermind);
-                    var exclusions2 = getExclusions.GetMastermindByMastermindExclusions(mastermind);
 
                     var schemeExclusions = exclusions.SchemeList;
                     var villainExclusions = exclusions.VillainList;
                     var henchmenExclusions = exclusions.HenchmenList;
                     var heroExclusions = exclusions.HeroList;
-                    var mastermindExclusions = exclusions.MastermindList;
+                    var mastermindExclusions = getExclusions.GetMastermindByMastermindExclusions(mastermind);
 
                     foreach (var item2 in schemeExclusions)
                     {
                         outputMbS = $"{outputMbS}{mastermind}, {item2}\r\n";
-                        enterIntoByTable("Scheme", "Mastermind", item2, mastermind);
                         enterIntoByTable("Mastermind", "Scheme", mastermind, item2);
                     }
 
                     foreach (var item2 in villainExclusions)
                     {
                         outputMbV = $"{outputMbV}{mastermind}, {item2}\r\n";
-                        enterIntoByTable("Villain", "Mastermind", item2, mastermind);
                         enterIntoByTable("Mastermind", "Villain", mastermind, item2);
                     }
 
                     foreach (var item2 in henchmenExclusions)
                     {
                         outputMbH = $"{outputMbH}{mastermind}, {item2}\r\n";
-                        enterIntoByTable("Henchmen", "Mastermind", item2, mastermind);
                         enterIntoByTable("Mastermind", "Henchmen", mastermind, item2);
                     }
 
                     foreach (var item2 in heroExclusions)
                     {
                         outputMbHo = $"{outputMbHo}{mastermind}, {item2}\r\n";
-                        enterIntoByTable("Hero", "Mastermind", item2, mastermind);
                         enterIntoByTable("Mastermind", "Hero", mastermind, item2);
                     }
 
-                    foreach (var item2 in exclusions2)
+                    foreach (var item2 in mastermindExclusions)
                     {
                         outputMbM = $"{outputMbM}{mastermind}, {item2}\r\n";
                         enterIntoByTable("Mastermind", "Mastermind", mastermind, item2);
@@ -98,11 +97,11 @@ namespace MarvelLegendary.Tools
             var suffixTableName = (tableSuffix == "Henchmen") ? "Henchmen" : (tableSuffix == "Hero" ? "Heroes" : $"{tableSuffix}s");
             var updatedSuffixItem = suffixItem.Contains("'") ? suffixItem.Replace("'", "''") : suffixItem;
 
-            var prefixItemId = new SqlHelper().GetResult($"SELECT ID FROM {prefixTableName} WHERE {tablePrefix}Name == '{updatedPrefixItem}'");
-            var suffixItemId = new SqlHelper().GetResult($"SELECT ID FROM {suffixTableName} WHERE {tableSuffix}Name == '{updatedSuffixItem}'");
+            var prefixItemId = new SqlHelper().GetResult($"SELECT ID FROM {prefixTableName} WHERE {tablePrefix}Name = '{updatedPrefixItem}'");
+            var suffixItemId = new SqlHelper().GetResult($"SELECT ID FROM {suffixTableName} WHERE {tableSuffix}Name = '{updatedSuffixItem}'");
 
             //This will check to see if that entry is already in the table
-            var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM {tablePrefix}By{tableSuffix} WHERE {tablePrefix}Id == {prefixItemId} && {tableSuffix}Id == {suffixItemId}");
+            var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM {tablePrefix}By{tableSuffix} WHERE {tablePrefix}Id = {prefixItemId} AND {tableSuffix}Id = {suffixItemId}");
             
             //The following code will run if the entry is not in the table
             if(itemCount == "0")
@@ -112,26 +111,87 @@ namespace MarvelLegendary.Tools
             }
         }
 
+        private static void ConvertSchemeGames()
+        {
+            var s = new Scheme();
+            var outputSbM = "";
+            var outputSbV = "";
+            var outputSbH = "";
+            var outputSbHo = "";
+            var listOfSchemes = s.GetListOfSchemes();
+
+            foreach (var scheme in listOfSchemes)
+            {
+                var newScheme = s.GetNewScheme(scheme);
+                var setName = newScheme.SetName;
+
+                if (!targetSets.Contains(setName))
+                {
+                    var getExclusions = new GetExclusions();
+                    var exclusions = getExclusions.GetSchemeExclusions(scheme);
+
+                    var mastermindExclusions = exclusions.MastermindList;
+                    var villainExclusions = exclusions.VillainList;
+                    var henchmenExclusions = exclusions.HenchmenList;
+                    var heroExclusions = exclusions.HeroList;
+
+                    foreach (var item2 in mastermindExclusions)
+                    {
+                        outputSbM = $"{outputSbM}{scheme}, {item2}\r\n";
+                        enterIntoByTable("Scheme", "Mastermind", scheme, item2);
+                    }
+
+                    foreach (var item2 in villainExclusions)
+                    {
+                        outputSbV = $"{outputSbV}{scheme}, {item2}\r\n";
+                        enterIntoByTable("Scheme", "Villain", scheme, item2);
+                    }
+
+                    foreach (var item2 in henchmenExclusions)
+                    {
+                        outputSbH = $"{outputSbH}{scheme}, {item2}\r\n";
+                        enterIntoByTable("Scheme", "Henchmen", scheme, item2);
+                    }
+
+                    foreach (var item2 in heroExclusions)
+                    {
+                        outputSbHo = $"{outputSbHo}{scheme}, {item2}\r\n";
+                        enterIntoByTable("Scheme", "Hero", scheme, item2);
+                    }
+                }
+            }
+        }
+
         private static void ConvertVillainGames()
         {
+            var v = new Villain();
+            var outputVbM = "";
             var outputVbS = "";
             var outputVbV = "";
             var outputVbH = "";
             var outputVbHo = "";
-            foreach (var villain in new Villain().GetListOfVillains())
+            var listOfVillains = v.GetListOfVillains();
+
+            foreach (var villain in listOfVillains)
             {
-                var newVillain = new Villain().GetNewVillain(villain);
+                var newVillain = v.GetNewVillain(villain);
                 var setName = newVillain.SetName;
 
                 if (!targetSets.Contains(setName))
                 {
                     var getExclusions = new GetExclusions();
                     var exclusions = getExclusions.GetVillainExclusion(villain);
-                    var exclusions2 = getExclusions.GetVillainByVillainExclusion(new List<string>() { villain });
 
+                    var mastermindExclusions = exclusions.MastermindList;
                     var schemeExclusions = exclusions.SchemeList;
                     var henchmenExclusions = exclusions.HenchmenList;
                     var heroExclusions = exclusions.HeroList;
+                    var villainExclusions = getExclusions.GetVillainByVillainExclusion(new List<string>() { villain });
+
+                    foreach (var item2 in mastermindExclusions)
+                    {
+                        outputVbM = $"{outputVbM}{villain}, {item2}\r\n";
+                    }
 
                     foreach (var item2 in schemeExclusions)
                     {
@@ -148,7 +208,7 @@ namespace MarvelLegendary.Tools
                         outputVbHo = $"{outputVbHo}{villain}, {item2}\r\n";
                     }
 
-                    foreach (var item2 in exclusions2)
+                    foreach (var item2 in villainExclusions)
                     {
                         outputVbV = $"{outputVbV}{villain}, {item2}\r\n";
                     }
@@ -158,29 +218,46 @@ namespace MarvelLegendary.Tools
 
         private static void ConvertHenchmenGames()
         {
+            var h = new Henchmen();
             var newTargetSets = new HashSet<Enums.Set>(targetSets);
             newTargetSets.Add(Enums.Set.P1);
 
+            var outputHbM = "";
             var outputHbS = "";
+            var outputHbV = "";
             var outputHbH = "";
             var outputHbHo = "";
-            foreach (var henchmen in new Henchmen().GetListOfHenchmen())
+            var henchmenList = h.GetListOfHenchmen();
+
+            foreach (var henchmen in henchmenList)
             {
-                var newHenchmen = new Henchmen().GetNewHenchmen(henchmen);
+                var newHenchmen = h.GetNewHenchmen(henchmen);
                 var setName = newHenchmen.HenchmenSet;
 
                 if (!newTargetSets.Contains(setName))
                 {
                     var getExclusions = new GetExclusions();
                     var exclusions = getExclusions.GetHenchmenExclusion(henchmen);
-                    var exclusions2 = getExclusions.GetHenchmenByHenchmenExclusions(new List<string>() { henchmen });
 
+                    var mastermindExclusions = exclusions.MastermindList;
                     var schemeExclusions = exclusions.SchemeList;
+                    var villainExclusions = exclusions.VillainList;
                     var heroExclusions = exclusions.HeroList;
+                    var henchmenExclusions = getExclusions.GetHenchmenByHenchmenExclusions(new List<string>() { henchmen });
+
+                    foreach (var item2 in mastermindExclusions)
+                    {
+                        outputHbM = $"{outputHbM}{henchmen}, {item2}\r\n";
+                    }
 
                     foreach (var item2 in schemeExclusions)
                     {
                         outputHbS = $"{outputHbS}{henchmen}, {item2}\r\n";
+                    }
+
+                    foreach (var item2 in villainExclusions)
+                    {
+                        outputHbV = $"{outputHbV}{henchmen}, {item2}\r\n";
                     }
 
                     foreach (var item2 in heroExclusions)
@@ -188,7 +265,7 @@ namespace MarvelLegendary.Tools
                         outputHbHo = $"{outputHbHo}{henchmen}, {item2}\r\n";
                     }
 
-                    foreach (var item2 in exclusions2)
+                    foreach (var item2 in henchmenExclusions)
                     {
                         outputHbH = $"{outputHbH}{henchmen}, {item2}\r\n";
                     }
@@ -198,27 +275,51 @@ namespace MarvelLegendary.Tools
 
         private static void ConvertHeroGames()
         {
+            var h = new Hero();
+            var outputHobM = "";
             var outputHobS = "";
+            var outputHobV = "";
+            var outputHobH = "";
             var outputHobHo = "";
-            foreach (var hero in new Hero().GetListOfHeroes())
+            var heroList = h.GetListOfHeroes();
+
+            foreach (var hero in heroList)
             {
-                var newHero = new Hero().GetNewHero(hero);
+                var newHero = h.GetNewHero(hero);
                 var setName = newHero.SetName;
 
                 if (!targetSets.Contains(setName))
                 {
                     var getExclusions = new GetExclusions();
                     var exclusions = getExclusions.GetHeroExclusion(hero);
-                    var exclusions2 = getExclusions.GetHeroByHeroExclusions(new List<string>() { hero });
 
+                    var mastermindExclusions = exclusions.MastermindList;
                     var schemeExclusions = exclusions.SchemeList;
+                    var villainExclusions = exclusions.VillainList;
+                    var henchmenExclusions = exclusions.HenchmenList;
+                    var heroExclusions = getExclusions.GetHeroByHeroExclusions(new List<string>() { hero });
+
+                    foreach (var item2 in mastermindExclusions)
+                    {
+                        outputHobM = $"{outputHobM}{hero}, {item2}\r\n";
+                    }
 
                     foreach (var item2 in schemeExclusions)
                     {
                         outputHobS = $"{outputHobS}{hero}, {item2}\r\n";
                     }
 
-                    foreach (var item2 in exclusions2)
+                    foreach (var item2 in villainExclusions)
+                    {
+                        outputHobV = $"{outputHobV}{hero}, {item2}\r\n";
+                    }
+
+                    foreach (var item2 in henchmenExclusions)
+                    {
+                        outputHobH = $"{outputHobH}{hero}, {item2}\r\n";
+                    }
+
+                    foreach (var item2 in heroExclusions)
                     {
                         outputHobHo = $"{outputHobHo}{hero}, {item2}\r\n";
                     }

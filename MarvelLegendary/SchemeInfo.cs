@@ -8,7 +8,7 @@ namespace MarvelLegendary
     {
         public string SchemeName { get; set; }
         public List<int> SchemeTwists { get; set; }
-        public string SetName { get; set; }
+        public Set SetName { get; set; }
         public bool CannotBeSolo { get; set; }
         public int ShardCount { get; set; }
         public bool IsShardCount { get; set; }
