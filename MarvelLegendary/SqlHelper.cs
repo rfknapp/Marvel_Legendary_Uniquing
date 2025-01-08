@@ -69,20 +69,62 @@ namespace MarvelLegendary
             return returnValue;
         }
 
+        public bool DoesExistInByTable(string byTable, string firstId, string secondId)
+        {
+            var returnValue = false;
+
+            using (connection)
+            {
+                connection.Open();
+
+                
+                using (SqlCommand command = new SqlCommand(sqlString, connection))
+                {
+                    // ExecuteScalar will return the first column of the first row as an object
+                    var result = command.ExecuteScalar();
+
+                    // Check if the result is not null and is convertible to the expected type
+                    if (result != null && result != DBNull.Value)
+                    {
+                        returnValue = result.ToString();
+                    }
+                    else
+                    {
+                        Console.WriteLine("No result found.");
+                    }
+                }
+            }
+
+            return returnValue;
+        }
+
         public void InsertInto(string sqlString)
         {
+            SqlTransaction transaction;
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
+                    transaction = connection.BeginTransaction();
 
-                    using (SqlCommand command = new SqlCommand(sqlString, connection))
+                    try
                     {
-                        // Execute the INSERT command
-                        int rowsAffected = command.ExecuteNonQuery();
+                        // Execute SQL INSERT operation within the transaction
+                        SqlCommand command = new SqlCommand(sqlString, connection, transaction);
 
+                        int rowsAffected = command.ExecuteNonQuery();
                         Console.WriteLine($"Rows affected: {rowsAffected}");
+
+                        // Commit the transaction if all operations are successful
+                        transaction.Commit();
+                        Console.WriteLine("Transaction committed successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Roll back the transaction if any operation fails
+                        transaction.Rollback();
+                        Console.WriteLine("Transaction rolled back: " + ex.Message);
                     }
                 }
             }

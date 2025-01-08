@@ -42,16 +42,8 @@ namespace MarvelLegendary
 
                 ConvertGames.ConvertTrackedGames();
 
-                try
-                {
-                    Console.WriteLine("How many players are playing? (0 to quit)");
-                    playerCount = Console.ReadLine();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Invalid input detected. Defaulting to 0.");
-                    playerCount = "0";
-                }
+                Console.WriteLine("How many players are playing? (0 to quit)");
+                playerCount = Console.ReadLine();
             }
         }
 

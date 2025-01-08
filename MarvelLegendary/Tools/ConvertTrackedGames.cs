@@ -29,10 +29,10 @@ namespace MarvelLegendary.Tools
         private static void ConvertMastermindGames()
         {
             var mm = new Mastermind();
-            var outputMbS = "";
-            var outputMbV = "";
-            var outputMbH = "";
-            var outputMbHo = "";
+            var outputMbS = "INSERT INTO MastermindByScheme (MastermindId, SchemeId) VALUES\r\n";
+            var outputMbV = "INSERT INTO MastermindByVillain (MastermindId, VillainId) VALUES\r\n";
+            var outputMbH = "INSERT INTO MastermindByHenchmen (MastermindId, HenchmenId) VALUES\r\n";
+            var outputMbHo = "INSERT INTO MastermindByHero (MastermindId, HeroId) VALUES\r\n";
             var outputMbM = "";
             var listOfMasterminds = mm.GetListOfMasterminds();
 
@@ -52,33 +52,70 @@ namespace MarvelLegendary.Tools
                     var heroExclusions = exclusions.HeroList;
                     var mastermindExclusions = getExclusions.GetMastermindByMastermindExclusions(mastermind);
 
+                    var mastermindId = new SqlHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{mastermind}'");
+
                     foreach (var item2 in schemeExclusions)
                     {
-                        outputMbS = $"{outputMbS}{mastermind}, {item2}\r\n";
+                        var schemeId = new SqlHelper().GetResult($"SELECT ID from Schemes WHERE SchemeName = '{item2}'");
+                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByScheme WHERE MastermindId = {mastermindId} AND SchemeId = {schemeId}");
+
+                        if (itemCount == "0")
+                        {
+                            outputMbS = $"{outputMbS}({mastermindId}, {schemeId}),\r\n";
+                        }
+
                         enterIntoByTable("Mastermind", "Scheme", mastermind, item2);
                     }
 
                     foreach (var item2 in villainExclusions)
                     {
-                        outputMbV = $"{outputMbV}{mastermind}, {item2}\r\n";
+                        var villainId = new SqlHelper().GetResult($"SELECT ID from Villains WHERE VillainName = '{item2}'");
+                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByVillain WHERE MastermindId = {mastermindId} AND VillainId = {villainId}");
+
+                        if (itemCount == "0")
+                        {
+                            outputMbV = $"{outputMbV}({mastermindId}, {villainId}),\r\n";
+                        }
+
                         enterIntoByTable("Mastermind", "Villain", mastermind, item2);
                     }
 
                     foreach (var item2 in henchmenExclusions)
                     {
-                        outputMbH = $"{outputMbH}{mastermind}, {item2}\r\n";
+                        var henchmenId = new SqlHelper().GetResult($"SELECT ID from Henchmen WHERE HenchmenName = '{item2}'");
+                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHenchmen WHERE MastermindId = {mastermindId} AND HenchmenId = {henchmenId}");
+
+                        if (itemCount == "0")
+                        {
+                            outputMbH = $"{outputMbH}({mastermindId}, {henchmenId}),\r\n";
+                        }
+
                         enterIntoByTable("Mastermind", "Henchmen", mastermind, item2);
                     }
 
                     foreach (var item2 in heroExclusions)
                     {
-                        outputMbHo = $"{outputMbHo}{mastermind}, {item2}\r\n";
+                        var heroId = new SqlHelper().GetResult($"SELECT ID from Heroes WHERE HeroName = '{item2}'");
+                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHero WHERE MastermindId = {mastermindId} AND HeroId = {heroId}");
+
+                        if (itemCount == "0")
+                        {
+                            outputMbHo = $"{outputMbHo}({mastermindId}, {heroId}),\r\n";
+                        }
+
                         enterIntoByTable("Mastermind", "Hero", mastermind, item2);
                     }
 
                     foreach (var item2 in mastermindExclusions)
                     {
-                        outputMbM = $"{outputMbM}{mastermind}, {item2}\r\n";
+                        var mastermind2Id = new SqlHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{item2}'");
+                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByMastermind WHERE MastermindId = {mastermindId} AND Mastermind2Id = {mastermind2Id}");
+
+                        if (itemCount == "0")
+                        {
+                            outputMbM = $"{outputMbM}({mastermindId}, {mastermind2Id}),\r\n";
+                        }
+
                         enterIntoByTable("Mastermind", "Mastermind", mastermind, item2);
                     }
                 }
@@ -92,21 +129,25 @@ namespace MarvelLegendary.Tools
         //suffixItem = The Legacy Virus
         private static void enterIntoByTable(string tablePrefix, string tableSuffix, string prefixItem, string suffixItem)
         {
-            var prefixTableName = (tablePrefix == "Henchmen") ? "Henchmen" : (tablePrefix == "Hero" ? "Heroes" : $"{tablePrefix}s");
+            var prefixTableName = (tablePrefix == "Henchmen") ? "Henchmen" : (tablePrefix == "Hero" ? "Heroes" : (prefixItem.StartsWith(".") ? "UnveiledSchemes": $"{tablePrefix}s"));
             var updatedPrefixItem = prefixItem.Contains("'") ? prefixItem.Replace("'", "''") : prefixItem;
-            var suffixTableName = (tableSuffix == "Henchmen") ? "Henchmen" : (tableSuffix == "Hero" ? "Heroes" : $"{tableSuffix}s");
+            var suffixTableName = (tableSuffix == "Henchmen") ? "Henchmen" : (tableSuffix == "Hero" ? "Heroes" : (suffixItem.StartsWith(".") ? "UnveiledSchemes" : $"{tableSuffix}s"));
             var updatedSuffixItem = suffixItem.Contains("'") ? suffixItem.Replace("'", "''") : suffixItem;
+            var updatedTablePrefix = prefixItem.StartsWith(".") ? "UnveiledScheme" : $"{tablePrefix}";
+            var updatedTableSuffix = suffixItem.StartsWith(".") ? "UnveiledScheme" : $"{tableSuffix}";
+            //If this is a table like MastermindByMastermind then the suffixId has to be Mastermind2Id
+            var tableSuffixId = tablePrefix == tableSuffix ? $"{updatedTableSuffix}2Id" : $"{updatedTableSuffix}Id";
 
-            var prefixItemId = new SqlHelper().GetResult($"SELECT ID FROM {prefixTableName} WHERE {tablePrefix}Name = '{updatedPrefixItem}'");
-            var suffixItemId = new SqlHelper().GetResult($"SELECT ID FROM {suffixTableName} WHERE {tableSuffix}Name = '{updatedSuffixItem}'");
+            var prefixItemId = new SqlHelper().GetResult($"SELECT ID FROM {prefixTableName} WHERE {updatedTablePrefix}Name = '{updatedPrefixItem}'");
+            var suffixItemId = new SqlHelper().GetResult($"SELECT ID FROM {suffixTableName} WHERE {updatedTableSuffix}Name = '{updatedSuffixItem}'");
 
             //This will check to see if that entry is already in the table
-            var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM {tablePrefix}By{tableSuffix} WHERE {tablePrefix}Id = {prefixItemId} AND {tableSuffix}Id = {suffixItemId}");
+            var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM {updatedTablePrefix}By{updatedTableSuffix} WHERE {updatedTablePrefix}Id = {prefixItemId} AND {tableSuffixId} = {suffixItemId}");
             
             //The following code will run if the entry is not in the table
             if(itemCount == "0")
             {
-                string sqlQuery = $"INSERT INTO {tablePrefix}By{tableSuffix} ({tablePrefix}Id, {tableSuffix}Id) VALUES ({prefixItemId}, {suffixItemId})";
+                string sqlQuery = $"INSERT INTO {tablePrefix}By{tableSuffix} ({tablePrefix}Id, {tableSuffixId}) VALUES ({prefixItemId}, {suffixItemId})";
                 new SqlHelper().InsertInto(sqlQuery);
             }
         }
