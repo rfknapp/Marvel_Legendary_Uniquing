@@ -16,6 +16,7 @@ namespace MarvelLegendary
         public SqlHelper()
         {
             connectionString = ConfigurationManager.ConnectionStrings["MarvelLegendary.Database"].ConnectionString;
+            Console.WriteLine(ConfigurationManager.ConnectionStrings["MarvelLegendary.Database"].ConnectionString);
             connection = new SqlConnection(connectionString);
         }
 
@@ -69,21 +70,26 @@ namespace MarvelLegendary
             return returnValue;
         }
 
-        public bool DoesExistInByTable(string byTable, string firstId, string secondId)
+        public string GetResult(string sqlString, Dictionary<string, object> parameters = null)
         {
-            var returnValue = false;
+            var returnValue = "";
 
-            using (connection)
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                
                 using (SqlCommand command = new SqlCommand(sqlString, connection))
                 {
-                    // ExecuteScalar will return the first column of the first row as an object
+                    if (parameters != null)
+                    {
+                        foreach (var param in parameters)
+                        {
+                            command.Parameters.AddWithValue(param.Key, param.Value);
+                        }
+                    }
+
                     var result = command.ExecuteScalar();
 
-                    // Check if the result is not null and is convertible to the expected type
                     if (result != null && result != DBNull.Value)
                     {
                         returnValue = result.ToString();
@@ -98,39 +104,46 @@ namespace MarvelLegendary
             return returnValue;
         }
 
+        //public bool DoesExistInByTable(string byTable, string firstId, string secondId)
+        //{
+        //    var returnValue = false;
+        //
+        //    using (connection)
+        //    {
+        //        connection.Open();
+        //
+        //        
+        //        using (SqlCommand command = new SqlCommand(sqlString, connection))
+        //        {
+        //            // ExecuteScalar will return the first column of the first row as an object
+        //            var result = command.ExecuteScalar();
+        //
+        //            // Check if the result is not null and is convertible to the expected type
+        //            if (result != null && result != DBNull.Value)
+        //            {
+        //                returnValue = result.ToString();
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("No result found.");
+        //            }
+        //        }
+        //    }
+        //
+        //    return returnValue;
+        //}
+
         public void InsertInto(string sqlString)
         {
-            SqlTransaction transaction;
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlString, connection))
                 {
-                    connection.Open();
-                    transaction = connection.BeginTransaction();
-
-                    try
-                    {
-                        // Execute SQL INSERT operation within the transaction
-                        SqlCommand command = new SqlCommand(sqlString, connection, transaction);
-
-                        int rowsAffected = command.ExecuteNonQuery();
-                        Console.WriteLine($"Rows affected: {rowsAffected}");
-
-                        // Commit the transaction if all operations are successful
-                        transaction.Commit();
-                        Console.WriteLine("Transaction committed successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        // Roll back the transaction if any operation fails
-                        transaction.Rollback();
-                        Console.WriteLine("Transaction rolled back: " + ex.Message);
-                    }
+                    int rowsAffected = command.ExecuteNonQuery();
+                    Console.WriteLine($"Rows affected: {rowsAffected}");
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 

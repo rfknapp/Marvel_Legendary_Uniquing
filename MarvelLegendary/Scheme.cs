@@ -282,6 +282,12 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Befoul Earth Into a Polluted Wasteland").SetSchemeSet(Set.TwentyNintyNine).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Pull Reality Into Cyberspace").SetSchemeSet(Set.TwentyNintyNine).SetSchemeTwists(7).Build(),
             new SchemeInfoBuilder().SetSchemeName("Subjugate Earth with Mega-Corporations").SetSchemeSet(Set.TwentyNintyNine).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
+
+            new SchemeInfoBuilder().SetSchemeName("Condition Logan Into Weapon X").SetSchemeSet(Set.WeaponX).SetNumberOfHeroWithNameLike(1, "Wolverine").Build(),
+            //Need to code "Don't use multiple Heroes that have the same Hero Name
+            new SchemeInfoBuilder().SetSchemeName("Go After Heroes' Loved Ones").SetSchemeSet(Set.WeaponX).SetSchemeTwists(new List<int>{ 8, 10, 10, 10, 11 }).AddAdditionalHero(1).NoDuplicates().SetLovedOnesDeck().Build(),
+            new SchemeInfoBuilder().SetSchemeName("Wipe Heroes' Memories").SetSchemeSet(Set.WeaponX).SetSchemeTwists(new List<int>{ 5, 6, 7, 8, 9 }).Build(),
+
         };
 
         public Scheme() 

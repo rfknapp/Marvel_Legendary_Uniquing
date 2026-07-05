@@ -86,7 +86,9 @@ namespace MarvelLegendary.Enums
         [Description("Ant-Man and the Wasp")]
         AntmanWasp,
         [Description("2099")]
-        TwentyNintyNine
+        TwentyNintyNine,
+        [Description("Weapon X")]
+        WeaponX
     }
     
     public enum Keywords
@@ -118,4 +120,12 @@ namespace MarvelLegendary.Enums
         Explore,
     }
 
+    public enum CardType
+    {
+        Mastermind = 1,
+        Scheme = 2,
+        Villain = 3,
+        Henchmen = 4,
+        Hero = 5
+    }
 }

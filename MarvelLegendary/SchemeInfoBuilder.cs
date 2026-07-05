@@ -115,6 +115,7 @@ namespace MarvelLegendary
                 IsShrinkTechHero = false,
                 ShrinkTechHero = null,
                 RoyalWeddingHeroCount = 0,
+                IsLovedOne = false,
 
                 //Sidekicks
                 SidekicksInVillainDeck = 0,
@@ -504,6 +505,12 @@ namespace MarvelLegendary
             return this;
         }
 
+        public SchemeInfoBuilder SetLovedOnesDeck()
+        {
+            _schemeInfo.IsLovedOne = true;
+            return this;
+        }
+
         public SchemeInfoBuilder AddAdditionalHero(int additionalHeroes)
         {
             _schemeInfo.Heroes = _schemeInfo.Heroes.Select(heroCount => heroCount + additionalHeroes).ToList();
@@ -602,6 +609,12 @@ namespace MarvelLegendary
         public SchemeInfo Build()
         {
             return _schemeInfo;
+        }
+
+        public SchemeInfoBuilder NoDuplicates()
+        {
+            //TODO - work on this
+            return this;
         }
     }
 }

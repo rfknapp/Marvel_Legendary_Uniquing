@@ -112,5 +112,6 @@ namespace MarvelLegendary
         //Sidekicks
         public int SidekicksInVillainDeck { get; set; }
         public bool IsSidekickInVillainDeck { get; set; }
+        public bool IsLovedOne { get; internal set; }
     }
 }

@@ -56,8 +56,21 @@ namespace MarvelLegendary.Tools
 
                     foreach (var item2 in schemeExclusions)
                     {
-                        var schemeId = new SqlHelper().GetResult($"SELECT ID from Schemes WHERE SchemeName = '{item2}'");
-                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByScheme WHERE MastermindId = {mastermindId} AND SchemeId = {schemeId}");
+                        var schemeIdSql = "SELECT ID FROM Schemes WHERE SchemeName = @SchemeName";
+                        var schemeIdParameters = new Dictionary<string, object>
+                        {
+                            { "@SchemeName", item2 }
+                        };
+                        var schemeId = new SqlHelper().GetResult(schemeIdSql, schemeIdParameters);
+
+                        var countSql = @"SELECT COUNT(*) FROM MastermindByScheme WHERE MastermindId = @MastermindId AND SchemeId = @SchemeId";
+                        var countParameters = new Dictionary<string, object>
+                        {
+                            { "@MastermindId", mastermindId },
+                            { "@SchemeId", schemeId }
+                        };
+                        var itemCount = new SqlHelper().GetResult(countSql, countParameters);
+                        //var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByScheme WHERE MastermindId = {mastermindId} AND SchemeId = {schemeId}");
 
                         if (itemCount == "0")
                         {

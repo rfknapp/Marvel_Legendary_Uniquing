@@ -1,9 +1,9 @@
-using MarvelLegendary.Exclusions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using MarvelLegendary.Tools;
-using static MarvelLegendary.Exclusions.GetExclusions;
+using Microsoft.Data.Sqlite;
 
 namespace MarvelLegendary
 {
@@ -11,6 +11,8 @@ namespace MarvelLegendary
     {
         static void Main()
         {
+            SetupDbTables();
+
             Console.WriteLine("How many players are playing? (1-5)");
             var playerCount = Console.ReadLine();
 
@@ -28,11 +30,11 @@ namespace MarvelLegendary
                 game.SetHeroes();
 
                 var gameText = GameTextBuilder(game);
-                
+
                 Console.Clear();
                 Console.Out.Write(gameText);
 
-                if(game.Scheme.SchemeInfo.isVeiled)
+                if (game.Scheme.SchemeInfo.isVeiled)
                 {
                     game.SetUnVeiledScheme();
                     Console.WriteLine("Press any key to reveal unveiled scheme.");
@@ -44,6 +46,93 @@ namespace MarvelLegendary
 
                 Console.WriteLine("How many players are playing? (0 to quit)");
                 playerCount = Console.ReadLine();
+            }
+        }
+
+        private static void SetupDbTables()
+        {
+            SQLitePCL.Batteries_V2.Init();
+            //var connectionString = "Data Source=Data\\MarvelLegendary.db";
+
+            // 2. Open the connection. If the file doesn't exist, SQLite creates it right here.
+            using (var connection = new SqliteConnection($"Data Source={DatabasePaths.DatabasePath}"))
+            {
+                connection.Open();
+                Console.WriteLine("Database created successfully!");
+
+                using (var pragma = connection.CreateCommand())
+                {
+                    pragma.CommandText = "PRAGMA foreign_keys = ON;";
+                    pragma.ExecuteNonQuery();
+                }
+
+                // 3. Create the tables inside the database
+                var sql =
+                    @"
+                    CREATE TABLE IF NOT EXISTS Card
+                    (
+                        CardId      INTEGER PRIMARY KEY,
+                        CardName    TEXT NOT NULL,
+                        CardType    INTEGER NOT NULL,
+                        SetId       INTEGER NOT NULL,
+                        Enabled     INTEGER NOT NULL DEFAULT 1,
+
+                        CHECK (CardType IN (1,2,3,4,5))
+                    );
+
+                    CREATE INDEX IF NOT EXISTS IX_Card_CardType
+                        ON Card(CardType);
+
+                    CREATE TABLE IF NOT EXISTS Game
+                    (
+                        
+                        GameId          INTEGER PRIMARY KEY AUTOINCREMENT,
+                        GamePlayDate    TEXT NOT NULL,
+                        PlayerCount     INTEGER,
+                        GameSuccess     INTEGER NOT NULL CHECK (GameSuccess IN (0,1)),
+                        Notes           TEXT
+                    );
+
+                    CREATE TABLE IF NOT EXISTS GameCard
+                    (
+                        GameId      INTEGER NOT NULL,
+                        CardId      INTEGER NOT NULL,
+
+                        PRIMARY KEY (GameId, CardId),
+
+                        FOREIGN KEY (GameId) REFERENCES Game(GameId),
+                        FOREIGN KEY (CardId) REFERENCES Card(CardId)
+                    );
+                    
+                    CREATE INDEX IF NOT EXISTS IX_GameCard_CardId
+                        ON GameCard(CardId);
+
+                    CREATE TABLE IF NOT EXISTS CardRelationship
+                    (
+                        Card1Id        INTEGER NOT NULL,
+                        Card2Id        INTEGER NOT NULL,
+                        TimesPlayed    INTEGER NOT NULL DEFAULT 1,
+
+                        PRIMARY KEY (Card1Id, Card2Id),
+
+                        FOREIGN KEY (Card1Id) REFERENCES Card(CardId),
+                        FOREIGN KEY (Card2Id) REFERENCES Card(CardId),
+
+                        CHECK (Card1Id < Card2Id)
+                    );
+
+                    CREATE INDEX IF NOT EXISTS IX_CardRelationship_Card1
+                        ON CardRelationship(Card1Id);
+
+                    CREATE INDEX IF NOT EXISTS IX_CardRelationship_Card2
+                        ON CardRelationship(Card2Id);";
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery(); // Executes the table creation
+                    Console.WriteLine("Database tables created successfully.");
+                }
             }
         }
 
@@ -99,13 +188,14 @@ namespace MarvelLegendary
             var quantumRealmString = game.Scheme.SchemeInfo.IsQuantumRealmDeck ? $"Set aside the {game.SchemeVillains.FirstOrDefault().VillainName} ({game.SchemeVillains[0].SetName}) Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.\r\n" : "";
             var pastHeroDeck = game.Scheme.SchemeName == "The Time Heist" ? "Set half of the hero groups in the main city. The other half of the hero groups make a Past Hero Deck." : "";
             var shrinkTechDeck = game.Scheme.SchemeInfo.IsShrinkTechHero ? $"Set aside all 14 cards of the {game.Scheme.SchemeInfo.ShrinkTechHero.HeroName} hero group as Shrink Tech.\r\n" : "";
+            var lovedOnesDeck = game.Scheme.SchemeInfo.IsLovedOne ? $"Set aside a lowest-cost card for each hero Name, face up,w ith 2 face up Bystanders under it as Loved Ones.\r\n" : "";
 
             var returnString = playerCount + mastermindOutput + schemeOutput + villainOutput + villainHeroOutput + henchmenOutput + heroesOutput + twistsBystanderAndMasterStrikeOutput + woundsOutput
                 + twistsNextToScheme + heroBystandersOutput + heroesInVillainDeck + heroHenchmen + bindingsInGame + henchmenNextToScheme + villainCardNextToScheme
                 + bystandersNextToScheme + shardCount + betrayalDeck + annihilationHenchmen + villainSidekicks + darkAllianceMastermind + tyrantVillain + secretWarsMasterminds + ambitions
                 + villainOfficers + tacticsInVillainDeck + monumentDeck + smugglerHenchmen + monsterDeck + infectedDeck + mutationDeck + hulkDeck + worldWarHulkMasterminds + drainedMastermind
                 + hasBindings + hasNewRecruits + hasMadameHydra + hasHorrors + hasDarkLoyalty + isContestOfChampions + isInvasionHero + zombieVillainsString + pastHeroDeck + quantumRealmString
-                + shrinkTechDeck + $"\r\n{sneakAttackString}\r\n";
+                + shrinkTechDeck + lovedOnesDeck + $"\r\n{sneakAttackString}\r\n";
 
             return returnString;
         }
@@ -117,9 +207,25 @@ namespace MarvelLegendary
             {
                 returnString = $"{returnString}Player {i + 1} chooses three non-rare cards with different names from the {heroes[i].HeroName} deck and three wounds and adds them to their deck.\r\n";
             }
-
+            
             return returnString;
         }
+    }
 
+    public static class DatabasePaths
+    {
+        public static string DatabasePath
+        {
+            get
+            {
+                var folder = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "MarvelLegendary_Uniquing");
+
+                Directory.CreateDirectory(folder);
+
+                return Path.Combine(folder, "MarvelLegendary.db");
+            }
+        }
     }
 }

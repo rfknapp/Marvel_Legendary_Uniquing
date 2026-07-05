@@ -21,6 +21,8 @@ MarvelLegendary/bin/
 MarvelLegendary/obj/
 .vs/
 TestResults/
+bin/
+obj/
 
 #########
 # Other #
