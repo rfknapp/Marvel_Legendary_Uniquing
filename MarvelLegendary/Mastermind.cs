@@ -23,54 +23,54 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Loki").LeadsVillain("Enemies of Asgard").Build(),
             new MastermindInfoBuilder().SetMastermindName("Magneto").LeadsVillain("Brotherhood").Build(),
             new MastermindInfoBuilder().SetMastermindName("Red Skull").LeadsVillain("HYDRA").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Apocalypse").SetMastermindSet(Set.Dc).LeadsVillain("Four Horsemen").Build(),
             new MastermindInfoBuilder().SetMastermindName("Kingpin").SetMastermindSet(Set.Dc).LeadsVillain("Streets of New York").Build(),
             new MastermindInfoBuilder().SetMastermindName("Mephisto").SetMastermindSet(Set.Dc).LeadsVillain("Underworld").Build(),
             new MastermindInfoBuilder().SetMastermindName("Mr. Sinister").SetMastermindSet(Set.Dc).LeadsVillain("Marauders").Build(),
             new MastermindInfoBuilder().SetMastermindName("Stryfe").SetMastermindSet(Set.Dc).LeadsVillain("MLF").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Galactus").SetMastermindSet(Set.Ff).LeadsVillain("Heralds of Galactus").Build(),
             new MastermindInfoBuilder().SetMastermindName("Mole Man").SetMastermindSet(Set.Ff).LeadsVillain("Subterranea").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Carnage").SetMastermindSet(Set.PttR).LeadsVillain("Maximum Carnage").Build(),
             new MastermindInfoBuilder().SetMastermindName("Mysterio").SetMastermindSet(Set.PttR).LeadsVillain("Sinister Six").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Dr. Strange").SetMastermindSet(Set.Villains).LeadsVillain("Defenders").IncludeBindings().Build(),
             new MastermindInfoBuilder().SetMastermindName("Nick Fury").SetMastermindSet(Set.Villains).LeadsVillain("Avengers").IncludeMadameHydra().Build(),
             new MastermindInfoBuilder().SetMastermindName("Odin").SetMastermindSet(Set.Villains).LeadsHenchmen("Asgardian Warriors").IncludeBindings().Build(),
             new MastermindInfoBuilder().SetMastermindName("Professor X").SetMastermindSet(Set.Villains).LeadsVillain("X-Men First Class").IncludeBindings().Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Supreme Intelligence Of The Kree").SetMastermindSet(Set.GotG).LeadsVillain("Kree Starforce").Build(),
             new MastermindInfoBuilder().SetMastermindName("Thanos").SetMastermindSet(Set.GotG).LeadsVillain("Infinity Gems").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Uru-Enchanted Iron Man").SetMastermindSet(Set.Fi).LeadsVillain("The Mighty").IncludeBindings().Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Madelyne Pryor, Goblin Queen").SetMastermindSet(Set.Sw1).LeadsVillain("Limbo").Build(),
             new MastermindInfoBuilder().SetMastermindName("Nimrod, Super Sentinel").SetMastermindSet(Set.Sw1).LeadsVillain("Sentinel Territories").Build(),
             new MastermindInfoBuilder().SetMastermindName("Wasteland Hulk").SetMastermindSet(Set.Sw1).LeadsVillain("Wasteland").Build(),
             new MastermindInfoBuilder().SetMastermindName("Zombie Green Goblin").SetMastermindSet(Set.Sw1).LeadsVillain("The Deadlands").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Immortal Emperor Zheng-Zhu").SetMastermindSet(Set.Sw2).LeadsVillain("K'un-Lun").Build(),
             new MastermindInfoBuilder().SetMastermindName("King Hyperion").SetMastermindSet(Set.Sw2).LeadsVillain("Utopolis").Build(),
             new MastermindInfoBuilder().SetMastermindName("Shiklah, the Demon Bride").SetMastermindSet(Set.Sw2).LeadsVillain("Monster Metropolis").Build(),
             new MastermindInfoBuilder().SetMastermindName("Spider-Queen").SetMastermindSet(Set.Sw2).LeadsHenchmen("Spider-Infected").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Armin Zola").SetMastermindSet(Set.Ca).LeadsVillain("Zola's Creations").Build(),
             new MastermindInfoBuilder().SetMastermindName("Baron Heinrich Zemo").SetMastermindSet(Set.Ca).LeadsVillain("Masters of Evil (WWII)").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Authoritarian Iron Man").SetMastermindSet(Set.Cw).LeadsVillain("Superhuman Registration Act").Build(),
             new MastermindInfoBuilder().SetMastermindName("Baron Helmut Zemo").SetMastermindSet(Set.Cw).LeadsVillain("Thunderbolts").Build(),
             new MastermindInfoBuilder().SetMastermindName("Maria Hill, Director Of S.H.I.E.L.D").SetMastermindSet(Set.Cw).LeadsVillain("S.H.I.E.L.D. Elite").Build(),
             new MastermindInfoBuilder().SetMastermindName("Misty Knight").SetMastermindSet(Set.Cw).LeadsVillain("Heroes for Hire").Build(),
             new MastermindInfoBuilder().SetMastermindName("Ragnarok").SetMastermindSet(Set.Cw).LeadsVillain("Registration Enforcers").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Evil Deadpool").SetMastermindSet(Set.Deadpool).LeadsVillain("Evil Deadpool Corpse").Build(),
             new MastermindInfoBuilder().SetMastermindName("Macho Gomez").SetMastermindSet(Set.Deadpool).LeadsVillain("Deadpool's \"Friends\"").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Charles Xavier").SetMastermindSet(Set.Noir).LeadsVillain("X-Men Noir").Build(),
             new MastermindInfoBuilder().SetMastermindName("The Goblin, Underworld Boss").SetMastermindSet(Set.Noir).LeadsVillain("Goblin's Freak Show").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Arcade").SetMastermindSet(Set.XMen).LeadsVillain("Murderworld").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Arcade").SetMastermindSet(Set.XMen).LeadsVillain("Murderworld").IncludeHorrors().Build(),
             new MastermindInfoBuilder().SetMastermindName("Dark Phoenix").SetMastermindSet(Set.XMen).LeadsVillain("Hellfire Club").Build(),
@@ -83,49 +83,49 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Epic Onslaught").SetMastermindSet(Set.XMen).LeadsVillain("Dark Descendants").IncludeHorrors().Build(),
             new MastermindInfoBuilder().SetMastermindName("Shadow King").SetMastermindSet(Set.XMen).LeadsVillain("Shadow-X").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Shadow King").SetMastermindSet(Set.XMen).LeadsVillain("Shadow-X").IncludeHorrors().Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Adrian Toomes").SetMastermindSet(Set.Sm).LeadsVillain("Salvagers").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Adrian Toomes").SetMastermindSet(Set.Sm).LeadsVillain("Salvagers").Build(),
             new MastermindInfoBuilder().SetMastermindName("Vulture").SetMastermindSet(Set.Sm).LeadsVillain("Vulture Tech").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Vulture").SetMastermindSet(Set.Sm).LeadsVillain("Vulture Tech").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Fin Fang Foom").SetMastermindSet(Set.Champions).LeadsVillain("Monsters Unleashed").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Fin Fang Foom").SetMastermindSet(Set.Champions).LeadsVillain("Monsters Unleashed").Build(),
             new MastermindInfoBuilder().SetMastermindName("Pagliacci").SetMastermindSet(Set.Champions).LeadsVillain("Wrecking Crew").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Pagliacci").SetMastermindSet(Set.Champions).LeadsVillain("Wrecking Crew").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("General Ross").SetMastermindSet(Set.Wwh).LeadsVillain("Code Red").Build(),
             new MastermindInfoBuilder().SetMastermindName("Illuminati, Secret Society").SetMastermindSet(Set.Wwh).LeadsVillain("Illuminati").Build(),
             new MastermindInfoBuilder().SetMastermindName("King Hulk, Sakaarson").SetMastermindSet(Set.Wwh).LeadsVillain("Warbound").Build(),
             new MastermindInfoBuilder().SetMastermindName("M.O.D.O.K.").SetMastermindSet(Set.Wwh).LeadsVillain("Intelligencia").Build(),
             new MastermindInfoBuilder().SetMastermindName("The Red King").SetMastermindSet(Set.Wwh).LeadsVillain("Sakaar Imperial Guard").Build(),
             new MastermindInfoBuilder().SetMastermindName("The Sentry").SetMastermindSet(Set.Wwh).LeadsVillain("Aspects of the Void").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Iron Monger").SetMastermindSet(Set.P1).LeadsVillain("Iron Foes").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Morgan Le Fay").SetMastermindSet(Set.Antman).LeadsVillain("Queen's Vengeance").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Morgan Le Fay").SetMastermindSet(Set.Antman).LeadsVillain("Queen's Vengeance").Build(),
             new MastermindInfoBuilder().SetMastermindName("Ultron").SetMastermindSet(Set.Antman).LeadsVillain("Ultron's Legacy").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Ultron").SetMastermindSet(Set.Antman).LeadsVillain("Ultron's Legacy").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Hybrid").SetMastermindSet(Set.Venom).LeadsVillain("Life Foundation").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Hybrid").SetMastermindSet(Set.Venom).LeadsVillain("Life Foundation").Build(),
             new MastermindInfoBuilder().SetMastermindName("Poison Thanos").SetMastermindSet(Set.Venom).LeadsVillain("Poisons").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Poison Thanos").SetMastermindSet(Set.Venom).LeadsVillain("Poisons").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("J. Jonah Jameson").SetMastermindSet(Set.Dimensions).LeadsHenchmen("Spider-Slayer").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic J. Jonah Jameson").SetMastermindSet(Set.Dimensions).LeadsHenchmen("Spider-Slayer").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Grim Reaper").SetMastermindSet(Set.Revelations).LeadsVillain("Lethal Legion").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Grim Reaper").SetMastermindSet(Set.Revelations).LeadsVillain("Lethal Legion").Build(),
             new MastermindInfoBuilder().SetMastermindName("The Hood").SetMastermindSet(Set.Revelations).LeadsVillain("Hood's Gang").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic The Hood").SetMastermindSet(Set.Revelations).LeadsVillain("Hood's Gang").Build(),
             new MastermindInfoBuilder().SetMastermindName("Mandarin").SetMastermindSet(Set.Revelations).LeadsHenchmen("Mandarin's Rings").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Mandarin").SetMastermindSet(Set.Revelations).LeadsHenchmen("Mandarin's Rings").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Hydra High Council").SetMastermindSet(Set.Shield).LeadsVillain("Hydra Elite").Build(),
             new MastermindInfoBuilder().SetMastermindName("Hydra Super-Adaptoid").SetMastermindSet(Set.Shield).LeadsHenchmen("A.I.M., Hydra Offshoot").Build(),
-            
+
             new MastermindInfoBuilder().SetMastermindName("Hela").SetMastermindSet(Set.Asgard).LeadsVillain("Omens of Ragnarok").Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Hela").SetMastermindSet(Set.Asgard).LeadsVillain("Omens of Ragnarok").Build(),
             new MastermindInfoBuilder().SetMastermindName("Malekith").SetMastermindSet(Set.Asgard).LeadsVillain("Dark Council").Build(),
@@ -207,6 +207,11 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Epic Alchemax Executives").SetMastermindSet(Set.TwentyNintyNine).LeadsVillain("Alchemax Executives").IncludeExtraHero().Build(),
             new MastermindInfoBuilder().SetMastermindName("Sinister Six 2099").SetMastermindSet(Set.TwentyNintyNine).LeadsVillainsByKind(new List<string> {"Alchemax", "Sinister" }).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Sinister Six 2099").SetMastermindSet(Set.TwentyNintyNine).LeadsVillainsByKind(new List<string> {"Alchemax", "Sinister" }).Build(),
+
+            new MastermindInfoBuilder().SetMastermindName("Omega Red").SetMastermindSet(Set.WeaponX).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Omega Red").SetMastermindSet(Set.WeaponX).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Romulus").SetMastermindSet(Set.WeaponX).LeadsVillain("Weapon Plus").Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Romulus").SetMastermindSet(Set.WeaponX).LeadsVillain("Weapon Plus").Build()
         };
 
         public Mastermind()
@@ -304,7 +309,7 @@ namespace MarvelLegendary
         public List<string> GetListOfMasterminds()
         {
             var allMastermindsQuery = "SELECT [MastermindName] FROM [Masterminds]";
-            var allMasterminds = new SqlHelper().GetList(allMastermindsQuery);
+            var allMasterminds = SqlHelper.GetList(allMastermindsQuery);
             return allMasterminds;
         }
 
@@ -330,13 +335,13 @@ namespace MarvelLegendary
                     inner join {tableName} t ON t.Id = mb.{cardTypeId}
                     where t.{cardType}Name = '{name}'";
 
-            var allMastermindsByX = new SqlHelper().GetList(allMastermindsBy);
+            var allMastermindsByX = SqlHelper.GetList(allMastermindsBy);
             return allMastermindsByX;
         }
 
         public List<Mastermind> GetExtraMasterminds(Scheme scheme, Mastermind mainMastermind)
         {
-            var sqlHelper = new SqlHelper();
+            var sqlHelper = new DatabaseHelper();
             var returnList = new List<Mastermind>();
             var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
             var extraMasterminds = new List<string>();

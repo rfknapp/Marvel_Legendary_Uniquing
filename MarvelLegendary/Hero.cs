@@ -445,7 +445,7 @@ namespace MarvelLegendary
         //This is replacing the DetermineLists functionality
         public Hero GetNewHero(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villainsInGame, List<Henchmen> henchmenInGame, List<Hero> heroesInGame)
         {
-            var sqlHelper = new SqlHelper();
+            var sqlHelper = new DatabaseHelper();
             var newHero = new Hero();
             
             //Get Heroes
@@ -694,7 +694,7 @@ namespace MarvelLegendary
                     inner join {tableName} t ON t.Id = hb.{cardType}Id
                     where t.{cardType}Name = '{updatedName}'";
 
-            var allHeroesByX = new SqlHelper().GetList(allHeroesBy);
+            var allHeroesByX = new DatabaseHelper().GetList(allHeroesBy);
             return allHeroesByX;
         }
 

@@ -130,6 +130,13 @@ namespace MarvelLegendary
             return this;
         }
 
+        public MastermindInfoBuilder IncludeExtraVillain()
+        {
+            _mastermindInfo.IncludeExtraVillain = true;
+            _mastermindInfo.MastermindNumberOfVillains = 1;
+            return this;
+        }
+
         public MastermindInfo Build()
         {
             return _mastermindInfo;

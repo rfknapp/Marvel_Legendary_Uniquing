@@ -145,7 +145,7 @@ namespace MarvelLegendary
             //This will add all Villain objects matching the VillianName strings
             Villains.AddRange(from item in villainNames select villain.GetNewVillain(item));
 
-            Villains = GetVillains(Scheme.NumberOfVillains, Villains, setAsideVillains);
+            Villains = GetVillains(Scheme.NumberOfVillains + Mastermind.MastermindInfo.MastermindNumberOfVillains, Villains, setAsideVillains);
 
             AllVillainsInGame = Villains.Concat(Scheme.RequiredVillains.Select(schemeRequiredVillain => villain.GetNewVillain(schemeRequiredVillain)))
                              .ToList();

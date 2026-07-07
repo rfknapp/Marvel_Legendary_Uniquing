@@ -341,7 +341,7 @@ namespace MarvelLegendary
             var schemeName = "";
             var schemeNameList = GetListOfSchemes();
             var mastermindSchemeNameList = GetListOfSchemesByX("Mastermind", mastermind.MastermindName);
-            var test = new SqlHelper().GetListFromByTable("Scheme", "Mastermind", mastermind.MastermindName);
+            var test = new DatabaseHelper().GetListFromByTable("Scheme", "Mastermind", mastermind.MastermindName);
 
             if (mastermindSchemeNameList.Count <= schemeNameList.Count)
             {
@@ -414,7 +414,7 @@ namespace MarvelLegendary
         public List<string> GetListOfSchemes()
         {
             var allSchemesQuery = "SELECT [SchemeName] FROM [Schemes]";
-            var allSchemes = new SqlHelper().GetList(allSchemesQuery);
+            var allSchemes = new DatabaseHelper().GetList(allSchemesQuery);
             return allSchemes;
         }
 
@@ -430,7 +430,7 @@ namespace MarvelLegendary
                     inner join {tableName} t ON t.Id = sb.{cardType}Id
                     where t.{cardType}Name = '{updatedName}'";
 
-            var allSchemesByX = new SqlHelper().GetList(allSchemesBy);
+            var allSchemesByX = new DatabaseHelper().GetList(allSchemesBy);
             return allSchemesByX;
         }
     }

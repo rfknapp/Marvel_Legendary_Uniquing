@@ -52,7 +52,7 @@ namespace MarvelLegendary.Tools
                     var heroExclusions = exclusions.HeroList;
                     var mastermindExclusions = getExclusions.GetMastermindByMastermindExclusions(mastermind);
 
-                    var mastermindId = new SqlHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{mastermind}'");
+                    var mastermindId = new DatabaseHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{mastermind}'");
 
                     foreach (var item2 in schemeExclusions)
                     {
@@ -61,7 +61,7 @@ namespace MarvelLegendary.Tools
                         {
                             { "@SchemeName", item2 }
                         };
-                        var schemeId = new SqlHelper().GetResult(schemeIdSql, schemeIdParameters);
+                        var schemeId = new DatabaseHelper().GetResult(schemeIdSql, schemeIdParameters);
 
                         var countSql = @"SELECT COUNT(*) FROM MastermindByScheme WHERE MastermindId = @MastermindId AND SchemeId = @SchemeId";
                         var countParameters = new Dictionary<string, object>
@@ -69,7 +69,7 @@ namespace MarvelLegendary.Tools
                             { "@MastermindId", mastermindId },
                             { "@SchemeId", schemeId }
                         };
-                        var itemCount = new SqlHelper().GetResult(countSql, countParameters);
+                        var itemCount = new DatabaseHelper().GetResult(countSql, countParameters);
                         //var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByScheme WHERE MastermindId = {mastermindId} AND SchemeId = {schemeId}");
 
                         if (itemCount == "0")
@@ -82,8 +82,8 @@ namespace MarvelLegendary.Tools
 
                     foreach (var item2 in villainExclusions)
                     {
-                        var villainId = new SqlHelper().GetResult($"SELECT ID from Villains WHERE VillainName = '{item2}'");
-                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByVillain WHERE MastermindId = {mastermindId} AND VillainId = {villainId}");
+                        var villainId = new DatabaseHelper().GetResult($"SELECT ID from Villains WHERE VillainName = '{item2}'");
+                        var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByVillain WHERE MastermindId = {mastermindId} AND VillainId = {villainId}");
 
                         if (itemCount == "0")
                         {
@@ -95,8 +95,8 @@ namespace MarvelLegendary.Tools
 
                     foreach (var item2 in henchmenExclusions)
                     {
-                        var henchmenId = new SqlHelper().GetResult($"SELECT ID from Henchmen WHERE HenchmenName = '{item2}'");
-                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHenchmen WHERE MastermindId = {mastermindId} AND HenchmenId = {henchmenId}");
+                        var henchmenId = new DatabaseHelper().GetResult($"SELECT ID from Henchmen WHERE HenchmenName = '{item2}'");
+                        var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHenchmen WHERE MastermindId = {mastermindId} AND HenchmenId = {henchmenId}");
 
                         if (itemCount == "0")
                         {
@@ -108,8 +108,8 @@ namespace MarvelLegendary.Tools
 
                     foreach (var item2 in heroExclusions)
                     {
-                        var heroId = new SqlHelper().GetResult($"SELECT ID from Heroes WHERE HeroName = '{item2}'");
-                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHero WHERE MastermindId = {mastermindId} AND HeroId = {heroId}");
+                        var heroId = new DatabaseHelper().GetResult($"SELECT ID from Heroes WHERE HeroName = '{item2}'");
+                        var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHero WHERE MastermindId = {mastermindId} AND HeroId = {heroId}");
 
                         if (itemCount == "0")
                         {
@@ -121,8 +121,8 @@ namespace MarvelLegendary.Tools
 
                     foreach (var item2 in mastermindExclusions)
                     {
-                        var mastermind2Id = new SqlHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{item2}'");
-                        var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByMastermind WHERE MastermindId = {mastermindId} AND Mastermind2Id = {mastermind2Id}");
+                        var mastermind2Id = new DatabaseHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{item2}'");
+                        var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByMastermind WHERE MastermindId = {mastermindId} AND Mastermind2Id = {mastermind2Id}");
 
                         if (itemCount == "0")
                         {
@@ -151,17 +151,17 @@ namespace MarvelLegendary.Tools
             //If this is a table like MastermindByMastermind then the suffixId has to be Mastermind2Id
             var tableSuffixId = tablePrefix == tableSuffix ? $"{updatedTableSuffix}2Id" : $"{updatedTableSuffix}Id";
 
-            var prefixItemId = new SqlHelper().GetResult($"SELECT ID FROM {prefixTableName} WHERE {updatedTablePrefix}Name = '{updatedPrefixItem}'");
-            var suffixItemId = new SqlHelper().GetResult($"SELECT ID FROM {suffixTableName} WHERE {updatedTableSuffix}Name = '{updatedSuffixItem}'");
+            var prefixItemId = new DatabaseHelper().GetResult($"SELECT ID FROM {prefixTableName} WHERE {updatedTablePrefix}Name = '{updatedPrefixItem}'");
+            var suffixItemId = new DatabaseHelper().GetResult($"SELECT ID FROM {suffixTableName} WHERE {updatedTableSuffix}Name = '{updatedSuffixItem}'");
 
             //This will check to see if that entry is already in the table
-            var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM {updatedTablePrefix}By{updatedTableSuffix} WHERE {updatedTablePrefix}Id = {prefixItemId} AND {tableSuffixId} = {suffixItemId}");
+            var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM {updatedTablePrefix}By{updatedTableSuffix} WHERE {updatedTablePrefix}Id = {prefixItemId} AND {tableSuffixId} = {suffixItemId}");
             
             //The following code will run if the entry is not in the table
             if(itemCount == "0")
             {
                 string sqlQuery = $"INSERT INTO {tablePrefix}By{tableSuffix} ({tablePrefix}Id, {tableSuffixId}) VALUES ({prefixItemId}, {suffixItemId})";
-                new SqlHelper().InsertInto(sqlQuery);
+                new DatabaseHelper().InsertInto(sqlQuery);
             }
         }
 

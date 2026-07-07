@@ -11,8 +11,8 @@ namespace MarvelLegendary
     {
         static void Main()
         {
-            SetupDbTables();
-
+            SqlHelper.SetupDatabase();
+            
             Console.WriteLine("How many players are playing? (1-5)");
             var playerCount = Console.ReadLine();
 
@@ -49,13 +49,13 @@ namespace MarvelLegendary
             }
         }
 
-        private static void SetupDbTables()
+        private static string SetupDbTables()
         {
             SQLitePCL.Batteries_V2.Init();
-            //var connectionString = "Data Source=Data\\MarvelLegendary.db";
+            var connectionString = $"Data Source={DatabasePaths.DatabasePath}";
 
             // 2. Open the connection. If the file doesn't exist, SQLite creates it right here.
-            using (var connection = new SqliteConnection($"Data Source={DatabasePaths.DatabasePath}"))
+            using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
                 Console.WriteLine("Database created successfully!");
@@ -134,6 +134,8 @@ namespace MarvelLegendary
                     Console.WriteLine("Database tables created successfully.");
                 }
             }
+
+            return connectionString;
         }
 
         private static string GameTextBuilder(GameInfo game)

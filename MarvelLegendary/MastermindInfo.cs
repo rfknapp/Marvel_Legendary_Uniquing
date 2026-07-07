@@ -24,5 +24,7 @@ namespace MarvelLegendary
         public bool RequireVillain { get; set; }
         public bool IncludeExtraHero { get; set; }
         public int MastermindNumberOfHeroes { get; set; }
+        public bool IncludeExtraVillain { get; internal set; }
+        public int MastermindNumberOfVillains { get; internal set; }
     }
 }

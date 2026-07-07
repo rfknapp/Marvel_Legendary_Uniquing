@@ -1,174 +1,134 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MarvelLegendary.Tools;
+using Microsoft.Data.Sqlite;
 
 namespace MarvelLegendary
 {
-    public class SqlHelper
+    public static class SqlHelper
     {
-        string connectionString;
-        SqlConnection connection;
+        private static readonly string ConnectionString = $"Data Source={DatabasePaths.DatabasePath}";
 
-        public SqlHelper()
+        static SqlHelper()
         {
-            connectionString = ConfigurationManager.ConnectionStrings["MarvelLegendary.Database"].ConnectionString;
-            Console.WriteLine(ConfigurationManager.ConnectionStrings["MarvelLegendary.Database"].ConnectionString);
-            connection = new SqlConnection(connectionString);
+            SQLitePCL.Batteries_V2.Init();
         }
 
-        public List<string> GetList(string sqlString)
+        public static SqliteConnection GetConnection()
         {
-            List<string> returnList = new List<string>();
+            return new SqliteConnection(ConnectionString);
+        }
 
-            using (connection)
+        public static void SetupDatabase()
+        {
+            using (var connection = GetConnection())
             {
-                SqlCommand command = new SqlCommand(sqlString, connection);
                 connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (var pragma = connection.CreateCommand())
                 {
-                    while (reader.Read())
+                    pragma.CommandText = "PRAGMA foreign_keys = ON;";
+                    pragma.ExecuteNonQuery();
+                }
+
+                CreateTables(connection);
+            }
+        }
+
+        private static void CreateTables(SqliteConnection connection)
+        {
+            var sql = @"
+                CREATE TABLE IF NOT EXISTS Card
+                (
+                    CardId      INTEGER PRIMARY KEY,
+                    CardName    TEXT NOT NULL,
+                    CardType    INTEGER NOT NULL,
+                    SetId       INTEGER NOT NULL,
+                    Enabled     INTEGER NOT NULL DEFAULT 1,
+
+                    CHECK (CardType IN (1,2,3,4,5))
+                );
+
+                CREATE INDEX IF NOT EXISTS IX_Card_CardType
+                    ON Card(CardType);
+
+                CREATE TABLE IF NOT EXISTS Game
+                (
+                    
+                    GameId          INTEGER PRIMARY KEY AUTOINCREMENT,
+                    GamePlayDate    TEXT NOT NULL,
+                    PlayerCount     INTEGER,
+                    GameSuccess     INTEGER NOT NULL CHECK (GameSuccess IN (0,1)),
+                    Notes           TEXT
+                );
+
+                CREATE TABLE IF NOT EXISTS GameCard
+                (
+                    GameId      INTEGER NOT NULL,
+                    CardId      INTEGER NOT NULL,
+
+                    PRIMARY KEY (GameId, CardId),
+
+                    FOREIGN KEY (GameId) REFERENCES Game(GameId),
+                    FOREIGN KEY (CardId) REFERENCES Card(CardId)
+                );
+                
+                CREATE INDEX IF NOT EXISTS IX_GameCard_CardId
+                    ON GameCard(CardId);
+
+                CREATE TABLE IF NOT EXISTS CardRelationship
+                (
+                    Card1Id        INTEGER NOT NULL,
+                    Card2Id        INTEGER NOT NULL,
+                    TimesPlayed    INTEGER NOT NULL DEFAULT 1,
+
+                    PRIMARY KEY (Card1Id, Card2Id),
+
+                    FOREIGN KEY (Card1Id) REFERENCES Card(CardId),
+                    FOREIGN KEY (Card2Id) REFERENCES Card(CardId),
+
+                    CHECK (Card1Id < Card2Id)
+                );
+
+                CREATE INDEX IF NOT EXISTS IX_CardRelationship_Card1
+                    ON CardRelationship(Card1Id);
+
+                CREATE INDEX IF NOT EXISTS IX_CardRelationship_Card2
+                    ON CardRelationship(Card2Id);";
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.ExecuteNonQuery();
+            }
+        }
+        
+        public static List<string> GetList(string sqlString)
+        {
+            var returnList = new List<string>();
+
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = sqlString;
+
+                    using (var reader = command.ExecuteReader())
                     {
-                        var name = reader.GetString(0);
-                        returnList.Add(name);
+                        while (reader.Read())
+                        {
+                            var name = reader.GetString(0);
+                            returnList.Add(name);
+                        }
                     }
                 }
             }
 
             return returnList;
-        }
-
-        public string GetResult(string sqlString)
-        {
-            var returnValue = "";
-
-            using (connection)
-            {
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand(sqlString, connection))
-                {
-                    // ExecuteScalar will return the first column of the first row as an object
-                    var result = command.ExecuteScalar();
-
-                    // Check if the result is not null and is convertible to the expected type
-                    if (result != null && result != DBNull.Value)
-                    {
-                        returnValue = result.ToString();
-                    }
-                    else
-                    {
-                        Console.WriteLine("No result found.");
-                    }
-                }
-            }
-
-            return returnValue;
-        }
-
-        public string GetResult(string sqlString, Dictionary<string, object> parameters = null)
-        {
-            var returnValue = "";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand(sqlString, connection))
-                {
-                    if (parameters != null)
-                    {
-                        foreach (var param in parameters)
-                        {
-                            command.Parameters.AddWithValue(param.Key, param.Value);
-                        }
-                    }
-
-                    var result = command.ExecuteScalar();
-
-                    if (result != null && result != DBNull.Value)
-                    {
-                        returnValue = result.ToString();
-                    }
-                    else
-                    {
-                        Console.WriteLine("No result found.");
-                    }
-                }
-            }
-
-            return returnValue;
-        }
-
-        //public bool DoesExistInByTable(string byTable, string firstId, string secondId)
-        //{
-        //    var returnValue = false;
-        //
-        //    using (connection)
-        //    {
-        //        connection.Open();
-        //
-        //        
-        //        using (SqlCommand command = new SqlCommand(sqlString, connection))
-        //        {
-        //            // ExecuteScalar will return the first column of the first row as an object
-        //            var result = command.ExecuteScalar();
-        //
-        //            // Check if the result is not null and is convertible to the expected type
-        //            if (result != null && result != DBNull.Value)
-        //            {
-        //                returnValue = result.ToString();
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine("No result found.");
-        //            }
-        //        }
-        //    }
-        //
-        //    return returnValue;
-        //}
-
-        public void InsertInto(string sqlString)
-        {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand(sqlString, connection))
-                {
-                    int rowsAffected = command.ExecuteNonQuery();
-                    Console.WriteLine($"Rows affected: {rowsAffected}");
-                }
-            }
-        }
-
-        public List<string> GetListFromByTable(string tablePrefix, string tableSuffix, string cardName)
-        {
-            //tablePrefix and tableSuffix can be Henchmen, Scheme, Hero, Villain, or Mastermind
-            var prefixTableName = (tablePrefix == "Henchmen") ? "Henchmen" : (tablePrefix == "Hero" ? "Heroes" : $"{tablePrefix}s");
-            var suffixTableName = (tableSuffix == "Henchmen") ? "Henchmen" : (tableSuffix == "Hero" ? "Heroes" : $"{tableSuffix}s");
-            var byTable = $"{tablePrefix}By{tableSuffix}";
-            var tablePrefixId = $"{tablePrefix}Id";
-
-            //This will escape the single quote if it is in the name of the card
-            var updatedCardName = cardName.Contains("'") ? cardName.Replace("'", "''") : cardName;
-
-            //need to handle if this is, for example, MastermindxMastermind
-            //{tableSuffix}Id has to become {tableSuffix}2Id
-            var tableSuffixId = tablePrefix == tableSuffix ? $"{tableSuffix}2Id" : $"{tableSuffix}Id";
-
-            var allItemsBy = $@"select pt.{tablePrefix}Name from {prefixTableName} pt
-                    inner join {byTable} bt ON pt.Id = bt.{tablePrefixId}
-                    inner join {suffixTableName} st ON st.Id = bt.{tableSuffixId}
-                    where st.{tableSuffix}Name = '{updatedCardName}'";
-
-            var allItemsByX = new SqlHelper().GetList(allItemsBy);
-            return allItemsByX;
         }
     }
 }
