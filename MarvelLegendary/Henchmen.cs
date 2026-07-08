@@ -325,8 +325,7 @@ namespace MarvelLegendary
 
         public List<string> GetListOfHenchmen()
         {
-            var test = HenchmenRepository.All.Select(h => h.HenchmenName).ToList();
-            var returnList = _henchmen.Select(h => h.HenchmenName).ToList();
+            var returnList = HenchmenRepository.All.Select(h => h.HenchmenName).ToList();
             return returnList;
         }
 

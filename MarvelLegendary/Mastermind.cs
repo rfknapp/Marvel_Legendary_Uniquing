@@ -2,22 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using MarvelLegendary.Enums;
+using MarvelLegendary.Helpers;
 
 namespace MarvelLegendary
 {
-    public class Mastermind
+    public static class MastermindRepository
     {
-        public string MastermindName { get; set; }
-        public Set SetName { get; set; }
-        public string LeadsHenchmen { get; set; }
-        public string LeadsVillain { get; set; }
-        public bool DoesLeadHenchmen { get; set; }
-        public bool DoesLeadVillain { get; set; }
-        public MastermindInfo MastermindInfo { get; set; }
-        public bool IncludeHorrors { get; set; }
-        private Random random;
-
-        private readonly List<MastermindInfo> _masterminds = new List<MastermindInfo>()
+        private static readonly List<MastermindInfo> _masterminds = new List<MastermindInfo>()
         {
             new MastermindInfoBuilder().SetMastermindName("Dr. Doom").LeadsHenchmen("Doombot Legion").Build(),
             new MastermindInfoBuilder().SetMastermindName("Loki").LeadsVillain("Enemies of Asgard").Build(),
@@ -214,37 +205,23 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Epic Romulus").SetMastermindSet(Set.WeaponX).LeadsVillain("Weapon Plus").Build()
         };
 
-        public Mastermind()
-        {
-            random = new Random();
-        }
+        public static IReadOnlyList<MastermindInfo> All => _masterminds;
+    }
 
-        public Mastermind GetNewMastermind(string mastermindName = "")
-        {
-            var newMastermind = new Mastermind();
-            var mastermind = mastermindName;
-            if(string.IsNullOrEmpty(mastermind))
-            {
-                var allMasterminds = GetListOfMasterminds();
-                mastermind = allMasterminds[random.Next(allMasterminds.Count)];
-            }
-            
-            var mastermindInfo = _masterminds.FirstOrDefault(m => m.MastermindName == mastermind);
+    public class Mastermind
+    {
+        public string MastermindName { get; set; }
+        public Set SetName { get; set; }
+        public string LeadsHenchmen { get; set; }
+        public string LeadsVillain { get; set; }
+        public bool DoesLeadHenchmen { get; set; }
+        public bool DoesLeadVillain { get; set; }
+        public MastermindInfo MastermindInfo { get; set; }
+        public bool IncludeHorrors { get; set; }
 
-            newMastermind.MastermindName = mastermindInfo.MastermindName;
-            newMastermind.SetName = mastermindInfo.SetName;
-            newMastermind.LeadsHenchmen = mastermindInfo.LeadsHenchmen;
-            newMastermind.LeadsVillain = mastermindInfo.LeadsVillain;
-            newMastermind.DoesLeadHenchmen = mastermindInfo.DoesLeadHenchmen;
-            newMastermind.DoesLeadVillain = mastermindInfo.DoesLeadVillain;
-            newMastermind.MastermindInfo = mastermindInfo;
-
-            return newMastermind;
-        }
-        
         public Mastermind(string mastermindName)
         {
-            var mastermindInfo = _masterminds.First(x => x.MastermindName == mastermindName);
+            var mastermindInfo = MastermindRepository.All.First(x => x.MastermindName == mastermindName);
 
             MastermindName = mastermindName;
             SetName = mastermindInfo.SetName;
@@ -255,26 +232,36 @@ namespace MarvelLegendary
             MastermindInfo = mastermindInfo;
         }
 
+        public static Mastermind GetNewMastermind(string mastermindName = "")
+        {
+            if(string.IsNullOrEmpty(mastermindName))
+            {
+                mastermindName = GetRandomMastermind();
+            }
+            
+            return new Mastermind(mastermindName);
+        }
+
         public List<MastermindInfo> GetMasterminds(List<string> masterminds)
         {
             var returnList = new List<MastermindInfo>();
             foreach (var mastermind in masterminds)
             {
-                if (_masterminds.Any(x => x.MastermindName == mastermind))
+                if (MastermindRepository.All.Any(x => x.MastermindName == mastermind))
                 {
-                    returnList.Add(_masterminds.First(x => x.MastermindName == mastermind));
+                    returnList.Add(MastermindRepository.All.First(x => x.MastermindName == mastermind));
                 }
             }
 
             return returnList;
         }
 
-        public string ToString(Mastermind mastermind)
+        public static string ToString(Mastermind mastermind)
         {
             return $"\r\n{mastermind.MastermindName}, {mastermind.SetName.GetDescription()}";
         }
 
-        public string ToString(List<Mastermind> mastermindList)
+        public static string ToString(List<Mastermind> mastermindList)
         {
             var returnString = "\r\n";
             var counter = 1;
@@ -292,7 +279,7 @@ namespace MarvelLegendary
 
         public List<MastermindInfo> ModifyMastermindList(List<string> mastermindExclusions)
         {
-            var returnList = _masterminds;
+            var returnList = MastermindRepository.All.ToList();
 
             foreach (var mastermindExclusion in mastermindExclusions)
             {
@@ -306,17 +293,16 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        public List<string> GetListOfMasterminds()
+        public static List<string> GetListOfMasterminds()
         {
-            var allMastermindsQuery = "SELECT [MastermindName] FROM [Masterminds]";
-            var allMasterminds = SqlHelper.GetList(allMastermindsQuery);
+            var allMasterminds = MastermindRepository.All.Select(m => m.MastermindName).ToList();
             return allMasterminds;
         }
 
-        public string GetRandomMastermind()
+        public static string GetRandomMastermind()
         {
             var allMasterminds = GetListOfMasterminds();
-            var mastermind = allMasterminds[random.Next(allMasterminds.Count)];
+            var mastermind = allMasterminds[RandomHelper.Instance.Next(allMasterminds.Count)];
             return mastermind;
         }
 
@@ -339,7 +325,7 @@ namespace MarvelLegendary
             return allMastermindsByX;
         }
 
-        public List<Mastermind> GetExtraMasterminds(Scheme scheme, Mastermind mainMastermind)
+        public static List<Mastermind> GetExtraMasterminds(Scheme scheme, Mastermind mainMastermind)
         {
             var sqlHelper = new DatabaseHelper();
             var returnList = new List<Mastermind>();
@@ -366,7 +352,7 @@ namespace MarvelLegendary
             for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
             {
                 //Get random mastermind from remaining list
-                var newMastermind = remainingMasterminds[random.Next(remainingMasterminds.Count)];
+                var newMastermind = remainingMasterminds[RandomHelper.Instance.Next(remainingMasterminds.Count)];
 
                 //Get MastermindxMastermind
                 //mastermindByMastermind = GetListOfMastermindByX("Mastermind", newMastermind);
@@ -388,11 +374,11 @@ namespace MarvelLegendary
             }
 
             returnList.AddRange(from item in extraMasterminds
-                                select new Mastermind().GetNewMastermind(item));
+                                select Mastermind.GetNewMastermind(item));
 
             if (scheme.SchemeInfo.IsDrainedMastermind)
             {
-                scheme.SchemeInfo.DrainedMastermind = new Mastermind().GetNewMastermind(extraMasterminds.First());
+                scheme.SchemeInfo.DrainedMastermind = Mastermind.GetNewMastermind(extraMasterminds.First());
             }
 
             return returnList;

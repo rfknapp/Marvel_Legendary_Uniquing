@@ -28,17 +28,16 @@ namespace MarvelLegendary.Tools
 
         private static void ConvertMastermindGames()
         {
-            var mm = new Mastermind();
             var outputMbS = "INSERT INTO MastermindByScheme (MastermindId, SchemeId) VALUES\r\n";
             var outputMbV = "INSERT INTO MastermindByVillain (MastermindId, VillainId) VALUES\r\n";
             var outputMbH = "INSERT INTO MastermindByHenchmen (MastermindId, HenchmenId) VALUES\r\n";
             var outputMbHo = "INSERT INTO MastermindByHero (MastermindId, HeroId) VALUES\r\n";
             var outputMbM = "";
-            var listOfMasterminds = mm.GetListOfMasterminds();
+            var listOfMasterminds = Mastermind.GetListOfMasterminds();
 
             foreach (var mastermind in listOfMasterminds)
             {
-                var newMastermind = mm.GetNewMastermind(mastermind);
+                var newMastermind = Mastermind.GetNewMastermind(mastermind);
                 var setName = newMastermind.SetName;
 
                 if (!targetSets.Contains(setName))

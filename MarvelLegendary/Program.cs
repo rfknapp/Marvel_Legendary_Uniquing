@@ -144,7 +144,7 @@ namespace MarvelLegendary
             var schemeInfo = game.Scheme.SchemeInfo;
 
             var playerCount = $"{game.PlayerCount} players take on\r\n";
-            var mastermindOutput = $"Mastermind is {new Mastermind().ToString(new List<Mastermind> { game.Mastermind })}\r\n";
+            var mastermindOutput = $"Mastermind is {Mastermind.ToString(new List<Mastermind> { game.Mastermind })}\r\n";
             var schemeOutput = $"Whose scheme is\r\n1) {scheme.SchemeName}, {scheme.SetName}\r\n\r\n";
             var villainOutput = $"Villains are {new Villain().ToString(game.Villains)}\r\n";
             var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {new Hero().ToString(game.VillainHeroes)}\r\n" : "";
@@ -164,9 +164,9 @@ namespace MarvelLegendary
             var betrayalDeck = schemeInfo.HasBetryalDeck ? $"Shuffle a \'Betrayal Deck\' of {game.BindingNumber} Bindings and a 9th Twist.\r\n" : "";
             var annihilationHenchmen = schemeInfo.HasAnnihilationHenchmen ? $"Put 10 extra of the following Henchmen in the KO pile.{new Henchmen().ToString(game.SchemeHenchmen)}\r\n" : "";
             var villainSidekicks = schemeInfo.IsSidekickInVillainDeck ? $"Add {schemeInfo.SidekicksInVillainDeck} Sidekicks to the Villain deck.\r\n" : "";
-            var darkAllianceMastermind = schemeInfo.IsDarkAllianceMastermind ? $"Set aside the following Mastermind and two Mastermind Tactics:{new Mastermind().ToString(game.ExtraMasterminds)} \r\n" : "";
-            var tyrantVillain = schemeInfo.IsTyrantVillain ? $"Shuffle the 12 Tactics from the following Masterminds into the Villain deck:{new Mastermind().ToString(game.ExtraMasterminds)}\r\n" : "";
-            var secretWarsMasterminds = schemeInfo.IsSecretWarsMasterminds ? $"Set aside the following Masterminds with one Tactic each:{new Mastermind().ToString(game.ExtraMasterminds)}\r\n" : "";
+            var darkAllianceMastermind = schemeInfo.IsDarkAllianceMastermind ? $"Set aside the following Mastermind and two Mastermind Tactics:{Mastermind.ToString(game.ExtraMasterminds)} \r\n" : "";
+            var tyrantVillain = schemeInfo.IsTyrantVillain ? $"Shuffle the 12 Tactics from the following Masterminds into the Villain deck:{Mastermind.ToString(game.ExtraMasterminds)}\r\n" : "";
+            var secretWarsMasterminds = schemeInfo.IsSecretWarsMasterminds ? $"Set aside the following Masterminds with one Tactic each:{Mastermind.ToString(game.ExtraMasterminds)}\r\n" : "";
             var ambitions = schemeInfo.HasAmbitions ? "Add 10 random Ambition cards to the Villain deck.\r\n" : "";
             var villainOfficers = schemeInfo.IsVillainOfficer ? $"Add {schemeInfo.VillainOfficerCount} S.H.I.E.L.D. Officers to the Villain deck.\r\n" : "";
             var tacticsInVillainDeck = schemeInfo.IsTacticsInVillainDeck ? "Shuffle the Mastermind Tactics into the Villain deck.\r\n" : "";
@@ -176,8 +176,8 @@ namespace MarvelLegendary
             var infectedDeck = schemeInfo.IsInfectedDeck ? $"Shuffle together 20 Bystanders and 10 of the following Henchmen as an \"Infected Deck.\"{new Henchmen().ToString(game.SchemeHenchmen)}\r\n" : "";
             var mutationDeck = schemeInfo.IsMutationDeck ? $"Take 14 cards from the following hero and put them in a face-up \"Mutation Pile\".:{new Hero().ToString(game.SchemeHeroes)}\r\n" : "";
             var hulkDeck = schemeInfo.IsHulkDeck ? $"Take 14 cards from the following Hero and shuffle them into a \"Hulk Deck\":{new Hero().ToString(game.SchemeHeroes)}\r\n" : "";
-            var worldWarHulkMasterminds = schemeInfo.IsWorldWarHulkMasterminds ? $"Put the following Masterminds out of play lurking. All four Masterminds have two Mastermind Tactics: {new Mastermind().ToString(game.ExtraMasterminds)}\r\n" : "";
-            var drainedMastermind = schemeInfo.IsDrainedMastermind ? $"Set aside the following as a \"Drained Mastermind\" and its 4 Tactics out of play:{new Mastermind().ToString(game.Scheme.SchemeInfo.DrainedMastermind)}\r\n" : "";
+            var worldWarHulkMasterminds = schemeInfo.IsWorldWarHulkMasterminds ? $"Put the following Masterminds out of play lurking. All four Masterminds have two Mastermind Tactics: {Mastermind.ToString(game.ExtraMasterminds)}\r\n" : "";
+            var drainedMastermind = schemeInfo.IsDrainedMastermind ? $"Set aside the following as a \"Drained Mastermind\" and its 4 Tactics out of play:{Mastermind.ToString(game.Scheme.SchemeInfo.DrainedMastermind)}\r\n" : "";
             var hasBindings = game.Heroes.Any(x => x.HeroInfo.IncludeBindings) || game.AllVillainsInGame.Any(x => x.VillainInfo.IncludeBindings) || game.AllMastermindsInGame.Any(x=>x.MastermindInfo.IncludeBindings) ? "Include Bindings.\r\n" : "";
             var hasNewRecruits = game.Heroes.Any(x => x.HeroInfo.IncludeNewRecruits) || game.AllHenchmenInGame.Any(x=>x.HenchmenInfo.IncludeNewRecruits) || game.Scheme.SchemeInfo.IncludeNewRecruits ? "Include New Recruits.\r\n" : "";
             var hasMadameHydra = game.Heroes.Any(x => x.HeroInfo.IncludeMadameHydra) || game.AllMastermindsInGame.Any(x => x.MastermindInfo.IncludeMadameHydra) || game.Scheme.SchemeInfo.IncludeMadameHydra ? "Include Madame Hydra.\r\n" : "";
@@ -220,9 +220,11 @@ namespace MarvelLegendary
         {
             get
             {
-                var folder = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "MarvelLegendary_Uniquing");
+                //var folder = Path.Combine(
+                //    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                //    "MarvelLegendary_Uniquing");
+
+                var folder = @"D:\git\Marvel_Legendary_Uniquing\MarvelLegendary\Data";
 
                 Directory.CreateDirectory(folder);
 

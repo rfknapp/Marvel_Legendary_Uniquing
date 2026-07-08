@@ -89,7 +89,7 @@ namespace MarvelLegendary
 
         public void SetMastermind(string mastermindName = "")
         {
-            Mastermind = new Mastermind().GetNewMastermind(mastermindName);
+            Mastermind = Mastermind.GetNewMastermind(mastermindName);
             AllMastermindsInGame.Add(Mastermind);
         }
 
@@ -111,7 +111,7 @@ namespace MarvelLegendary
 
         public void SetExtraMasterminds()
         {
-            ExtraMasterminds = new Mastermind().GetExtraMasterminds(Scheme, Mastermind);
+            ExtraMasterminds = Mastermind.GetExtraMasterminds(Scheme, Mastermind);
             AllMastermindsInGame.Concat(ExtraMasterminds).ToList();
         }
 
@@ -273,7 +273,7 @@ namespace MarvelLegendary
             var returnList = new List<Mastermind>();
             var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
             var extraMasterminds = new List<string>();
-            var mastermindList = new Mastermind().GetListOfMasterminds();
+            var mastermindList = Mastermind.GetListOfMasterminds();
 
             for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
             {
@@ -287,11 +287,11 @@ namespace MarvelLegendary
             }
 
             returnList.AddRange(from item in extraMasterminds
-                                select new Mastermind().GetNewMastermind(item));
+                                select Mastermind.GetNewMastermind(item));
 
             if (scheme.SchemeInfo.IsDrainedMastermind)
             {
-                scheme.SchemeInfo.DrainedMastermind = new Mastermind().GetNewMastermind(extraMasterminds.First());
+                scheme.SchemeInfo.DrainedMastermind = Mastermind.GetNewMastermind(extraMasterminds.First());
             }
 
             return returnList;
@@ -305,7 +305,7 @@ namespace MarvelLegendary
             for (int i = mastermindsToExcludeWith.Count - 1; i >= 0; i--)
             {
                 var test = getExclusions.GetMastermindByMastermindExclusions(mastermindsToExcludeWith);
-                var mastermindList = new Mastermind().GetListOfMasterminds();
+                var mastermindList = Mastermind.GetListOfMasterminds();
                 var compareList = mastermindList.Except(mastermindsInGame).Except(test).ToList();
                 if (compareList.Count > 0)
                 {

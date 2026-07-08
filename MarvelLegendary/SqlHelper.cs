@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MarvelLegendary.Enums;
 using MarvelLegendary.Tools;
 using Microsoft.Data.Sqlite;
 
@@ -129,6 +130,53 @@ namespace MarvelLegendary
             }
 
             return returnList;
+        }
+
+        public static T RunCommandScalar<T>(SqliteCommand command)
+        {
+            command.Connection.Open();
+
+            try
+            {
+                var result = command.ExecuteScalar();
+
+                if (result == null || result == DBNull.Value)
+                    return default(T);
+
+                return (T)Convert.ChangeType(result, typeof(T));
+            }
+            finally
+            {
+                command.Connection.Close();
+            }
+        }
+
+        public static List<SchemeInfo> RunCommand(SqliteCommand command)
+        {
+            var cards = new List<SchemeInfo>();
+            command.Connection.Open();
+
+            try
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var schemeName = reader.GetString(reader.GetOrdinal("CardName"));
+                        var setName = (Set)reader.GetInt32(reader.GetOrdinal("SetId"));
+
+                        var card = SchemeRepository.All.Where(s => s.SchemeName == schemeName && s.SetName == setName).FirstOrDefault();
+
+                        cards.Add(card);
+                    }
+                }
+            }
+            finally
+            {
+                command.Connection.Close();
+            }
+
+            return cards;
         }
     }
 }

@@ -40,7 +40,7 @@ namespace MarvelLegendary_Uniquing_Tests
             henchmenExclusions.HeroList = henchmenExclusionHeroes;
 
             var newGameInfo = new GameInfo(1);
-            newGameInfo.Mastermind = new Mastermind().GetNewMastermind("Loki");
+            newGameInfo.Mastermind = Mastermind.GetNewMastermind("Loki");
             newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
             newGameInfo.Scheme = new Scheme().GetNewScheme(1, newGameInfo.Mastermind, "Steal the Weaponized Plutonium");
             newGameInfo.Villains = new List<Villain>() { new Villain().GetNewVillain("Enemies of Asgard"), new Villain().GetNewVillain("HYDRA") };
@@ -75,7 +75,7 @@ namespace MarvelLegendary_Uniquing_Tests
         public void TestIsHeroesInVillainDeck()
         {
             var newGameInfo = new GameInfo(1);
-            newGameInfo.Mastermind = new Mastermind().GetNewMastermind("Loki");
+            newGameInfo.Mastermind = Mastermind.GetNewMastermind("Loki");
             newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
             newGameInfo.Scheme = new Scheme().GetNewScheme(1, newGameInfo.Mastermind, "The Dark Phoenix Saga");
             newGameInfo.Villains = new List<Villain>() { new Villain().GetNewVillain("Enemies of Asgard"), new Villain().GetNewVillain("HYDRA") };
@@ -137,7 +137,7 @@ namespace MarvelLegendary_Uniquing_Tests
         public void TestIsHeroNameLimit(string hulkHeroName1, string hulkHeroName2)
         {
             var newGameInfo = new GameInfo(1);
-            newGameInfo.Mastermind = new Mastermind().GetNewMastermind("Loki");
+            newGameInfo.Mastermind = Mastermind.GetNewMastermind("Loki");
             newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
             newGameInfo.Scheme = new Scheme().GetNewScheme(1, newGameInfo.Mastermind, "Fall of the Hulks");
             newGameInfo.Villains = new List<Villain>() { new Villain().GetNewVillain("Enemies of Asgard"), new Villain().GetNewVillain("HYDRA") };
@@ -198,7 +198,7 @@ namespace MarvelLegendary_Uniquing_Tests
         public void TestIsIncludeHeroTeam(string schemeName, string heroName)
         {
             var newGameInfo = new GameInfo(1);
-            newGameInfo.Mastermind = new Mastermind().GetNewMastermind("Loki");
+            newGameInfo.Mastermind = Mastermind.GetNewMastermind("Loki");
             newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
             newGameInfo.Scheme = new Scheme().GetNewScheme(1, newGameInfo.Mastermind, schemeName);
             newGameInfo.Villains = new List<Villain>() { new Villain().GetNewVillain("Enemies of Asgard"), new Villain().GetNewVillain("HYDRA") };
