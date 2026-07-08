@@ -349,27 +349,21 @@ namespace MarvelLegendary
 
             var command = SqlHelper.GetConnection().CreateCommand();
             command.CommandText =
-                @"SELECT CardId
-                  FROM Card
-                  WHERE CardName = $name
-                    AND SetId = $setId";
-
-            command.Parameters.AddWithValue("$name", mastermind.MastermindName);
-            command.Parameters.AddWithValue("$setId", (int)mastermind.SetName);
-
-            var mastermindId = SqlHelper.RunCommandScalar<int>(command);
-
-            command.Parameters.Clear();
-            command.CommandText =
                 @"SELECT Card2Id
                   FROM CardRelationship cr
                   INNER JOIN Card c
                     ON cr.Card2Id = c.CardId
-                  WHERE cr.Card1Id = $card1Id
-                    AND c.CardType = $cardTypeId";
+                  WHERE c.CardType = $cardTypeId
+                    AND cr.Card1Id = (
+                      SELECT CardId
+                      FROM Card
+                      WHERE CardName = $name
+                        AND SetId = $setId
+                    )";
 
-            command.Parameters.AddWithValue("$card1Id", mastermindId);
             command.Parameters.AddWithValue("$cardTypeId", (int)CardType.Scheme);
+            command.Parameters.AddWithValue("$name", mastermind.MastermindName);
+            command.Parameters.AddWithValue("$setId", (int)mastermind.SetName);
 
             schemesPlayedWithMastermind = SqlHelper.RunCommand(command);
 
