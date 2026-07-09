@@ -117,7 +117,6 @@ namespace MarvelLegendary
 
         public void SetVillains(List<string> villainNames = null)
         {
-            var villain = new Villain();
             var schemeInfo = Scheme.SchemeInfo;
             var setAsideVillains = new List<string>();
 
@@ -129,7 +128,7 @@ namespace MarvelLegendary
             //just use one if statement to set up the scheme villains
             if (schemeInfo.IsMonsterPitDeck || schemeInfo.IsQuantumRealmDeck)
             {
-                var schemeVillain = villain.GetNewVillain(schemeInfo.SchemeVillainName);
+                var schemeVillain = Villain.GetNewVillain(schemeInfo.SchemeVillainName);
                 SchemeVillains.Add(schemeVillain);
                 setAsideVillains.Add(schemeVillain.VillainName);
             }
@@ -143,11 +142,11 @@ namespace MarvelLegendary
             }
 
             //This will add all Villain objects matching the VillianName strings
-            Villains.AddRange(from item in villainNames select villain.GetNewVillain(item));
+            Villains.AddRange(from item in villainNames select Villain.GetNewVillain(item));
 
             Villains = GetVillains(Scheme.NumberOfVillains + Mastermind.MastermindInfo.MastermindNumberOfVillains, Villains, setAsideVillains);
 
-            AllVillainsInGame = Villains.Concat(Scheme.RequiredVillains.Select(schemeRequiredVillain => villain.GetNewVillain(schemeRequiredVillain)))
+            AllVillainsInGame = Villains.Concat(Scheme.RequiredVillains.Select(schemeRequiredVillain => Villain.GetNewVillain(schemeRequiredVillain)))
                              .ToList();
         }
 
@@ -324,13 +323,12 @@ namespace MarvelLegendary
         //to include in the villain deck
         private List<Villain> GetVillains(int numberOfVillains, List<Villain> currentVillains, List<string> schemeVillains)
         {
-            var villain = new Villain();
             var schemeInfo = Scheme.SchemeInfo;
 
             //This will be the list of villians to include in the villain deck
             var villainList = new List<Villain>();
 
-            var allVillains = villain.GetListOfVillains();
+            var allVillains = Villain.GetListOfVillains();
 
             //villainsNotAllowed is a list of villains that are not allowed to be in the game based on the scheme
             var villainsNotAllowed = Scheme.SchemeInfo.VillainsNotAllowed;
@@ -350,7 +348,7 @@ namespace MarvelLegendary
                 && numberOfVillains > villainList.Count)
             {
                 //If the masterminds leads one of the villains brought in through the scheme, it won't be added twice
-                var mastermindLeadsVillain = villain.GetNewVillain(Mastermind.LeadsVillain);
+                var mastermindLeadsVillain = Villain.GetNewVillain(Mastermind.LeadsVillain);
                 var mastermindLeadsVillainName = mastermindLeadsVillain.VillainName;
                 if (villainList.All(x => x.VillainName != mastermindLeadsVillainName))
                 {
@@ -360,8 +358,8 @@ namespace MarvelLegendary
 
             if (schemeInfo.IsMarvelZombies)
             {
-                var allKeywordVillains = villain.GetListOfVillainsWithKeyword(schemeInfo.ZombieKeyword).Select(x => villain.GetNewVillain(x)).ToList();
-                var mastermindVillain = villain.GetNewVillain(Mastermind.MastermindInfo.LeadsVillain);
+                var allKeywordVillains = Villain.GetListOfVillainsWithKeyword(schemeInfo.ZombieKeyword).Select(x => Villain.GetNewVillain(x)).ToList();
+                var mastermindVillain = Villain.GetNewVillain(Mastermind.MastermindInfo.LeadsVillain);
 
                 //If the Mastermind leads a villain group with the "Rise of the Living Dead" keyword then this shouldn't grab another one
                 if (allKeywordVillains.Any(v => v.VillainName == mastermindVillain.VillainName))
@@ -394,27 +392,26 @@ namespace MarvelLegendary
 
             while (numRemainingVillains > 0)
             {
-                var newVillain = villain.GetNewVillain(AllMastermindsInGame, Scheme, villainsInGame);
+                var newVillain = Villain.GetNewVillain(AllMastermindsInGame, Scheme, villainsInGame);
                 villainsInGame.Add(newVillain.VillainName);
                 numRemainingVillains--;
             }
 
             returnList.AddRange(from item in villainsInGame
-                                select villain.GetNewVillain(item));
+                                select Villain.GetNewVillain(item));
 
             return returnList;
         }
 
         private List<Villain> GetMarvelZombieVillains(int numberOfVillains, Keywords keyword)
         {
-            var villain = new Villain();
             var returnList = new List<Villain>();
-            var keywordVillains = villain.GetListOfVillainsWithKeyword(keyword);
+            var keywordVillains = Villain.GetListOfVillainsWithKeyword(keyword);
 
             while (returnList.Count < numberOfVillains && keywordVillains.Count > 0)
             {
                 var zombieVillain = keywordVillains[random.Next(keywordVillains.Count)];
-                returnList.Add(villain.GetNewVillain(zombieVillain));
+                returnList.Add(Villain.GetNewVillain(zombieVillain));
                 keywordVillains.Remove(zombieVillain);
             }
 

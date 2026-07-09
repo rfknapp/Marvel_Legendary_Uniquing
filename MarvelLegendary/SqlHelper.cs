@@ -3,11 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MarvelLegendary.Enums;
+using MarvelLegendary.Helpers;
 using MarvelLegendary.Tools;
 using Microsoft.Data.Sqlite;
 
 namespace MarvelLegendary
 {
+    public class Card
+    {
+        public int CardId { get; set; }
+        public string CardName { get; set; }
+        public int CardType { get; set; }
+        public int SetId { get; set; }
+    }
+
     public static class SqlHelper
     {
         private static readonly string ConnectionString = $"Data Source={DatabasePaths.DatabasePath}";
@@ -151,9 +160,9 @@ namespace MarvelLegendary
             }
         }
 
-        public static List<SchemeInfo> RunCommand(SqliteCommand command)
+        public static List<Card> RunCommand(SqliteCommand command)
         {
-            var cards = new List<SchemeInfo>();
+            var cards = new List<Card>();
             command.Connection.Open();
 
             try
@@ -162,12 +171,13 @@ namespace MarvelLegendary
                 {
                     while (reader.Read())
                     {
-                        var schemeName = reader.GetString(reader.GetOrdinal("CardName"));
-                        var setName = (Set)reader.GetInt32(reader.GetOrdinal("SetId"));
-
-                        var card = SchemeRepository.All.Where(s => s.SchemeName == schemeName && s.SetName == setName).FirstOrDefault();
-
-                        cards.Add(card);
+                        cards.Add(new Card
+                        {
+                            CardId = reader.GetInt32(reader.GetOrdinal("CardId")),
+                            CardName = reader.GetString(reader.GetOrdinal("CardName")),
+                            SetId = reader.GetInt32(reader.GetOrdinal("SetId")),
+                            CardType = reader.GetInt32(reader.GetOrdinal("CardType"))
+                        });
                     }
                 }
             }
@@ -177,6 +187,46 @@ namespace MarvelLegendary
             }
 
             return cards;
+        }
+
+        public static List<string> GetCardRelationships(CardType typeEnum, Card card)
+        {
+            //This will return the CardId for the card that combinations are queried for
+            var command = GetConnection().CreateCommand();
+            command.CommandText =
+                @"SELECT CardId
+                  FROM Card
+                  WHERE CardName = $name
+                    AND SetId = $setId";
+
+            command.Parameters.AddWithValue("$name", card.CardName);
+            command.Parameters.AddWithValue("$setId", card.SetId);
+
+            var cardId = RunCommandScalar<int>(command);
+
+            //This will return all cards, that match typeEnum, that were played with the card that was queried for
+            command.Parameters.Clear();
+            command = GetConnection().CreateCommand();
+            command.CommandText =
+                @"SELECT c.CardId,
+                         c.CardName,
+                         c.SetId,
+                         c.CardType
+                  FROM CardRelationship cr
+                  INNER JOIN Card c
+                      ON c.CardId = CASE
+                                      WHEN cr.Card1Id = $cardId THEN cr.Card2Id
+                                      ELSE cr.Card1Id
+                                    END
+                  WHERE (cr.Card1Id = $cardId OR cr.Card2Id = $cardId)
+                    AND c.CardType = $cardTypeId;";
+
+            command.Parameters.AddWithValue("$cardId", cardId);
+            command.Parameters.AddWithValue("$cardTypeId", (int)typeEnum);
+            
+            var cardsPlayedWithQuery = RunCommand(command);
+            var cardNames = cardsPlayedWithQuery.Select(c => c.CardName).ToList();
+            return cardNames;
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MarvelLegendary.Enums;
+using MarvelLegendary.Helpers;
 
 namespace MarvelLegendary
 {
@@ -204,45 +205,47 @@ namespace MarvelLegendary
         public string VillainName { get; set; }
         public Set SetName { get; set; }
         public VillainInfo VillainInfo { get; set; }
-        private Random random;
 
         
-        public Villain()
+        public static Villain GetNewVillain(string villainName = "")
         {
-            random = new Random();
-        }
-
-        public Villain GetNewVillain(string villainName = "")
-        {
-            var newVillain = new Villain();
             var villain = villainName;
             if (string.IsNullOrEmpty(villain))
             {
                 var allVillains = GetListOfVillains();
-                villain = allVillains[random.Next(allVillains.Count)];
+                villain = allVillains[RandomHelper.Instance.Next(allVillains.Count)];
             }
 
             var villainInfo = VillainRepository.All.FirstOrDefault(v => v.VillainName == villain);
 
-            newVillain.VillainName = villainName;
-            newVillain.SetName = villainInfo.VillainSetName;
-            newVillain.VillainInfo = villainInfo;
+            var newVillain = new Villain
+            {
+                VillainName = villainName,
+                SetName = villainInfo.VillainSetName,
+                VillainInfo = villainInfo
+            };
 
             return newVillain;
         }
 
-        public Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme, List<string> villainsInGame)
+        public static Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme, List<string> villainsInGame)
         {
             var sqlHelper = new DatabaseHelper();
-            var newVillain = new Villain();
             var villainList = GetListOfVillains();
 
             //Remove all Villains currently in the game from the list
             var remainingVillains = villainList.Except(villainsInGame).ToList();
 
             //Get Villains that have played with the Scheme
-            //var villainsByScheme = GetListOfVillainsByX("Scheme", scheme.SchemeName);
-            var villainsByScheme = sqlHelper.GetListFromByTable("Villain", "Scheme", scheme.SchemeName);
+            var schemeCard = new Card
+            {
+                CardName = scheme.SchemeName,
+                CardType = (int)CardType.Scheme,
+                SetId = (int)scheme.SetName
+            };
+
+            //This is the new implementation of the VillainByScheme table lookup
+            var villainsByScheme = SqlHelper.GetCardRelationships(CardType.Villain, schemeCard);
 
             //Remove all Villains that have played with the scheme from the list
             remainingVillains = remainingVillains.Except(villainsByScheme).ToList();
@@ -250,9 +253,15 @@ namespace MarvelLegendary
             //Get Villains that have played with each of the Masterminds with
             foreach (var mastermind in allMastermindsInGame)
             {
-                //var villainsByMastermind = GetListOfVillainsByX("Mastermind", mastermind.MastermindName);
-                var villainsByMastermind = sqlHelper.GetListFromByTable("Villain", "Mastermind", mastermind.MastermindName);
-                //Remove all Villains that have played with the Mastermind(s)
+                var mastermindCard = new Card
+                {
+                    CardName = mastermind.MastermindName,
+                    CardType = (int)CardType.Mastermind,
+                    SetId = (int)mastermind.SetName
+                };
+
+                //This is the new implementation of the VillainByMastermind table lookup
+                var villainsByMastermind = SqlHelper.GetCardRelationships(CardType.Villain, mastermindCard);
                 remainingVillains = remainingVillains.Except(villainsByMastermind).ToList();
             }
 
@@ -260,28 +269,34 @@ namespace MarvelLegendary
             foreach (var villain in villainsInGame)
             {
                 //var villainsByVillain = GetListOfVillainsByX("Villain", villain);
-                var villainsByVillain = sqlHelper.GetListFromByTable("Villain", "Villain", villain);
+                var villainObj = GetNewVillain(villain);
+                var villainCard = new Card
+                {
+                    CardName = villainObj.VillainName,
+                    CardType = (int)CardType.Villain,
+                    SetId = (int)villainObj.SetName
+                };
+                //var villainsByVillain = sqlHelper.GetListFromByTable("Villain", "Villain", villain);
+                var villainsByVillain = SqlHelper.GetCardRelationships(CardType.Villain, villainCard);
                 //Remove all Villains that have played with the Villains(s)
                 remainingVillains = remainingVillains.Except(villainsByVillain).ToList();
             }
 
             //Select Villain from remaining list
-            var villainName = remainingVillains[random.Next(remainingVillains.Count)];
+            var villainName = remainingVillains[RandomHelper.Instance.Next(remainingVillains.Count)];
             var villainInfo = VillainRepository.All.First(v => v.VillainName == villainName);
 
-            //Set VillainName
-            newVillain.VillainName = villainName;
-
-            //Set SetName
-            newVillain.SetName = villainInfo.VillainSetName;
-
-            //Set VillainInfo
-            newVillain.VillainInfo = villainInfo;
+            var newVillain = new Villain
+            {
+                VillainName = villainName,
+                SetName = villainInfo.VillainSetName,
+                VillainInfo = villainInfo
+            };
 
             return newVillain;
         }
 
-        public string ToString(List<Villain> villainList)
+        public static string ToString(List<Villain> villainList)
         {
             var returnString = "\r\n";
             var counter = 1;
@@ -313,13 +328,13 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        public List<string> GetListOfVillains()
+        public static List<string> GetListOfVillains()
         {
             var returnList = VillainRepository.All.Select(v => v.VillainName).ToList();
             return returnList;
         }
 
-        public List<string> GetListOfVillainsWithKeyword(Keywords keyword)
+        public static List<string> GetListOfVillainsWithKeyword(Keywords keyword)
         {
             var returnList = VillainRepository.All
                 .Where(villain => villain.KeywordsList.Contains(keyword))

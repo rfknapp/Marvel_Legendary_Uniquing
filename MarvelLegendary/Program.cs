@@ -49,95 +49,6 @@ namespace MarvelLegendary
             }
         }
 
-        private static string SetupDbTables()
-        {
-            SQLitePCL.Batteries_V2.Init();
-            var connectionString = $"Data Source={DatabasePaths.DatabasePath}";
-
-            // 2. Open the connection. If the file doesn't exist, SQLite creates it right here.
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-                Console.WriteLine("Database created successfully!");
-
-                using (var pragma = connection.CreateCommand())
-                {
-                    pragma.CommandText = "PRAGMA foreign_keys = ON;";
-                    pragma.ExecuteNonQuery();
-                }
-
-                // 3. Create the tables inside the database
-                var sql =
-                    @"
-                    CREATE TABLE IF NOT EXISTS Card
-                    (
-                        CardId      INTEGER PRIMARY KEY,
-                        CardName    TEXT NOT NULL,
-                        CardType    INTEGER NOT NULL,
-                        SetId       INTEGER NOT NULL,
-                        Enabled     INTEGER NOT NULL DEFAULT 1,
-
-                        CHECK (CardType IN (1,2,3,4,5))
-                    );
-
-                    CREATE INDEX IF NOT EXISTS IX_Card_CardType
-                        ON Card(CardType);
-
-                    CREATE TABLE IF NOT EXISTS Game
-                    (
-                        
-                        GameId          INTEGER PRIMARY KEY AUTOINCREMENT,
-                        GamePlayDate    TEXT NOT NULL,
-                        PlayerCount     INTEGER,
-                        GameSuccess     INTEGER NOT NULL CHECK (GameSuccess IN (0,1)),
-                        Notes           TEXT
-                    );
-
-                    CREATE TABLE IF NOT EXISTS GameCard
-                    (
-                        GameId      INTEGER NOT NULL,
-                        CardId      INTEGER NOT NULL,
-
-                        PRIMARY KEY (GameId, CardId),
-
-                        FOREIGN KEY (GameId) REFERENCES Game(GameId),
-                        FOREIGN KEY (CardId) REFERENCES Card(CardId)
-                    );
-                    
-                    CREATE INDEX IF NOT EXISTS IX_GameCard_CardId
-                        ON GameCard(CardId);
-
-                    CREATE TABLE IF NOT EXISTS CardRelationship
-                    (
-                        Card1Id        INTEGER NOT NULL,
-                        Card2Id        INTEGER NOT NULL,
-                        TimesPlayed    INTEGER NOT NULL DEFAULT 1,
-
-                        PRIMARY KEY (Card1Id, Card2Id),
-
-                        FOREIGN KEY (Card1Id) REFERENCES Card(CardId),
-                        FOREIGN KEY (Card2Id) REFERENCES Card(CardId),
-
-                        CHECK (Card1Id < Card2Id)
-                    );
-
-                    CREATE INDEX IF NOT EXISTS IX_CardRelationship_Card1
-                        ON CardRelationship(Card1Id);
-
-                    CREATE INDEX IF NOT EXISTS IX_CardRelationship_Card2
-                        ON CardRelationship(Card2Id);";
-
-                using (var command = connection.CreateCommand())
-                {
-                    command.CommandText = sql;
-                    command.ExecuteNonQuery(); // Executes the table creation
-                    Console.WriteLine("Database tables created successfully.");
-                }
-            }
-
-            return connectionString;
-        }
-
         private static string GameTextBuilder(GameInfo game)
         {
             var scheme = game.Scheme;
@@ -146,7 +57,7 @@ namespace MarvelLegendary
             var playerCount = $"{game.PlayerCount} players take on\r\n";
             var mastermindOutput = $"Mastermind is {Mastermind.ToString(new List<Mastermind> { game.Mastermind })}\r\n";
             var schemeOutput = $"Whose scheme is\r\n1) {scheme.SchemeName}, {scheme.SetName}\r\n\r\n";
-            var villainOutput = $"Villains are {new Villain().ToString(game.Villains)}\r\n";
+            var villainOutput = $"Villains are {Villain.ToString(game.Villains)}\r\n";
             var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {new Hero().ToString(game.VillainHeroes)}\r\n" : "";
             var henchmenOutput = "Henchmen " + (game.Henchmen.Count==1 ? "is" : "are") + $" {new Henchmen().ToString(game.Henchmen)}\r\n";
             var heroesOutput = $"Heroes are {new Hero().ToString(game.Heroes)}\r\n";

@@ -217,17 +217,16 @@ namespace MarvelLegendary.Tools
 
         private static void ConvertVillainGames()
         {
-            var v = new Villain();
             var outputVbM = "";
             var outputVbS = "";
             var outputVbV = "";
             var outputVbH = "";
             var outputVbHo = "";
-            var listOfVillains = v.GetListOfVillains();
+            var listOfVillains = Villain.GetListOfVillains();
 
             foreach (var villain in listOfVillains)
             {
-                var newVillain = v.GetNewVillain(villain);
+                var newVillain = Villain.GetNewVillain(villain);
                 var setName = newVillain.SetName;
 
                 if (!targetSets.Contains(setName))
