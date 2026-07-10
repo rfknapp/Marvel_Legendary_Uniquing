@@ -346,7 +346,7 @@ namespace MarvelLegendary
         public string GetRandomVillain()
         {
             var allVillains = GetListOfVillains();
-            var villain = allVillains[random.Next(allVillains.Count)];
+            var villain = allVillains[RandomHelper.Instance.Next(allVillains.Count)];
             return villain;
         }
 

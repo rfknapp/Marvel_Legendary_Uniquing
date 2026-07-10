@@ -30,7 +30,7 @@ namespace MarvelLegendary
         public List<Villain> MarvelZombieVillains { get; set; }
         public List<Villain> SchemeVillains { get; set; }
 
-        public List<Henchmen> Henchmen { get; set; }
+        public List<Henchmen> HenchmenList { get; set; }
         public List<Henchmen> SchemeHenchmen { get; set; }
         public List<Henchmen> InfectedHenchmen { get; set; }
         public List<Henchmen> AllHenchmenInGame { get; set; }
@@ -71,7 +71,7 @@ namespace MarvelLegendary
             AllVillainsInGame = new List<Villain>();
             SchemeVillains = new List<Villain>();
 
-            Henchmen = new List<Henchmen>();
+            HenchmenList = new List<Henchmen>();
             SchemeHenchmen = new List<Henchmen>();
             InfectedHenchmen = new List<Henchmen>();
             AllHenchmenInGame = new List<Henchmen>();
@@ -83,8 +83,6 @@ namespace MarvelLegendary
             HenchmenCount = 0;
             GameIncludeHeroTeam = false;
             UnveiledScheme = null;
-
-            random = new Random();
         }
 
         public void SetMastermind(string mastermindName = "")
@@ -95,7 +93,7 @@ namespace MarvelLegendary
 
         public void SetScheme(string schemeName = "")
         {
-            Scheme = new Scheme().GetNewScheme(PlayerCount, Mastermind, schemeName);
+            Scheme = Scheme.GetNewScheme(PlayerCount, Mastermind, schemeName);
             PlayerCount = Scheme.NumberOfPlayers;
 
             WoundNumber = GetWoundInformation(Scheme.CustomWoundNumber, Scheme.Wounds);
@@ -152,18 +150,17 @@ namespace MarvelLegendary
 
         public void SetHenchmen(List<string> henchmenNames = null)
         {
-            var henchmen = new Henchmen();
             henchmenNames = henchmenNames ?? new List<string>();
 
             if (Scheme.SchemeInfo.IsInfectedDeck)
             {
-                InfectedHenchmen.Add(henchmen.GetNewHenchmen("Cytoplasm Spikes"));
-                SchemeHenchmen.Add(henchmen.GetNewHenchmen("Cytoplasm Spikes"));
+                InfectedHenchmen.Add(MarvelLegendary.Henchmen.GetNewHenchmen("Cytoplasm Spikes"));
+                SchemeHenchmen.Add(Henchmen.GetNewHenchmen("Cytoplasm Spikes"));
             }
 
             if (Scheme.SchemeInfo.IsHenchmenNextToScheme)
             {
-                SchemeHenchmen.Add(henchmen.GetNewHenchmen(Scheme.SchemeInfo.HenchmenNextToScheme));
+                SchemeHenchmen.Add(Henchmen.GetNewHenchmen(Scheme.SchemeInfo.HenchmenNextToScheme));
             }
 
             //This is for Symbiotic Absorption
@@ -171,13 +168,13 @@ namespace MarvelLegendary
             {
                 Scheme.RequiredHenchmen.Add(ExtraMasterminds.First().LeadsHenchmen);
                 Scheme.NumberOfHenchmen += 1;
-                Henchmen.Add(henchmen.GetNewHenchmen(ExtraMasterminds.First().LeadsHenchmen));
+                HenchmenList.Add(Henchmen.GetNewHenchmen(ExtraMasterminds.First().LeadsHenchmen));
             }
 
-            Henchmen.AddRange(from item in henchmenNames select henchmen.GetNewHenchmen(item));
+            HenchmenList.AddRange(from item in henchmenNames select Henchmen.GetNewHenchmen(item));
 
             //Henchmen is the list of henchmen in the villain deck
-            Henchmen = GetHenchmen(Scheme.NumberOfHenchmen, Henchmen, SchemeHenchmen);
+            HenchmenList = GetHenchmen(Scheme.NumberOfHenchmen, HenchmenList, SchemeHenchmen);
 
             //Smuggler adds an extra henchmen to the deck
             //HenchmenInHeroDeck adds a henchmen group to the hero deck
@@ -187,15 +184,15 @@ namespace MarvelLegendary
             if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen
                 || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
             {
-                var extraHenchmen = GetHenchmen(1, Henchmen, SchemeHenchmen).FirstOrDefault();
+                var extraHenchmen = GetHenchmen(1, HenchmenList, SchemeHenchmen).FirstOrDefault();
                 SchemeHenchmen.Add(extraHenchmen);
 
                 if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
-                    Henchmen.Add(extraHenchmen);
+                    HenchmenList.Add(extraHenchmen);
             }
 
-            AllHenchmenInGame = Henchmen.Concat(SchemeHenchmen)
-                .Concat(Scheme.RequiredHenchmen.Select(schemeRequiredHenchmen => henchmen.GetNewHenchmen(schemeRequiredHenchmen)))
+            AllHenchmenInGame = HenchmenList.Concat(SchemeHenchmen)
+                .Concat(Scheme.RequiredHenchmen.Select(schemeRequiredHenchmen => Henchmen.GetNewHenchmen(schemeRequiredHenchmen)))
                              .ToList();
         }
 
@@ -430,7 +427,7 @@ namespace MarvelLegendary
             //This will be the list of henchmen to include in the villain deck
             var henchmenList = new List<Henchmen>();
 
-            var allHenchmen = new Henchmen().GetListOfHenchmen();
+            var allHenchmen = Henchmen.GetListOfHenchmen();
 
             henchmenList.AddRange(from item in currentHenchmen select item);
 
@@ -443,7 +440,7 @@ namespace MarvelLegendary
                 && numberOfHenchmen > henchmenList.Count)
             {
                 //If the masterminds leads one of the henchmen brought in through the scheme twist, it won't be added twice
-                var mastermindLeadsHenchmen = new Henchmen().GetNewHenchmen(Mastermind.LeadsHenchmen);
+                var mastermindLeadsHenchmen = Henchmen.GetNewHenchmen(Mastermind.LeadsHenchmen); 
                 var mastermindLeadsHenchmenName = mastermindLeadsHenchmen.HenchmenName;
                 if (henchmenList.All(x => x.HenchmenName != mastermindLeadsHenchmenName))
                 {
@@ -463,13 +460,13 @@ namespace MarvelLegendary
 
             while(numRemainingHenchmen > 0)
             {
-                var henchmen = new Henchmen().GetNewHenchmen(AllMastermindsInGame, Scheme, Villains, henchmenInGame);
+                var henchmen = Henchmen.GetNewHenchmen(AllMastermindsInGame, Scheme, Villains, henchmenInGame);
                 henchmenInGame.Add(henchmen.HenchmenName);
                 numRemainingHenchmen--;
             }
 
             returnList.AddRange(from item in henchmenInGame
-                                select new Henchmen().GetNewHenchmen(item));
+                                select Henchmen.GetNewHenchmen(item));
 
             return returnList;
         }
@@ -734,7 +731,7 @@ namespace MarvelLegendary
             //If the required number of heroes from schemes hasn't reached the number of heroes for the player count, it will do this
             for (int i = 0; i < heroCount; i++)
             {
-                var exclusions = DetermineHeroes.DetermineHeroList(Villains, AllMastermindsInGame, Henchmen, Scheme, heroesInGame, availableHeroesWithoutExcludedHeroes, getExclusions);
+                var exclusions = DetermineHeroes.DetermineHeroList(Villains, AllMastermindsInGame, HenchmenList, Scheme, heroesInGame, availableHeroesWithoutExcludedHeroes, getExclusions);
 
                 var exclusionsWithoutHeroesInGame = availableHeroesWithoutExcludedHeroes.Except(heroesInGame).ToList();
                 var heroesToChooseFrom = exclusionsWithoutHeroesInGame.Except(exclusions).ToList();

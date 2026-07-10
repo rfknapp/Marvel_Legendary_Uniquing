@@ -166,16 +166,15 @@ namespace MarvelLegendary.Tools
 
         private static void ConvertSchemeGames()
         {
-            var s = new Scheme();
             var outputSbM = "";
             var outputSbV = "";
             var outputSbH = "";
             var outputSbHo = "";
-            var listOfSchemes = s.GetListOfSchemes();
+            var listOfSchemes = Scheme.GetListOfSchemes();
 
             foreach (var scheme in listOfSchemes)
             {
-                var newScheme = s.GetNewScheme(scheme);
+                var newScheme = Scheme.GetNewScheme(scheme);
                 var setName = newScheme.SetName;
 
                 if (!targetSets.Contains(setName))
@@ -270,7 +269,6 @@ namespace MarvelLegendary.Tools
 
         private static void ConvertHenchmenGames()
         {
-            var h = new Henchmen();
             var newTargetSets = new HashSet<Enums.Set>(targetSets);
             newTargetSets.Add(Enums.Set.P1);
 
@@ -279,11 +277,11 @@ namespace MarvelLegendary.Tools
             var outputHbV = "";
             var outputHbH = "";
             var outputHbHo = "";
-            var henchmenList = h.GetListOfHenchmen();
+            var henchmenList = Henchmen.GetListOfHenchmen();
 
             foreach (var henchmen in henchmenList)
             {
-                var newHenchmen = h.GetNewHenchmen(henchmen);
+                var newHenchmen = Henchmen.GetNewHenchmen(henchmen);
                 var setName = newHenchmen.HenchmenSet;
 
                 if (!newTargetSets.Contains(setName))

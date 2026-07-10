@@ -14,7 +14,7 @@ namespace MarvelLegendary.DetermineLists
         {
             var masterminds = mastermindsInGame.Select(x => x.MastermindName).ToList();
             var villains = villainsInGame.Select(x => x.VillainName).ToList();
-            var availableHenchmen = new Henchmen().GetListOfHenchmen();
+            var availableHenchmen = Henchmen.GetListOfHenchmen();
             var returnList = new List<string>();
             var getExclusions = new GetExclusions();
 

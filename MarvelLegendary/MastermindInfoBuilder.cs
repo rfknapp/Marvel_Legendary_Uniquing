@@ -71,7 +71,7 @@ namespace MarvelLegendary
 
         public MastermindInfoBuilder LeadsHenchmenByKind(string henchmenKind)
         {
-            var henchmenList = new Henchmen().GetListOfHenchmen();
+            var henchmenList = Henchmen.GetListOfHenchmen();
             var henchmenNames = (henchmenList.Where(item => item.Contains(henchmenKind))).ToList();
 
             _mastermindInfo.LeadsHenchmen = henchmenNames[new Random().Next(henchmenNames.Count)];

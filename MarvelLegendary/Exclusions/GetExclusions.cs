@@ -405,7 +405,7 @@ namespace MarvelLegendary.Exclusions
         {
             var spreadsheet = new GetSpreadsheet();
             var spreadsheetInfo = spreadsheet.GetSpreadsheetInfo("By Henchmen");
-            var henchmen = new Henchmen().GetNewHenchmen(henchmenGroup);
+            var henchmen = Henchmen.GetNewHenchmen(henchmenGroup);
             henchmenGroup = henchmen.HenchmenName;
             
             var listOfHenchmen = spreadsheetInfo.First();

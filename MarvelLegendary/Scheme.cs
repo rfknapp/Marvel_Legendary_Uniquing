@@ -24,7 +24,7 @@ namespace MarvelLegendary
 
         public UnveiledScheme(string schemeName = "")
         {
-            var schemeInfo = schemeName == "" ? _unveiledSchemes[new Random().Next(_unveiledSchemes.Count)] : _unveiledSchemes.First(x => x.SchemeName == schemeName);
+            var schemeInfo = schemeName == "" ? _unveiledSchemes[RandomHelper.Instance.Next(_unveiledSchemes.Count)] : _unveiledSchemes.First(x => x.SchemeName == schemeName);
             SchemeName = schemeInfo.SchemeName;
             SetName = schemeInfo.SetName;
         }
@@ -299,13 +299,11 @@ namespace MarvelLegendary
 
         public Scheme() 
         {
-            random = new Random();
         }
 
         //This function is only used in the ConverTrackedGames class
-        public Scheme GetNewScheme(string schemeName = "")
+        public static Scheme GetNewScheme(string schemeName = "")
         {
-            var newScheme = new Scheme();
             var scheme = schemeName;
             if (string.IsNullOrEmpty(scheme))
             {
@@ -315,13 +313,14 @@ namespace MarvelLegendary
 
             var schemeInfo = SchemeRepository.All.FirstOrDefault(s => s.SchemeName == scheme);
 
-            newScheme.SchemeName = schemeInfo.SchemeName;
-            newScheme.SetName = newScheme.SetName;
-
-            return newScheme;
+            return new Scheme
+            {
+                SchemeName = schemeInfo.SchemeName,
+                SetName = schemeInfo.SetName
+            };
         }
 
-        public Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName="")
+        public static Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName="")
         {
             SchemeInfo schemeInfo;
 
@@ -338,56 +337,36 @@ namespace MarvelLegendary
             return newScheme;
         }
 
-        private SchemeInfo GetSchemeInfo(string schemeName)
+        private static SchemeInfo GetSchemeInfo(string schemeName)
         {
             return SchemeRepository.All.First(x => x.SchemeName == schemeName);
         }
 
-        private SchemeInfo GetRandomScheme(Mastermind mastermind)
+        private static SchemeInfo GetRandomScheme(Mastermind mastermind)
         {
-            var schemesPlayedWithMastermind = new List<SchemeInfo>();
-
-            var command = SqlHelper.GetConnection().CreateCommand();
-            command.CommandText =
-                @"SELECT Card2Id
-                  FROM CardRelationship cr
-                  INNER JOIN Card c
-                    ON cr.Card2Id = c.CardId
-                  WHERE c.CardType = $cardTypeId
-                    AND cr.Card1Id = (
-                      SELECT CardId
-                      FROM Card
-                      WHERE CardName = $name
-                        AND SetId = $setId
-                    )";
-
-            command.Parameters.AddWithValue("$cardTypeId", (int)CardType.Scheme);
-            command.Parameters.AddWithValue("$name", mastermind.MastermindName);
-            command.Parameters.AddWithValue("$setId", (int)mastermind.SetName);
-
-            schemesPlayedWithMastermind = SqlHelper.RunCommand(command);
-
-            var schemeName = "";
-            var allSchemeList = SchemeRepository.All.ToList();
-            var schemeNameList = SchemeRepository.All.Select(s => s.SchemeName).ToList();
-            
-            if (schemesPlayedWithMastermind.Count < schemeNameList.Count)
+            var mastermindCard = new Card
             {
-                var remainingSchemes = allSchemeList.
-                    Where(s => !schemesPlayedWithMastermind.Any(s2 =>
-                      s2.SchemeName == s.SchemeName &&
-                      s2.SetName == s2.SetName)).ToList();
-                schemeName = remainingSchemes[random.Next(remainingSchemes.Count)].SchemeName;
+                CardName = mastermind.MastermindName,
+                CardType = (int)CardType.Mastermind,
+                SetId = (int)mastermind.SetName
+            };
+
+            var schemesPlayedWithMastermind = SqlHelper.GetCardRelationships(CardType.Scheme, mastermindCard);
+
+            var schemeNameList = GetListOfSchemes();
+
+            var remainingSchemes = schemeNameList.Except(schemesPlayedWithMastermind).ToList();
+            if(remainingSchemes.Count > 0)
+            {
+                return GetSchemeInfo(remainingSchemes[RandomHelper.Instance.Next(remainingSchemes.Count)]);
             }
             else
             {
-                schemeName = schemeNameList[RandomHelper.Instance.Next(schemeNameList.Count)];
+                return GetSchemeInfo(schemeNameList[RandomHelper.Instance.Next(schemeNameList.Count)]);
             }
-
-            return GetSchemeInfo(schemeName);
         }
 
-        private Scheme ProcessSchemeInfo(int playerCount, SchemeInfo schemeInfo, Mastermind mastermind)
+        private static Scheme ProcessSchemeInfo(int playerCount, SchemeInfo schemeInfo, Mastermind mastermind)
         {
             var newScheme = new Scheme();
             if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)
@@ -403,7 +382,7 @@ namespace MarvelLegendary
             newScheme.SchemeName = schemeInfo.SchemeName;
             newScheme.SetName = schemeInfo.SetName;
             newScheme.Twists = schemeInfo.SchemeTwists[playerCount - 1];
-            newScheme.NumberOfSchemeTwists = SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith" ? 1 : schemeInfo.SchemeTwists[playerCount - 1];
+            newScheme.NumberOfSchemeTwists = newScheme.SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith" ? 1 : schemeInfo.SchemeTwists[playerCount - 1];
             newScheme.SchemeInfo = schemeInfo;
             newScheme.IsSchemeTwistsNextToScheme = schemeInfo.IsSchemeTwistsNextToScheme;
             newScheme.NumberTwistsNextToScheme = schemeInfo.NumberTwistsNextToScheme;
@@ -414,13 +393,13 @@ namespace MarvelLegendary
             newScheme.NumberOfVillains = schemeInfo.Villains[playerCount - 1];
             
             //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is Lilith
-            if (SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith")
+            if (newScheme.SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith")
                 newScheme.NumberOfVillains++;
 
             newScheme.RequiredVillains = schemeInfo.RequiredVillains;
 
             //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is not Lilith
-            if (SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName != "Lilith")
+            if (newScheme.SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName != "Lilith")
                 newScheme.RequiredVillains.Add("Lilin");
 
             newScheme.NumberOfHenchmen = schemeInfo.Henchmen[playerCount - 1];
@@ -442,7 +421,7 @@ namespace MarvelLegendary
             return newScheme;
         }
 
-        public List<string> GetListOfSchemes()
+        public static List<string> GetListOfSchemes()
         {
             var allSchemes = SchemeRepository.All.Select(s => s.SchemeName).ToList();
             return allSchemes;

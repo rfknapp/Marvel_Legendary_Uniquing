@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MarvelLegendary.Enums;
+using MarvelLegendary.Helpers;
 
 namespace MarvelLegendary
 {
@@ -103,144 +104,75 @@ namespace MarvelLegendary
 
     public class Henchmen
     {
-        private Random random;
-        public Set HenchmenSet;
-        public string HenchmenName;
+        public Set HenchmenSet { get; set; }
+        public string HenchmenName { get; set; }
         public HenchmenInfo HenchmenInfo { get; set; }
 
-        private readonly List<HenchmenInfo> _henchmen = new List<HenchmenInfo>()
+        public static Henchmen GetNewHenchmen(string henchmenName = "")
         {
-            new HenchmenInfo("Doombot Legion", Set.Core, "Ten Ring Fantatics"),
-            new HenchmenInfo("Hand Ninjas", Set.Core, "HYDRA Piots"),
-            new HenchmenInfo("Savage Land Mutates", Set.Core, "HYDRA Spies"),
-            new HenchmenInfo("Sentinels", Set.Core, "Hammer Drone Army"),
-            
-            new HenchmenInfo("Maggia Goons", Set.Dc),
-            new HenchmenInfo("Phalanx", Set.Dc),
-            
-            new HenchmenInfo("Asgardian Warriors", Set.Villains),
-            new HenchmenInfo("Cops", Set.Villains, true),
-            new HenchmenInfo("Multiple Man", Set.Villains),
-            new HenchmenInfo("S.H.I.E.L.D. Assault Squad", Set.Villains),
-             
-            new HenchmenInfo("Ghost Racers", Set.Sw1),
-            new HenchmenInfo("M.O.D.O.K.s", Set.Sw1),
-            new HenchmenInfo("Thor Corps", Set.Sw1),
-             
-            new HenchmenInfo("Khonshu Guardians", Set.Sw2),
-            new HenchmenInfo("Magma Men", Set.Sw2),
-            new HenchmenInfo("Spider-Infected", Set.Sw2),
-             
-            new HenchmenInfo("Cape-killers", Set.Cw),
-            new HenchmenInfo("Mandroids", Set.Cw),
-             
-            new HenchmenInfo("Circus of Crime", Set.ThreeD),
-            new HenchmenInfo("Spider-Slayer", Set.ThreeD),
-            
-            new HenchmenInfo("The Brood", Set.XMen),
-            new HenchmenInfo("Hellfire Cult", Set.XMen),
-            new HenchmenInfo("Sapien League", Set.XMen),
-            new HenchmenInfo("Shi'ar Death Commandos", Set.XMen),
-            new HenchmenInfo("Shi'ar Patrol Craft", Set.XMen),
-             
-            new HenchmenInfo("Cytoplasm Spikes", Set.Wwh),
-            new HenchmenInfo("Death's Heads", Set.Wwh),
-            new HenchmenInfo("Sakaaran Hivelings", Set.Wwh),
-            
-            new HenchmenInfo("Hammer Drone Army (Sentinels)", Set.P1, "Sentinels"),
-            new HenchmenInfo("HYDRA Pilots (Hand Ninjas)", Set.P1, "Hand Ninjas"),
-            new HenchmenInfo("HYDRA Spies (Savage Land Mutates)", Set.P1, "Savage Land Mutates"),
-            new HenchmenInfo("Ten Rings Fanatics (Doombot Legion)", Set.P1, "Doombot Legion"),
-            
-            new HenchmenInfo("HYDRA Base", Set.Revelations),
-            new HenchmenInfo("Mandarin's Rings", Set.Revelations),
-
-            new HenchmenInfo("Sidera Maris, Bridge Builders", Set.Cosmos),
-            new HenchmenInfo("Universal Church of Truth", Set.Cosmos),
-
-            new HenchmenInfo("Mr. Sinister Clones", Set.Messiah),
-            new HenchmenInfo("Sentinel Squad O*N*E*", Set.Messiah),
-
-            new HenchmenInfo("Giants of Jotunheim", Set.WhatIf),
-            new HenchmenInfo("Ultron Sentries", Set.WhatIf),
-            new HenchmenInfo("Vibranium Liberator Drones", Set.WhatIf),
-
-            new HenchmenInfo("Quantonauts", Set.AntmanWasp),
-            new HenchmenInfo("Quantum Hounds", Set.AntmanWasp),
-            new HenchmenInfo("Tardigrade", Set.AntmanWasp)
-        };
-
-        public Henchmen()
-        {
-            random = new Random();
-        }
-
-        public Henchmen GetNewHenchmen(string henchmenName = "")
-        {
-            var newHenchmen = new Henchmen();
             var henchmen = henchmenName;
-            if (string.IsNullOrEmpty(henchmen))
+            if (string.IsNullOrEmpty(henchmenName))
             {
                 var allHenchmen = GetListOfHenchmen();
-                henchmen = allHenchmen[random.Next(allHenchmen.Count)];
+                henchmen = allHenchmen[RandomHelper.Instance.Next(allHenchmen.Count)];
             }
 
-            var henchmenInfo = _henchmen.FirstOrDefault(h => h.HenchmenName == henchmen);
+            var henchmenInfo = HenchmenRepository.All.FirstOrDefault(h => h.HenchmenName == henchmen);
 
-            newHenchmen.HenchmenName = henchmen;
-            newHenchmen.HenchmenSet = henchmenInfo.HenchmenSetName;
-            newHenchmen.HenchmenInfo = henchmenInfo;
-
-            return newHenchmen;
+            return new Henchmen
+            {
+                HenchmenName = henchmen,
+                HenchmenSet = henchmenInfo.HenchmenSetName,
+                HenchmenInfo = henchmenInfo
+            };
         }
 
-        public Henchmen GetNewHenchmen(List<string> exclusionHenchmen)
+        public static Henchmen GetNewHenchmen(List<string> exclusionHenchmen)
         {
-            var newHenchmen = new Henchmen();
             var henchmenName = GetRandomHenchmen();
-            var henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmenName);
+            var henchmen = HenchmenRepository.All.FirstOrDefault(x => x.HenchmenName == henchmenName);
 
             //In Phase 1 there were Henchmen that were clones of the Henchmen released in the base game.
             //This will choose the base game versions of those Henchmen
             if (henchmenName.Contains('('))
             {
-                henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                henchmen = HenchmenRepository.All.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
             }
 
-            if (exclusionHenchmen.Count < _henchmen.Count)
+            if (exclusionHenchmen.Count < HenchmenRepository.All.Count)
             {
                 while (exclusionHenchmen.Any(x => x == henchmen.HenchmenName.Split('_').First()))
                 {
-                    henchmen = _henchmen[random.Next(_henchmen.Count)];
+                    henchmen = HenchmenRepository.All[RandomHelper.Instance.Next(HenchmenRepository.All.Count)];
                     if (henchmen.HenchmenName.Contains('('))
                     {
                         var tempName = henchmen.HenchmenName.Split('(')[1].Split(')')[0];
-                        henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == tempName);
+                        henchmen = HenchmenRepository.All.FirstOrDefault(x => x.HenchmenName == tempName);
                     }
 
                     while (henchmen == null)
                     {
-                        henchmen = _henchmen[random.Next(_henchmen.Count)];
+                        henchmen = HenchmenRepository.All[RandomHelper.Instance.Next(HenchmenRepository.All.Count)];
                         if (henchmen.HenchmenName.Contains('('))
                         {
-                            henchmen = _henchmen.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
+                            henchmen = HenchmenRepository.All.FirstOrDefault(x => x.HenchmenName == henchmen.DuplicateName);
                         }
                     }
                 }
             }
 
-            newHenchmen.HenchmenName = henchmen.HenchmenName;
-            newHenchmen.HenchmenSet = henchmen.HenchmenSetName;
-            newHenchmen.HenchmenInfo = henchmen;
-
-            return newHenchmen;
+            return new Henchmen
+            {
+                HenchmenName = henchmen.HenchmenName,
+                HenchmenSet = henchmen.HenchmenSetName,
+                HenchmenInfo = henchmen
+            };
         }
 
-        public Henchmen GetNewHenchmen(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villains, List<string> henchmenInGame)
+        public static Henchmen GetNewHenchmen(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villains, List<string> henchmenInGame)
         {
             var sqlHelper = new DatabaseHelper();
-            var newHenchmen = new Henchmen();
-            
+
             //Get Henchmen
             var henchmenList = GetListOfHenchmen();
 
@@ -248,17 +180,30 @@ namespace MarvelLegendary
             var remainingHenchmen = henchmenList.Except(henchmenInGame).ToList();
 
             //Get Henchmen that have played with the Scheme
+            var schemeCard = new Card
+            {
+                CardName = scheme.SchemeName,
+                CardType = (int)CardType.Scheme,
+                SetId = (int)scheme.SetName
+            };
             //var henchmenByScheme = GetListOfHenchmenByX("Scheme", scheme.SchemeName);
-            var henchmenByScheme = sqlHelper.GetListFromByTable("Henchmen", "Scheme", scheme.SchemeName);
-
+            var henchmenByScheme = SqlHelper.GetCardRelationships(CardType.Henchmen, schemeCard);
+            
             //Remove all Henchmen that have played with the scheme from the list
             remainingHenchmen = remainingHenchmen.Except(henchmenByScheme).ToList();
 
             //Get Henchmen that have played with each of the Masterminds with
             foreach (var mastermind in allMastermindsInGame)
             {
-                //var henchmenByMastermind = GetListOfHenchmenByX("Mastermind", mastermind.MastermindName);
-                var henchmenByMastermind = sqlHelper.GetListFromByTable("Henchmen", "Mastermind", mastermind.MastermindName);
+                var mastermindCard = new Card
+                {
+                    CardName = mastermind.MastermindName,
+                    CardType = (int)CardType.Mastermind,
+                    SetId = (int)mastermind.SetName
+                };
+
+                //This is the new implementation of the HenchmenByMastermind table lookup
+                var henchmenByMastermind = SqlHelper.GetCardRelationships(CardType.Henchmen, mastermindCard);
                 //Remove all Henchmen that have played with the Mastermind(s)
                 remainingHenchmen = remainingHenchmen.Except(henchmenByMastermind).ToList();
             }
@@ -266,8 +211,15 @@ namespace MarvelLegendary
             //Get Henchmen that have played with each of the Villains with
             foreach (var villain in villains)
             {
-                //var henchmenByVillain = GetListOfHenchmenByX("Villain", villain.VillainName);
-                var henchmenByVillain = sqlHelper.GetListFromByTable("Henchmen", "Villain", villain.VillainName);
+                var villainCard = new Card
+                {
+                    CardName = villain.VillainName,
+                    CardType = (int)CardType.Villain,
+                    SetId = (int)villain.SetName
+                };
+
+                //This is the new implementation of the HenchmenByVillain table lookup
+                var henchmenByVillain = SqlHelper.GetCardRelationships(CardType.Henchmen, villainCard);
                 //Remove all Henchmen that have played with the Villains
                 remainingHenchmen = remainingHenchmen.Except(henchmenByVillain).ToList();
             }
@@ -275,24 +227,34 @@ namespace MarvelLegendary
             //Get Henchmen that have played with each of the Henchmen with
             foreach (var henchmen in henchmenInGame)
             {
-                //var henchmenByHenchmen = GetListOfHenchmenByX("Henchmen", henchmen);
-                var henchmenByHenchmen = sqlHelper.GetListFromByTable("Henchmen", "Henchmen", henchmen);
+                var henchmenObj = GetNewHenchmen(henchmen);
+
+                var henchmenCard = new Card
+                {
+                    CardName = henchmenObj.HenchmenName,
+                    CardType = (int)CardType.Henchmen,
+                    SetId = (int)henchmenObj.HenchmenSet
+                };
+
+                //This is the new implementation of the HenchmenByHenchmen table lookup
+                var henchmenByHenchmen = SqlHelper.GetCardRelationships(CardType.Henchmen, henchmenCard);
                 //Remove all Henchmen that have played with the Henchmen
                 remainingHenchmen = remainingHenchmen.Except(henchmenByHenchmen).ToList();
             }
 
             //Select Henchmen from remaining list
-            var henchmenName = remainingHenchmen[random.Next(remainingHenchmen.Count)];
-            var henchmenInfo = _henchmen.First(h => h.HenchmenName == henchmenName);
+            var henchmenName = remainingHenchmen[RandomHelper.Instance.Next(remainingHenchmen.Count)];
+            var henchmenInfo = HenchmenRepository.All.First(h => h.HenchmenName == henchmenName);
 
-            newHenchmen.HenchmenName = henchmenName;
-            newHenchmen.HenchmenSet = henchmenInfo.HenchmenSetName;
-            newHenchmen.HenchmenInfo = henchmenInfo;
-
-            return newHenchmen;
+            return new Henchmen
+            {
+                HenchmenName = henchmenName,
+                HenchmenSet = henchmenInfo.HenchmenSetName,
+                HenchmenInfo = henchmenInfo
+            };
         }
 
-        public string ToString(List<Henchmen> henchmenList)
+        public static string ToString(List<Henchmen> henchmenList)
         {
             var returnString = "\r\n";
             var counter = 1;
@@ -309,7 +271,7 @@ namespace MarvelLegendary
 
         public List<HenchmenInfo> ModifyHenchmenList(List<string> henchmenExclusions)
         {
-            var returnList = new List<HenchmenInfo>(_henchmen);
+            var returnList = new List<HenchmenInfo>(HenchmenRepository.All);
 
             foreach (var henchmenExclusion in henchmenExclusions)
             {
@@ -323,16 +285,16 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        public List<string> GetListOfHenchmen()
+        public static List<string> GetListOfHenchmen()
         {
             var returnList = HenchmenRepository.All.Select(h => h.HenchmenName).ToList();
             return returnList;
         }
 
-        public string GetRandomHenchmen()
+        public static string GetRandomHenchmen()
         {
             var allHenchmen = GetListOfHenchmen();
-            var henchmen = allHenchmen[random.Next(allHenchmen.Count)];
+            var henchmen = allHenchmen[RandomHelper.Instance.Next(allHenchmen.Count)];
             return henchmen;
         }
 
