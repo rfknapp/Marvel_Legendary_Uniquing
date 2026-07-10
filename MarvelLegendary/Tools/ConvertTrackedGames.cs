@@ -325,17 +325,16 @@ namespace MarvelLegendary.Tools
 
         private static void ConvertHeroGames()
         {
-            var h = new Hero();
             var outputHobM = "";
             var outputHobS = "";
             var outputHobV = "";
             var outputHobH = "";
             var outputHobHo = "";
-            var heroList = h.GetListOfHeroes();
+            var heroList = Hero.GetListOfHeroes();
 
             foreach (var hero in heroList)
             {
-                var newHero = h.GetNewHero(hero);
+                var newHero = Hero.GetNewHero(hero);
                 var setName = newHero.SetName;
 
                 if (!targetSets.Contains(setName))

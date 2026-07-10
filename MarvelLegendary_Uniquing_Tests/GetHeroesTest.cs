@@ -14,15 +14,15 @@ namespace MarvelLegendary_Uniquing_Tests
         [TestCaseSource("_sourceLists")]
         public void TestGetHeroesThirdHero(List<int> heroesToInclude, string expectedHero)
         {
-            var mastermindExclusionHeroes = new Hero().GetHeroNameList(new List<int>() { 1, 2, 3 });
-            var schemeExclusionHeroes = new Hero().GetHeroNameList(new List<int>() { 3, 4, 5, 11, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46 });
-            var oneVillainExclusionHeroes = new Hero().GetHeroNameList(new List<int>() { 5, 6, 7, 17, 18, 28, 29, 30, 41, 42, 43, 44, 45, 46 });
-            var twoVillainExclusionHeroes = new Hero().GetHeroNameList(new List<int>() { 5, 6, 7, 8, 9, 17, 18, 23, 24, 25, 26, 27, 28, 29, 30, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46 });
-            var henchmenExclusionHeroes = new Hero().GetHeroNameList(new List<int>() { 7, 9, 10, 11, 17, 18, 21, 22, 25, 26, 27, 30, 33, 34, 38, 39, 40, 44, 45, 46 });
-            var oneHeroExclusionHeroes = new Hero().GetHeroNameList(new List<int>() { 13, 14, 15, 22, 24, 28, 29, 30, 32, 34, 37, 40, 43, 46 });
-            var twoHeroExclusionHeroes = new Hero().GetHeroNameList(new List<int>() { 13, 14, 15, 17, 18, 19, 21, 22, 24, 27, 29, 30, 32, 34, 37, 40, 43, 46 });
+            var mastermindExclusionHeroes = Hero.GetHeroNameList(new List<int>() { 1, 2, 3 });
+            var schemeExclusionHeroes = Hero.GetHeroNameList(new List<int>() { 3, 4, 5, 11, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46 });
+            var oneVillainExclusionHeroes = Hero.GetHeroNameList(new List<int>() { 5, 6, 7, 17, 18, 28, 29, 30, 41, 42, 43, 44, 45, 46 });
+            var twoVillainExclusionHeroes = Hero.GetHeroNameList(new List<int>() { 5, 6, 7, 8, 9, 17, 18, 23, 24, 25, 26, 27, 28, 29, 30, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46 });
+            var henchmenExclusionHeroes = Hero.GetHeroNameList(new List<int>() { 7, 9, 10, 11, 17, 18, 21, 22, 25, 26, 27, 30, 33, 34, 38, 39, 40, 44, 45, 46 });
+            var oneHeroExclusionHeroes = Hero.GetHeroNameList(new List<int>() { 13, 14, 15, 22, 24, 28, 29, 30, 32, 34, 37, 40, 43, 46 });
+            var twoHeroExclusionHeroes = Hero.GetHeroNameList(new List<int>() { 13, 14, 15, 17, 18, 19, 21, 22, 24, 27, 29, 30, 32, 34, 37, 40, 43, 46 });
 
-            var allHeroes = new Hero().GetHeroNameList(heroesToInclude);
+            var allHeroes = Hero.GetHeroNameList(heroesToInclude);
             var testMoq = new Mock<IGetExclusions>();
             var mastermindExclusions = new GameExclusions();
             mastermindExclusions.HeroList = mastermindExclusionHeroes;
@@ -45,7 +45,7 @@ namespace MarvelLegendary_Uniquing_Tests
             newGameInfo.Scheme = Scheme.GetNewScheme(1, newGameInfo.Mastermind, "Steal the Weaponized Plutonium");
             newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard"), Villain.GetNewVillain("HYDRA") };
             newGameInfo.HenchmenList = new List<Henchmen>() { Henchmen.GetNewHenchmen("Doombot Legion") };
-            newGameInfo.Heroes = new List<Hero>() { new Hero().GetNewHero("Spider-Man"), new Hero().GetNewHero("Angel") };
+            newGameInfo.Heroes = new List<Hero>() { Hero.GetNewHero("Spider-Man"), Hero.GetNewHero("Angel") };
 
             var mastermindStrings = new List<string>();
             foreach (var item in newGameInfo.AllMastermindsInGame)
@@ -82,10 +82,10 @@ namespace MarvelLegendary_Uniquing_Tests
             newGameInfo.HenchmenList = new List<Henchmen>() { Henchmen.GetNewHenchmen("Doombot Legion") };
             newGameInfo.Heroes = new List<Hero>();
 
-            var allHeroes = new Hero().GetHeroNameList(new List<int>() { 1, 2, 3, 28 });
+            var allHeroes = Hero.GetHeroNameList(new List<int>() { 1, 2, 3, 28 });
             var mastermindExclusionHeroes = new List<string>() { "Black Widow" };
             var schemeExclusionHeroes = new List<string>() { "Captain America" };
-            var schemeHeroes = new List<Hero>() { new Hero().GetNewHero("Jean Grey") };
+            var schemeHeroes = new List<Hero>() { Hero.GetNewHero("Jean Grey") };
             var heroListString = new List<string>();
 
             var testMoq = new Mock<IGetExclusions>();
@@ -266,8 +266,7 @@ namespace MarvelLegendary_Uniquing_Tests
         [TestCaseSource("_getAllHeroesByNamePart")]
         public void TestGetAllHeroesByNamePart(int testNumber, List<string> availableHeroes, List<string> nameLimitHeroes, string namePart)
         {
-            var newHero = new Hero();
-            var result = newHero.GetAllHeroesByNamePart(namePart, availableHeroes);
+            var result = Hero.GetAllHeroesByNamePart(namePart, availableHeroes);
 
             var resultNames = (from item in result select item.HeroName);
             Assert.That(resultNames, Is.SubsetOf(nameLimitHeroes));

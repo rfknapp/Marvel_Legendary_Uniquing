@@ -308,17 +308,17 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder SetSoulsDeck(string heroName)
         {
-            _schemeInfo.SoulsHero = new Hero().GetNewHero(heroName);
+            _schemeInfo.SoulsHero = Hero.GetNewHero(heroName);
             _schemeInfo.IsSoulsHero = true;
             return this;
         }
 
         public SchemeInfoBuilder SetShrinkTechDeck()
         {
-            var keywordHeroes = new Hero().GetListOfHeroesWithKeyword(Keywords.Size);
+            var keywordHeroes = Hero.GetListOfHeroesWithKeyword(Keywords.Size);
 
             var randomIndex = rnd.Next(keywordHeroes.Count);
-            _schemeInfo.ShrinkTechHero = new Hero().GetNewHero(keywordHeroes[randomIndex]);
+            _schemeInfo.ShrinkTechHero = Hero.GetNewHero(keywordHeroes[randomIndex]);
             _schemeInfo.IsShrinkTechHero = true;
             return this;
         }
@@ -420,7 +420,7 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder HeroesInVillainDeckWithNameLike(int numberOfHeroesWithNameString, string nameString)
         {
-            var heroes = new Hero().GetListOfHeroes();
+            var heroes = Hero.GetListOfHeroes();
             var namedHeroes = heroes.Where(x => x.Contains(nameString)).ToList();
 
             while (_schemeInfo.HeroesInVillainDeck.Count < numberOfHeroesWithNameString && namedHeroes.Count > 0)

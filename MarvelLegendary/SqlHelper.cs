@@ -160,35 +160,6 @@ namespace MarvelLegendary
             }
         }
 
-        public static List<Card> RunCommand(SqliteCommand command)
-        {
-            var cards = new List<Card>();
-            command.Connection.Open();
-
-            try
-            {
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        cards.Add(new Card
-                        {
-                            CardId = reader.GetInt32(reader.GetOrdinal("CardId")),
-                            CardName = reader.GetString(reader.GetOrdinal("CardName")),
-                            SetId = reader.GetInt32(reader.GetOrdinal("SetId")),
-                            CardType = reader.GetInt32(reader.GetOrdinal("CardType"))
-                        });
-                    }
-                }
-            }
-            finally
-            {
-                command.Connection.Close();
-            }
-
-            return cards;
-        }
-
         public static List<string> GetCardRelationships(CardType typeEnum, Card card)
         {
             //This will return the CardId for the card that combinations are queried for
@@ -227,6 +198,35 @@ namespace MarvelLegendary
             var cardsPlayedWithQuery = RunCommand(command);
             var cardNames = cardsPlayedWithQuery.Select(c => c.CardName).ToList();
             return cardNames;
+        }
+
+        public static List<Card> RunCommand(SqliteCommand command)
+        {
+            var cards = new List<Card>();
+            command.Connection.Open();
+
+            try
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        cards.Add(new Card
+                        {
+                            CardId = reader.GetInt32(reader.GetOrdinal("CardId")),
+                            CardName = reader.GetString(reader.GetOrdinal("CardName")),
+                            SetId = reader.GetInt32(reader.GetOrdinal("SetId")),
+                            CardType = reader.GetInt32(reader.GetOrdinal("CardType"))
+                        });
+                    }
+                }
+            }
+            finally
+            {
+                command.Connection.Close();
+            }
+
+            return cards;
         }
     }
 }

@@ -58,14 +58,14 @@ namespace MarvelLegendary
             var mastermindOutput = $"Mastermind is {Mastermind.ToString(new List<Mastermind> { game.Mastermind })}\r\n";
             var schemeOutput = $"Whose scheme is\r\n1) {scheme.SchemeName}, {scheme.SetName}\r\n\r\n";
             var villainOutput = $"Villains are {Villain.ToString(game.Villains)}\r\n";
-            var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {new Hero().ToString(game.VillainHeroes)}\r\n" : "";
+            var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {Hero.ToString(game.VillainHeroes)}\r\n" : "";
             var henchmenOutput = "Henchmen " + (game.HenchmenList.Count==1 ? "is" : "are") + $" {Henchmen.ToString(game.HenchmenList)}\r\n";
-            var heroesOutput = $"Heroes are {new Hero().ToString(game.Heroes)}\r\n";
+            var heroesOutput = $"Heroes are {Hero.ToString(game.Heroes)}\r\n";
             var twistsBystanderAndMasterStrikeOutput = $"Include {scheme.Twists} Scheme Twists, 5 Master Strikes, and {scheme.BystandersInVillainDeck} Bystanders in the Villain deck.\r\n";
             var woundsOutput = game.CustomWoundNumber ? $"There are {game.WoundNumber} wounds in the wound deck.\r\n": "";
             var twistsNextToScheme = scheme.IsSchemeTwistsNextToScheme ? $"Place {scheme.NumberTwistsNextToScheme} Twists next to the Scheme\r\n": "";
             var heroBystandersOutput = scheme.IsBystandersInHeroDeck ? $"Place {scheme.BystandersInHeroDeck} Bystanders in the Hero deck.\r\n" : "";
-            var heroesInVillainDeck = schemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Include the following Heroes in the Villain deck:{new Hero().ToString(game.VillainHeroes)}\r\n" : "";
+            var heroesInVillainDeck = schemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Include the following Heroes in the Villain deck:{Hero.ToString(game.VillainHeroes)}\r\n" : "";
             var heroHenchmen = schemeInfo.IsHenchmenInHeroDeck ? $"Include 6 cards from the following Henchmen group to the Hero deck:{Henchmen.ToString(game.SchemeHenchmen)}\r\n" : "";
             var bindingsInGame = schemeInfo.CustomBindingCount && !schemeInfo.HasBetryalDeck ? $"The Bindings stack holds {game.BindingNumber} Bindings.\r\n" : "";
             var henchmenNextToScheme = schemeInfo.IsHenchmenNextToScheme ? $"Stack {game.NumberHenchmenNextToScheme} of the following Henchmen next to the plot.{Henchmen.ToString(game.SchemeHenchmen)}\r\n" : "";
@@ -85,8 +85,8 @@ namespace MarvelLegendary
             var smugglerHenchmen = schemeInfo.IsSmugglerHenchmen ? $"Include the following Henchmen as Smugglers with the Striker ability.{Henchmen.ToString(game.SchemeHenchmen)}\r\n" : "";
             var monsterDeck = schemeInfo.IsMonsterPitDeck ? $"Shuffle 8 of the Villains into a face-down \"Monster Pit\" deck.\r\n{game.SchemeVillains[0].VillainName}, {game.SchemeVillains[0].SetName}\r\n" : "";
             var infectedDeck = schemeInfo.IsInfectedDeck ? $"Shuffle together 20 Bystanders and 10 of the following Henchmen as an \"Infected Deck.\"{Henchmen.ToString(game.SchemeHenchmen)}\r\n" : "";
-            var mutationDeck = schemeInfo.IsMutationDeck ? $"Take 14 cards from the following hero and put them in a face-up \"Mutation Pile\".:{new Hero().ToString(game.SchemeHeroes)}\r\n" : "";
-            var hulkDeck = schemeInfo.IsHulkDeck ? $"Take 14 cards from the following Hero and shuffle them into a \"Hulk Deck\":{new Hero().ToString(game.SchemeHeroes)}\r\n" : "";
+            var mutationDeck = schemeInfo.IsMutationDeck ? $"Take 14 cards from the following hero and put them in a face-up \"Mutation Pile\".:{Hero.ToString(game.SchemeHeroes)}\r\n" : "";
+            var hulkDeck = schemeInfo.IsHulkDeck ? $"Take 14 cards from the following Hero and shuffle them into a \"Hulk Deck\":{Hero.ToString(game.SchemeHeroes)}\r\n" : "";
             var worldWarHulkMasterminds = schemeInfo.IsWorldWarHulkMasterminds ? $"Put the following Masterminds out of play lurking. All four Masterminds have two Mastermind Tactics: {Mastermind.ToString(game.ExtraMasterminds)}\r\n" : "";
             var drainedMastermind = schemeInfo.IsDrainedMastermind ? $"Set aside the following as a \"Drained Mastermind\" and its 4 Tactics out of play:{Mastermind.ToString(game.Scheme.SchemeInfo.DrainedMastermind)}\r\n" : "";
             var hasBindings = game.Heroes.Any(x => x.HeroInfo.IncludeBindings) || game.AllVillainsInGame.Any(x => x.VillainInfo.IncludeBindings) || game.AllMastermindsInGame.Any(x=>x.MastermindInfo.IncludeBindings) ? "Include Bindings.\r\n" : "";
@@ -97,7 +97,7 @@ namespace MarvelLegendary
             var isContestOfChampions = game.Scheme.SchemeInfo.SchemeName == "The Contest of Champions" ? "Put 11 random cards from the Hero Deck face up in a Contest Row\r\n" : "";
             var isInvasionHero = game.Scheme.SchemeInfo.SchemeName.Contains("Skrull Shapeshifters") ? "Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.\r\n" : "";
             var sneakAttackString = game.Scheme.SchemeInfo.SchemeName == "Sneak Attack the Heroes" ? SneakAttackRuleGenerator(game.PlayerCount, game.Heroes) : "";
-            var zombieVillainsString = game.Mastermind.MastermindInfo.IsZombieSoloVillain ? "Treat the Villain group as having the Zombie keyword.\r\n" : "";
+            var zombieVillainsString = game.Mastermind.MastermindInfo.IsZombieSoloVillain && game.PlayerCount == 1 ? "Treat the Villain group as having the Zombie keyword.\r\n" : "";
             var quantumRealmString = game.Scheme.SchemeInfo.IsQuantumRealmDeck ? $"Set aside the {game.SchemeVillains.FirstOrDefault().VillainName} ({game.SchemeVillains[0].SetName}) Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.\r\n" : "";
             var pastHeroDeck = game.Scheme.SchemeName == "The Time Heist" ? "Set half of the hero groups in the main city. The other half of the hero groups make a Past Hero Deck." : "";
             var shrinkTechDeck = game.Scheme.SchemeInfo.IsShrinkTechHero ? $"Set aside all 14 cards of the {game.Scheme.SchemeInfo.ShrinkTechHero.HeroName} hero group as Shrink Tech.\r\n" : "";

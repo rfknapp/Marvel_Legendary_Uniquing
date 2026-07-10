@@ -171,8 +171,6 @@ namespace MarvelLegendary
 
         public static Henchmen GetNewHenchmen(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villains, List<string> henchmenInGame)
         {
-            var sqlHelper = new DatabaseHelper();
-
             //Get Henchmen
             var henchmenList = GetListOfHenchmen();
 

@@ -295,7 +295,6 @@ namespace MarvelLegendary
         public int BystandersInVillainDeck { get; set; }
         public int BystandersInHeroDeck { get; set; }
         public bool IsBystandersInHeroDeck { get; set; }
-        private Random random;
 
         public Scheme() 
         {

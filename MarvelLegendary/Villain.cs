@@ -230,7 +230,6 @@ namespace MarvelLegendary
 
         public static Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme, List<string> villainsInGame)
         {
-            var sqlHelper = new DatabaseHelper();
             var villainList = GetListOfVillains();
 
             //Remove all Villains currently in the game from the list
