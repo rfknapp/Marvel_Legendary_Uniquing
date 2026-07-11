@@ -8,6 +8,7 @@ namespace MarvelLegendary
 {
     public class HeroInfo
     {
+        public int Id { get; set; }
         public string HeroName { get; set; }
         public Set SetName { get; set; }
         public HeroTeam HeroTeam { get; set; }
@@ -16,7 +17,10 @@ namespace MarvelLegendary
         public bool IncludeNewRecruits { get; set; }
         public bool IncludeBindings { get; set; }
         public bool IncludeMadameHydra { get; set; }
-        public List<Keywords> KeywordsList { get; set; }
+        public List<Keywords> KeywordsList { get; set; } = new List<Keywords>();
+        public List<Set> DuplicateHeroSets { get; set; } = new List<Set>();
+        public List<int> DuplicateHeroIds { get; set; } = new List<int>();
+        public bool IsEnabled { get; set; } = true;
     }
 
     public enum HeroTeam
@@ -74,6 +78,4 @@ namespace MarvelLegendary
         [Description("Guardians of the Multiverse")]
         Multiverse
     };
-
-
 }

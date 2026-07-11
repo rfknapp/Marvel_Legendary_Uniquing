@@ -319,7 +319,8 @@ namespace MarvelLegendary
             };
         }
 
-        public static Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName="")
+        //TODO: Update this to also use SetName. Since there are schemes with the same name the output may not be the one you want every time
+        public static Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName=null)
         {
             SchemeInfo schemeInfo;
 
@@ -350,19 +351,31 @@ namespace MarvelLegendary
                 SetId = (int)mastermind.SetName
             };
 
-            var schemesPlayedWithMastermind = SqlHelper.GetCardRelationships(CardType.Scheme, mastermindCard);
+            var schemeCardsPlayedWithMastermind = SqlHelper.GetCardRelationships(CardType.Scheme, mastermindCard);
+            var schemesPlayedWithMastermind = ConvertToSchemeList(schemeCardsPlayedWithMastermind);
 
-            var schemeNameList = GetListOfSchemes();
+            var schemeNameList = SchemeRepository.All.ToList();
 
             var remainingSchemes = schemeNameList.Except(schemesPlayedWithMastermind).ToList();
             if(remainingSchemes.Count > 0)
             {
-                return GetSchemeInfo(remainingSchemes[RandomHelper.Instance.Next(remainingSchemes.Count)]);
+                return remainingSchemes[RandomHelper.Instance.Next(remainingSchemes.Count)];
             }
             else
             {
-                return GetSchemeInfo(schemeNameList[RandomHelper.Instance.Next(schemeNameList.Count)]);
+                return schemeNameList[RandomHelper.Instance.Next(schemeNameList.Count)];
             }
+        }
+
+        private static List<SchemeInfo> ConvertToSchemeList(List<Card> cardList)
+        {
+            List<SchemeInfo> returnList = new List<SchemeInfo>();
+            foreach (var card in cardList)
+            {
+                returnList.Add(SchemeRepository.All.First(s => s.SchemeName == card.CardName && (int)s.SetName == card.SetId));
+            }
+
+            return returnList;
         }
 
         private static Scheme ProcessSchemeInfo(int playerCount, SchemeInfo schemeInfo, Mastermind mastermind)
@@ -424,6 +437,11 @@ namespace MarvelLegendary
         {
             var allSchemes = SchemeRepository.All.Select(s => s.SchemeName).ToList();
             return allSchemes;
+        }
+
+        public static string ToString(Scheme scheme)
+        {
+            return $"{scheme.SchemeName}, {scheme.SetName.GetDescription()}";
         }
 
         public List<string> GetListOfSchemesByX(string cardType, string name)

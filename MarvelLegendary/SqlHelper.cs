@@ -160,7 +160,7 @@ namespace MarvelLegendary
             }
         }
 
-        public static List<string> GetCardRelationships(CardType typeEnum, Card card)
+        public static List<Card> GetCardRelationships(CardType typeEnum, Card card)
         {
             //This will return the CardId for the card that combinations are queried for
             var command = GetConnection().CreateCommand();
@@ -197,7 +197,11 @@ namespace MarvelLegendary
             
             var cardsPlayedWithQuery = RunCommand(command);
             var cardNames = cardsPlayedWithQuery.Select(c => c.CardName).ToList();
-            return cardNames;
+
+            //This returns List<string> but needs to return List<Card>
+
+            return cardsPlayedWithQuery;
+            //return cardNames;
         }
 
         public static List<Card> RunCommand(SqliteCommand command)

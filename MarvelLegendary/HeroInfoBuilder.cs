@@ -14,6 +14,7 @@ namespace MarvelLegendary
         {
             _heroInfo = new HeroInfo
             {
+                Id = 0,
                 HeroName = "",
                 SetName = Set.Core,
                 HeroTeam = HeroTeam.Avengers,
@@ -22,8 +23,16 @@ namespace MarvelLegendary
                 IncludeNewRecruits = false,
                 IncludeBindings = false,
                 IncludeMadameHydra = false,
-                KeywordsList = new List<Keywords>()
+                KeywordsList = new List<Keywords>(),
+                DuplicateHeroIds = new List<int>(),
+                IsEnabled = true
             };
+        }
+        
+        public HeroInfoBuilder HeroId(int id)
+        {
+            _heroInfo.Id = id;
+            return this;
         }
 
         public HeroInfoBuilder SetHeroName(string name)
@@ -65,6 +74,19 @@ namespace MarvelLegendary
         public HeroInfoBuilder SetKeywords(List<Keywords> keywords)
         {
             _heroInfo.KeywordsList = keywords;
+            return this;
+        }
+
+        public HeroInfoBuilder Duplicates(List<int> duplicateCardIds)
+        {
+            _heroInfo.DuplicateHeroIds = duplicateCardIds;
+            _heroInfo.IsDuplicate = true;
+            return this;
+        }
+
+        public HeroInfoBuilder Disable()
+        {
+            _heroInfo.IsEnabled = false;
             return this;
         }
 

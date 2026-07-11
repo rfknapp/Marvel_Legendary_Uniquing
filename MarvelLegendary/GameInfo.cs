@@ -384,7 +384,7 @@ namespace MarvelLegendary
 
             while (numRemainingVillains > 0)
             {
-                var newVillain = Villain.GetNewVillain(AllMastermindsInGame, Scheme, villainsInGame);
+                var newVillain = Villain.GetNewVillain(AllMastermindsInGame, Scheme, villainList);
                 villainsInGame.Add(newVillain.VillainName);
                 numRemainingVillains--;
             }
@@ -455,7 +455,7 @@ namespace MarvelLegendary
 
             while(numRemainingHenchmen > 0)
             {
-                var henchmen = Henchmen.GetNewHenchmen(AllMastermindsInGame, Scheme, Villains, henchmenInGame);
+                var henchmen = Henchmen.GetNewHenchmen(AllMastermindsInGame, Scheme, Villains, henchmenList);
                 henchmenInGame.Add(henchmen.HenchmenName);
                 numRemainingHenchmen--;
             }

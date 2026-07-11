@@ -42,7 +42,7 @@ namespace MarvelLegendary
                     Console.WriteLine($"Unveiled scheme is\r\n1) {game.UnveiledScheme.SchemeName}, {game.UnveiledScheme.SetName}\r\n\r\n");
                 }
 
-                ConvertGames.ConvertTrackedGames();
+                //ConvertGames.ConvertTrackedGames();
 
                 Console.WriteLine("How many players are playing? (0 to quit)");
                 playerCount = Console.ReadLine();
@@ -56,7 +56,8 @@ namespace MarvelLegendary
 
             var playerCount = $"{game.PlayerCount} players take on\r\n";
             var mastermindOutput = $"Mastermind is {Mastermind.ToString(new List<Mastermind> { game.Mastermind })}\r\n";
-            var schemeOutput = $"Whose scheme is\r\n1) {scheme.SchemeName}, {scheme.SetName}\r\n\r\n";
+            //var schemeOutput = $"Whose scheme is\r\n1) {scheme.SchemeName}, {scheme.SetName}\r\n\r\n";
+            var schemeOutput = $"Whose scheme is\r\n1) {Scheme.ToString(scheme)}\r\n\r\n";
             var villainOutput = $"Villains are {Villain.ToString(game.Villains)}\r\n";
             var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {Hero.ToString(game.VillainHeroes)}\r\n" : "";
             var henchmenOutput = "Henchmen " + (game.HenchmenList.Count==1 ? "is" : "are") + $" {Henchmen.ToString(game.HenchmenList)}\r\n";
