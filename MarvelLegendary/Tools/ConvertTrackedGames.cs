@@ -221,7 +221,7 @@ namespace MarvelLegendary.Tools
             var outputVbV = "";
             var outputVbH = "";
             var outputVbHo = "";
-            var listOfVillains = Villain.GetListOfVillains();
+            var listOfVillains = VillainRepository.All.ToList();
 
             foreach (var villain in listOfVillains)
             {
@@ -231,13 +231,13 @@ namespace MarvelLegendary.Tools
                 if (!targetSets.Contains(setName))
                 {
                     var getExclusions = new GetExclusions();
-                    var exclusions = getExclusions.GetVillainExclusion(villain);
+                    var exclusions = getExclusions.GetVillainExclusion(villain.VillainName);
 
                     var mastermindExclusions = exclusions.MastermindList;
                     var schemeExclusions = exclusions.SchemeList;
                     var henchmenExclusions = exclusions.HenchmenList;
                     var heroExclusions = exclusions.HeroList;
-                    var villainExclusions = getExclusions.GetVillainByVillainExclusion(new List<string>() { villain });
+                    var villainExclusions = getExclusions.GetVillainByVillainExclusion(new List<string>() { villain.VillainName });
 
                     foreach (var item2 in mastermindExclusions)
                     {

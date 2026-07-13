@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MarvelLegendary.Enums;
+using MarvelLegendary.Helpers;
 
 namespace MarvelLegendary
 {
@@ -18,8 +19,8 @@ namespace MarvelLegendary
                 MastermindName = "",
                 SetName = Set.Core,
                 RequiredVillain = "",
-                LeadsVillain = "",
-                LeadsHenchmen = "",
+                LeadsVillain = null,
+                LeadsHenchmen = null,
                 AlwaysLeadsOnSolo = false,
                 DoesLeadHenchmen = false,
                 DoesLeadVillain = false,
@@ -45,50 +46,56 @@ namespace MarvelLegendary
             return this;
         }
 
-        public MastermindInfoBuilder LeadsVillain(string villainName)
+        public MastermindInfoBuilder LeadsVillain(string villainName, Set setName)
         {
             if (!villainName.Equals(""))
             {
-                _mastermindInfo.LeadsVillain = villainName;
+                _mastermindInfo.LeadsVillain = Villain.GetNewVillain(villainName, setName);
                 _mastermindInfo.DoesLeadVillain = true;
             }
             return this;
         }
 
-        public MastermindInfoBuilder LeadsHenchmen(string henchmenName)
+        public MastermindInfoBuilder LeadsHenchmen(string henchmenName, Set set)
         {
-            _mastermindInfo.LeadsHenchmen = henchmenName;
+            var henchmen = Henchmen.GetNewHenchmen(henchmenName, set);
+            _mastermindInfo.LeadsHenchmen = henchmen;
             _mastermindInfo.DoesLeadHenchmen = true;
             return this;
         }
 
-        public MastermindInfoBuilder LeadsHenchmen(List<string> henchmenNames)
+        public MastermindInfoBuilder LeadsHenchmen(List<Henchmen> henchmenNames)
         {
-            _mastermindInfo.LeadsHenchmen = henchmenNames[new Random().Next(henchmenNames.Count)];
+            _mastermindInfo.LeadsHenchmen = henchmenNames[RandomHelper.Instance.Next(henchmenNames.Count)];
             _mastermindInfo.DoesLeadHenchmen = true;
             return this;
         }
 
-        public MastermindInfoBuilder LeadsHenchmenByKind(string henchmenKind)
+        public MastermindInfoBuilder LeadsHenchmenByKind(List<string> henchmenKind)
         {
-            var henchmenList = Henchmen.GetListOfHenchmen();
-            var henchmenNames = (henchmenList.Where(item => item.Contains(henchmenKind))).ToList();
+            var henchmenList = HenchmenRepository.All.ToList();
+            var henchmenInfoList = new List<HenchmenInfo>();
 
-            _mastermindInfo.LeadsHenchmen = henchmenNames[new Random().Next(henchmenNames.Count)];
+            foreach (var henchmanKind in henchmenKind)
+            {
+                henchmenInfoList = henchmenInfoList.Concat(henchmenList.Where(item => item.HenchmenName.Contains(henchmanKind)).ToList()).ToList();
+            }
+
+            _mastermindInfo.LeadsHenchmen = Henchmen.GetNewHenchmen(henchmenInfoList[RandomHelper.Instance.Next(henchmenInfoList.Count)]);
             _mastermindInfo.DoesLeadHenchmen = true;
             return this;
         }
 
         public MastermindInfoBuilder LeadsVillainsByKind(List<string> villainKinds)
         {
-            var villainsList = Villain.GetListOfVillains();
-            var listOfVillains = new List<string>();
+            var villainsList = Villain.ConvertToVillainList(VillainRepository.All.ToList());
+            var listOfVillains = new List<Villain>();
             foreach (var villainKind in villainKinds)
             {
-                listOfVillains.AddRange((villainsList.Where(item => item.Contains(villainKind))).ToList());
+                listOfVillains.AddRange((villainsList.Where(item => item.VillainName.Contains(villainKind))).ToList());
             }
 
-            _mastermindInfo.LeadsVillain = listOfVillains[new Random().Next(listOfVillains.Count)];
+            _mastermindInfo.LeadsVillain = listOfVillains[RandomHelper.Instance.Next(listOfVillains.Count)];
             _mastermindInfo.DoesLeadVillain = true;
             return this;
         }

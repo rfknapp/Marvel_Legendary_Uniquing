@@ -39,14 +39,14 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Negative Zone Prison Breakout").AddAdditionalHenchmen(1).CannotBeSolo().Build(),
             new SchemeInfoBuilder().SetSchemeName("Portals to The Dark Dimension").SetSchemeTwists(7).Build(),
             new SchemeInfoBuilder().SetSchemeName("Replace Earth's Leaders With Killbots").SetSchemeTwists(5).SetSchemesNextToTwist(3).SetBystanderCount(18).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Secret Invasion of the Skrull Shapeshifters").SetHeroCount(6).SetRequiredVillains("Skrulls").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Secret Invasion of the Skrull Shapeshifters").SetHeroCount(6).SetRequiredVillains("Skrulls", Set.Core).Build(),
             new SchemeInfoBuilder().SetSchemeName("Super Hero Civil War").CannotBeSolo().SetSchemeTwists(new List<int> { 0,8,8,5,5}).SetHeroCount(new List<int> {0,4,5,5,6}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Unleash the Power of the Cosmic Cube").Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Capture Baby Hope").SetSchemeSet(Set.Dc).Build(),
             new SchemeInfoBuilder().SetSchemeName("Detonate the Helicarrier").SetSchemeSet(Set.Dc).SetHeroCount(6).Build(),
             new SchemeInfoBuilder().SetSchemeName("Massive Earthquake Generator").SetSchemeSet(Set.Dc).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Organized Crimewave").SetSchemeSet(Set.Dc).SetRequiredHenchmen("Maggia Goons").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Organized Crimewave").SetSchemeSet(Set.Dc).SetRequiredHenchmen(Henchmen.GetNewHenchmen("Maggia Goons", Set.Dc)).Build(),
             new SchemeInfoBuilder().SetSchemeName("Save Humanity").SetSchemeSet(Set.Dc).SetHeroBystanderCount(new List<int> { 12, 24, 24, 24, 24}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Steal the Weaponized Plutonium").SetSchemeSet(Set.Dc).AddAdditionalVillain(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Transform Citizens into Demons").SetSchemeSet(Set.Dc).HeroesInVillainDeck("Jean Grey").SetBystanderCount(0).Build(),
@@ -58,22 +58,22 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Pull Reality into the Negative Zone").SetSchemeSet(Set.Ff).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Invade the Daily Bugle News HQ").SetSchemeSet(Set.PttR).IncludeHenchmenInHeroDeck(1).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Splice Humans with Spider DNA").SetSchemeSet(Set.PttR).SetRequiredVillains("Sinister Six").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Splice Humans with Spider DNA").SetSchemeSet(Set.PttR).SetRequiredVillains("Sinister Six", Set.PttR).Build(),
             new SchemeInfoBuilder().SetSchemeName("The Clone Saga").SetSchemeSet(Set.PttR).Build(),
             new SchemeInfoBuilder().SetSchemeName("Weave a Web of Lies").SetSchemeSet(Set.PttR).SetSchemeTwists(7).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Build an Underground MegaVault Prison").SetSchemeSet(Set.Villains).SetBindingCount(true,5).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Cage Villains in Power-Suppressing Cells").SetSchemeSet(Set.Villains).NumberHenchmenNextToScheme(2, "Cops").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Cage Villains in Power-Suppressing Cells").SetSchemeSet(Set.Villains).NumberHenchmenNextToScheme(2, "Cops", Set.Villains).Build(),
             new SchemeInfoBuilder().SetSchemeName("Crown Thor King of Asgard").SetSchemeSet(Set.Villains).SetVillainCardNextToScheme("Thor").Build(),
             new SchemeInfoBuilder().SetSchemeName("Crush HYDRA").SetSchemeSet(Set.Villains).IncludeNewRecruits().IncludeMadameHydra().Build(),
             new SchemeInfoBuilder().SetSchemeName("Graduation at Xavier's X-Academy").SetSchemeSet(Set.Villains).SetBystandersNextToScheme(8).Build(),
             new SchemeInfoBuilder().SetSchemeName("Infiltrate the Lair with Spies").SetSchemeSet(Set.Villains).SetBystandersNextToScheme(21).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Mass Produce War Machine Armor").SetSchemeSet(Set.Villains).SetRequiredHenchmen("S.H.I.E.L.D. Assault Squad").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Mass Produce War Machine Armor").SetSchemeSet(Set.Villains).SetRequiredHenchmen(Henchmen.GetNewHenchmen("S.H.I.E.L.D. Assault Squad", Set.Villains)).Build(),
             new SchemeInfoBuilder().SetSchemeName("Resurrect Heroes with Norn Stones").SetSchemeSet(Set.Villains).Build(),
 
-            new SchemeInfoBuilder().SetSchemeName("Forge the Infinity Gauntlet").SetSchemeSet(Set.GotG).SetRequiredVillains("Infinity Gems").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Forge the Infinity Gauntlet").SetSchemeSet(Set.GotG).SetRequiredVillains("Infinity Gems", Set.GotG).Build(),
             new SchemeInfoBuilder().SetSchemeName("Intergalactic Kree Nega-Bomb").SetSchemeSet(Set.GotG).SetBystandersNextToScheme(6).Build(),
-            new SchemeInfoBuilder().SetSchemeName("The Kree-Skrull War").SetSchemeSet(Set.GotG).SetRequiredVillains(new List<string> { "Kree Starforce", "Skrulls" }).Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Kree-Skrull War").SetSchemeSet(Set.GotG).SetRequiredVillains(new List<Villain> { Villain.GetNewVillain("Kree Starforce", Set.GotG), Villain.GetNewVillain("Skrulls", Set.Core) }).Build(),
             new SchemeInfoBuilder().SetSchemeName("Unite the Shards").SetSchemeSet(Set.GotG).SetShardNumber(30).SetSchemeTwists(new List<int> { 6, 7, 8, 9, 10 }).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Fear Itself").SetSchemeSet(Set.Fi).SetSchemeTwists(10).Build(),
@@ -93,7 +93,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Enthrone the Barons of Battleworld").SetSchemeSet(Set.Sw2).Build(),
             new SchemeInfoBuilder().SetSchemeName("The Fountain of Eternal Life").SetSchemeSet(Set.Sw2).SetSchemeTwists(new List<int> { 4, 8, 8, 8, 8 }).Build(),
             new SchemeInfoBuilder().SetSchemeName("The God-Emperor of Battleworld").SetSchemeSet(Set.Sw2).Build(),
-            new SchemeInfoBuilder().SetSchemeName("The Mark of Khonshu").SetSchemeSet(Set.Sw2).SetSchemeTwists(10).SetRequiredHenchmen("Khonshu Guardians").HeroesInVillainDeck(1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Mark of Khonshu").SetSchemeSet(Set.Sw2).SetSchemeTwists(10).SetRequiredHenchmen(Henchmen.GetNewHenchmen("Khonshu Guardians",Set.Sw2)).HeroesInVillainDeck(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Master the Mysteries of Kung-Fu").SetSchemeSet(Set.Sw2).Build(),
             new SchemeInfoBuilder().SetSchemeName("Secret Wars").SetSchemeSet(Set.Sw2).SetSecretWarsMasterminds().Build(),
             new SchemeInfoBuilder().SetSchemeName("Sinister Ambitions").SetSchemeSet(Set.Sw2).SetSchemeTwists(6).SetAmbitions().Build(),
@@ -122,13 +122,13 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Five Families of Crime").SetSchemeSet(Set.Noir).AddAdditionalVillain(2).Build(),
             new SchemeInfoBuilder().SetSchemeName("Hidden Heart of Darkness").SetSchemeSet(Set.Noir).MastermindTacticsInVillainDeck().Build(),
 
-            new SchemeInfoBuilder().SetSchemeName("Alien Brood Encounters").SetSchemeSet(Set.XMen).AddAdditionalHenchmen(1).SetRequiredHenchmen("The Brood").SetBystanderCount(0).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Alien Brood Encounters").SetSchemeSet(Set.XMen).AddAdditionalHenchmen(1).SetRequiredHenchmen(Henchmen.GetNewHenchmen("The Brood",Set.XMen)).SetBystanderCount(0).Build(),
             new SchemeInfoBuilder().SetSchemeName("Anti-Mutant Hatred ").SetSchemeSet(Set.XMen).SetSchemeTwists(11).SetWoundCount(false, 30).Build(),
             new SchemeInfoBuilder().SetSchemeName("Horror of Horrors").SetSchemeSet(Set.XMen).SetSchemeTwists(6).IncludeHorrors().Build(),
-            new SchemeInfoBuilder().SetSchemeName("Mutant-Hunting Super Sentinels").SetSchemeSet(Set.XMen).SetSchemeTwists(9).AddAdditionalHenchmen(1).SetRequiredHenchmen("Sentinels").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Mutant-Hunting Super Sentinels").SetSchemeSet(Set.XMen).SetSchemeTwists(9).AddAdditionalHenchmen(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Nuclear Armageddon").SetSchemeSet(Set.XMen).SetSchemeTwists(5).Build(),
             new SchemeInfoBuilder().SetSchemeName("Televised Deathtraps of Mojo World").SetSchemeSet(Set.XMen).SetSchemeTwists(11).SetWoundCount(true, 6).Build(),
-            new SchemeInfoBuilder().SetSchemeName("The Dark Phoenix Saga").SetSchemeSet(Set.XMen).SetSchemeTwists(10).SetRequiredVillains("Hellfire Club").HeroesInVillainDeck("Jean Grey").Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Dark Phoenix Saga").SetSchemeSet(Set.XMen).SetSchemeTwists(10).SetRequiredVillains("Hellfire Club", Set.XMen).HeroesInVillainDeck("Jean Grey").Build(),
             new SchemeInfoBuilder().SetSchemeName("X-Men Danger Room goes Berserk").SetSchemeSet(Set.XMen).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Distract the Hero").SetSchemeSet(Set.Sm).IncludeHeroTeams(1, HeroTeam.SpiderFriends).Build(),
@@ -152,7 +152,7 @@ namespace MarvelLegendary
 
             new SchemeInfoBuilder().SetSchemeName("Asgard Under Siege (Negative Zone Prison Breakout)").SetSchemeSet(Set.P1).AddAdditionalHenchmen(1).CannotBeSolo().Build(),
             new SchemeInfoBuilder().SetSchemeName("Destroy the Cities of Earth! (Midtown Bank Robbery)").SetSchemeSet(Set.P1).SetBystanderCount(12).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Enslave Minds with the Chitauri Scepter (Secret Invasion of the Skrull Shapeshifters)").SetSchemeSet(Set.P1).SetHeroCount(6).SetRequiredVillains("Chitauri").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Enslave Minds with the Chitauri Scepter (Secret Invasion of the Skrull Shapeshifters)").SetSchemeSet(Set.P1).SetHeroCount(6).SetRequiredVillains("Chitauri", Set.P1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Invade Asgard (Portals to The Dark Dimension)").SetSchemeSet(Set.P1).SetSchemeTwists(7).Build(),
             new SchemeInfoBuilder().SetSchemeName("Radioactive Palladium Poisoning (The Legacy Virus)").SetSchemeSet(Set.P1).SetWoundCount(true, 6).Build(),
             new SchemeInfoBuilder().SetSchemeName("Replace Earth's Leaders with HYDRA (Replace Earth's Leaders With Killbots)").SetSchemeSet(Set.P1).SetSchemeTwists(5).SetSchemesNextToTwist(3).SetBystanderCount(18).Build(),
@@ -177,7 +177,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Hail Hydra").SetSchemeSet(Set.Shield).SetSchemeTwists(11).Build(),
             new SchemeInfoBuilder().SetSchemeName("Hydra Helicarriers Hunt Heroes").SetSchemeSet(Set.Shield).AddAdditionalHero(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Secret Empire of Betrayal").SetSchemeSet(Set.Shield).SetSchemeTwists(11).SetDarkLoyalty().Build(),
-            new SchemeInfoBuilder().SetSchemeName("S.H.I.E.L.D. vs. Hydra War").SetSchemeSet(Set.Shield).SetSchemeTwists(7).SetRequiredVillains(new List<string>{"Hydra Elite", "A.I.M., Hydra Offshoot" }, 1).Build(),
+            new SchemeInfoBuilder().SetSchemeName("S.H.I.E.L.D. vs. Hydra War").SetSchemeSet(Set.Shield).SetSchemeTwists(7).SetOneButNotOther(new List<Villain>{Villain.GetNewVillain("Hydra Elite", Set.Shield), Villain.GetNewVillain("A.I.M., Hydra Offshoot",Set.Shield) }).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Asgardian Test of Worth").SetSchemeSet(Set.Asgard).SetSchemeTwists(11).Build(),
             new SchemeInfoBuilder().SetSchemeName("The Dark World of Svartalfheim").SetSchemeSet(Set.Asgard).SetSchemeTwists(10).Build(),
@@ -185,7 +185,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("War of the Frost Giants").SetSchemeSet(Set.Asgard).SetSchemeTwists(9).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Crash the Moon into the Sun").SetSchemeSet(Set.NewMutants).SetSchemeTwists(11).Build(),
-            new SchemeInfoBuilder().SetSchemeName("The Demon Bear Saga").SetSchemeSet(Set.NewMutants).SetRequiredVillains("Demons of Limbo").Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Demon Bear Saga").SetSchemeSet(Set.NewMutants).SetRequiredVillains("Demons of Limbo", Set.NewMutants).Build(),
             new SchemeInfoBuilder().SetSchemeName("Superhuman Baseball Game").SetSchemeSet(Set.NewMutants).SetSchemeTwists(9).AddAdditionalVillain(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Trapped in the Insane Asylum").SetSchemeSet(Set.NewMutants).SetSchemeTwists(new List<int>{3,5,7,9,11}).Build(),
 
@@ -242,7 +242,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Breach the Nexus of All Realities").SetSchemeSet(Set.WhatIf).SetVillainCount(new List<int>{ 3, 3, 3, 3, 4 }).SetSchemeTwists(new List<int>{6,6,6,6,8}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Collect an Interstellar Zoo").SetSchemeSet(Set.WhatIf).SetSchemeTwists(11).Build(),
             new SchemeInfoBuilder().SetSchemeName("Marvel Zombies").SetSchemeSet(Set.WhatIf).SetSchemeTwists(4).HeroesInVillainDeck(1).MarvelZombieVillains(1, Keywords.LivingDead).SetBystanderCount(new List<int>{ 4, 5, 8, 8, 12 }).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Trash Earth with Hugest Party Ever").SetSchemeSet(Set.WhatIf).SetSchemeTwists(6).SetRequiredHeroes("Party Thor").SetRequiredVillains("Intergalactic Party Animals").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Trash Earth with Hugest Party Ever").SetSchemeSet(Set.WhatIf).SetSchemeTwists(6).SetRequiredHeroes("Party Thor").SetRequiredVillains("Intergalactic Party Animals", Set.WhatIf).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Auction Shrink Tech to Highest Bidder").SetSchemeSet(Set.AntmanWasp).SetSchemeTwists(11).SetShrinkTechDeck().Build(),
             new SchemeInfoBuilder().SetSchemeName("Escape an Imprisoning Dimension").SetSchemeSet(Set.AntmanWasp).SetSchemeTwists(5).Build(),
@@ -281,12 +281,12 @@ namespace MarvelLegendary
         public int RandomHeroesInVillainDeck { get; set; }
 
         public int NumberOfVillains { get; set; }
-        public List<string> RequiredVillains { get; set; }
+        public List<Villain> RequiredVillains { get; set; }
 
         public int NumberOfMasterminds { get; set; }
 
         public int NumberOfHenchmen { get; set; }
-        public List<string> RequiredHenchmen { get; set; }
+        public List<Henchmen> RequiredHenchmen { get; set; }
 
         public bool WoundsPerPlayer { get; set; }
         public bool CustomWoundNumber { get; set; }
@@ -412,7 +412,7 @@ namespace MarvelLegendary
 
             //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is not Lilith
             if (newScheme.SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName != "Lilith")
-                newScheme.RequiredVillains.Add("Lilin");
+                newScheme.RequiredVillains.Add(Villain.GetNewVillain("Lilin", Set.MidnightSons));
 
             newScheme.NumberOfHenchmen = schemeInfo.Henchmen[playerCount - 1];
             newScheme.RequiredHenchmen = schemeInfo.RequiredHenchmen;
@@ -442,22 +442,6 @@ namespace MarvelLegendary
         public static string ToString(Scheme scheme)
         {
             return $"{scheme.SchemeName}, {scheme.SetName.GetDescription()}";
-        }
-
-        public List<string> GetListOfSchemesByX(string cardType, string name)
-        {
-            //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
-            var schemeByTable = $"SchemeBy{cardType}";
-            var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
-            var updatedName = name.Replace("'", "''");
-
-            var allSchemesBy = $@"select s.SchemeName from Schemes s
-                    inner join {schemeByTable} sb ON s.Id = sb.SchemeId
-                    inner join {tableName} t ON t.Id = sb.{cardType}Id
-                    where t.{cardType}Name = '{updatedName}'";
-
-            var allSchemesByX = new DatabaseHelper().GetList(allSchemesBy);
-            return allSchemesByX;
         }
     }
 }

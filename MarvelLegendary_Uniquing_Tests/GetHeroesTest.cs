@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using static MarvelLegendary.Exclusions.GetExclusions;
+using MarvelLegendary.Enums;
 
 namespace MarvelLegendary_Uniquing_Tests
 {
@@ -43,7 +44,7 @@ namespace MarvelLegendary_Uniquing_Tests
             newGameInfo.Mastermind = Mastermind.GetNewMastermind("Loki");
             newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
             newGameInfo.Scheme = Scheme.GetNewScheme(1, newGameInfo.Mastermind, "Steal the Weaponized Plutonium");
-            newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard"), Villain.GetNewVillain("HYDRA") };
+            newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard", Set.Core), Villain.GetNewVillain("HYDRA", Set.Core) };
             newGameInfo.HenchmenList = new List<Henchmen>() { Henchmen.GetNewHenchmen("Doombot Legion") };
             newGameInfo.Heroes = new List<Hero>() { Hero.GetNewHero("Spider-Man"), Hero.GetNewHero("Angel") };
 
@@ -78,7 +79,7 @@ namespace MarvelLegendary_Uniquing_Tests
             newGameInfo.Mastermind = Mastermind.GetNewMastermind("Loki");
             newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
             newGameInfo.Scheme = Scheme.GetNewScheme(1, newGameInfo.Mastermind, "The Dark Phoenix Saga");
-            newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard"), Villain.GetNewVillain("HYDRA") };
+            newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard", Set.Core), Villain.GetNewVillain("HYDRA", Set.Core) };
             newGameInfo.HenchmenList = new List<Henchmen>() { Henchmen.GetNewHenchmen("Doombot Legion") };
             newGameInfo.Heroes = new List<Hero>();
 
@@ -140,7 +141,7 @@ namespace MarvelLegendary_Uniquing_Tests
             newGameInfo.Mastermind = Mastermind.GetNewMastermind("Loki");
             newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
             newGameInfo.Scheme = Scheme.GetNewScheme(1, newGameInfo.Mastermind, "Fall of the Hulks");
-            newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard"), Villain.GetNewVillain("HYDRA") };
+            newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard", Set.Core), Villain.GetNewVillain("HYDRA", Set.Core) };
             newGameInfo.HenchmenList = new List<Henchmen>() { Henchmen.GetNewHenchmen("Doombot Legion") };
             newGameInfo.Heroes = new List<Hero>();
 
@@ -201,7 +202,7 @@ namespace MarvelLegendary_Uniquing_Tests
             newGameInfo.Mastermind = Mastermind.GetNewMastermind("Loki");
             newGameInfo.AllMastermindsInGame = new List<Mastermind>() { newGameInfo.Mastermind };
             newGameInfo.Scheme = Scheme.GetNewScheme(1, newGameInfo.Mastermind, schemeName);
-            newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard"), Villain.GetNewVillain("HYDRA") };
+            newGameInfo.Villains = new List<Villain>() { Villain.GetNewVillain("Enemies of Asgard", Set.Core), Villain.GetNewVillain("HYDRA", Set.Core) };
             newGameInfo.HenchmenList = new List<Henchmen>() { Henchmen.GetNewHenchmen("Doombot Legion") };
             newGameInfo.Heroes = new List<Hero>();
 

@@ -12,8 +12,8 @@ namespace MarvelLegendary
         public string MastermindName { get; set; }
         public Set SetName { get; set; }
         public string RequiredVillain { get; set; }
-        public string LeadsVillain { get; set; }
-        public string LeadsHenchmen { get; set; }
+        public Villain LeadsVillain { get; set; }
+        public Henchmen LeadsHenchmen { get; set; }
         public bool AlwaysLeadsOnSolo { get; set; }
         public bool DoesLeadVillain { get; set; }
         public bool DoesLeadHenchmen { get; set; }

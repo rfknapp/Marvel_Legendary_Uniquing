@@ -1,4 +1,5 @@
 ﻿using MarvelLegendary.Enums;
+using MarvelLegendary.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,6 @@ namespace MarvelLegendary
     class SchemeInfoBuilder
     {
         private SchemeInfo _schemeInfo;
-        static Random rnd = new Random();
 
         public SchemeInfoBuilder()
         {
@@ -56,10 +56,10 @@ namespace MarvelLegendary
 
                 //Henchmen
                 Henchmen = new List<int> { 1, 1, 1, 2, 2 },
-                RequiredHenchmen = new List<string>(),
+                RequiredHenchmen = new List<Henchmen>(),
                 NumberHenchmenInHeroDeck = 0,
                 HenchmenNextToSchemePerPlayer = new List<int>() { 0, 0, 0, 0, 0 },
-                HenchmenNextToScheme = "",
+                HenchmenNextToScheme = null,
                 HasAnnihilationHenchmen = false,
                 IsHenchmenInHeroDeck = false,
                 IsHenchmenNextToScheme = false,
@@ -70,15 +70,15 @@ namespace MarvelLegendary
 
                 //Villains
                 Villains = new List<int> { 1, 2, 3, 3, 4 },
-                RequiredVillains = new List<string>(),
+                RequiredVillains = new List<Villain>(),
                 VillainCardNextToScheme = "",
                 IsVillainCardNextToScheme = false,
                 IsMonsterPitDeck = false,
                 IsQuantumRealmDeck = false,
-                VillainsNotAllowed = new List<string>(),
+                VillainsNotAllowed = new List<Villain>(),
                 IsMarvelZombies = false,
                 MarvelZombiesGroup = new List<string>(),
-                SchemeVillainName = "",
+                SchemeVillain = null,
                 ZombieKeyword = Keywords.None,
                 NumberOfSchemeVillains = 0,
 
@@ -271,14 +271,14 @@ namespace MarvelLegendary
         public SchemeInfoBuilder IncludeMonsterPitDeck()
         {
             _schemeInfo.IsMonsterPitDeck = true;
-            _schemeInfo.SchemeVillainName = "Monsters Unleashed";
+            _schemeInfo.SchemeVillain = Villain.GetNewVillain("Monsters Unleashed", Set.Champions);
             return this;
         }
 
         public SchemeInfoBuilder IncludeQuantumRealmDeck()
         {
             _schemeInfo.IsQuantumRealmDeck = true;
-            _schemeInfo.SchemeVillainName = "Quantum Realm";
+            _schemeInfo.SchemeVillain = Villain.GetNewVillain("Quantum Realm", Set.AntmanWasp);
             return this;
         }
 
@@ -317,7 +317,7 @@ namespace MarvelLegendary
         {
             var keywordHeroes = Hero.GetListOfHeroesWithKeyword(Keywords.Size);
 
-            var randomIndex = rnd.Next(keywordHeroes.Count);
+            var randomIndex = RandomHelper.Instance.Next(keywordHeroes.Count);
             _schemeInfo.ShrinkTechHero = Hero.GetNewHero(keywordHeroes[randomIndex]);
             _schemeInfo.IsShrinkTechHero = true;
             return this;
@@ -349,17 +349,17 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder NumberHenchmenNextToScheme(int henchmenNumber, string henchmenName)
+        public SchemeInfoBuilder NumberHenchmenNextToScheme(int henchmenNumber, string henchmenName, Set setName)
         {
             _schemeInfo.HenchmenNextToSchemePerPlayer = Enumerable.Range(1, 5).Select(i => i * henchmenNumber).ToList();
-            _schemeInfo.HenchmenNextToScheme = henchmenName;
+            _schemeInfo.HenchmenNextToScheme = Henchmen.GetNewHenchmen(henchmenName, setName);
             _schemeInfo.IsHenchmenNextToScheme = true;
             return this;
         }
 
-        public SchemeInfoBuilder SetRequiredHenchmen(string henchmenGroup)
+        public SchemeInfoBuilder SetRequiredHenchmen(Henchmen henchmen)
         {
-            _schemeInfo.RequiredHenchmen = new List<string> { henchmenGroup };
+            _schemeInfo.RequiredHenchmen = new List<Henchmen> { henchmen };
             return this;
         }
 
@@ -425,7 +425,7 @@ namespace MarvelLegendary
 
             while (_schemeInfo.HeroesInVillainDeck.Count < numberOfHeroesWithNameString && namedHeroes.Count > 0)
             {
-                var randomIndex = rnd.Next(namedHeroes.Count);
+                var randomIndex = RandomHelper.Instance.Next(namedHeroes.Count);
                 _schemeInfo.HeroesInVillainDeck.Add(namedHeroes[randomIndex]);
                 namedHeroes.RemoveAt(randomIndex);
             }
@@ -462,23 +462,22 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder SetRequiredVillains(string villainGroup)
+        public SchemeInfoBuilder SetRequiredVillains(string villainGroup, Set villainSetName)
         {
-            _schemeInfo.RequiredVillains = new List<string> { villainGroup };
+            _schemeInfo.RequiredVillains = new List<Villain> { Villain.GetNewVillain(villainGroup, villainSetName) };
             return this;
         }
 
-        public SchemeInfoBuilder SetRequiredVillains(List<string> villainGroup)
+        public SchemeInfoBuilder SetRequiredVillains(List<Villain> villainGroup)
         {
             _schemeInfo.RequiredVillains = villainGroup;
             return this;
         }
 
-        public SchemeInfoBuilder SetRequiredVillains(List<string> villainList, int numberOfVillainsFromGroup)
+        public SchemeInfoBuilder SetOneButNotOther(List<Villain> villainList)
         {
-            var randomIndex = rnd.Next(villainList.Count);
-            var villain = villainList[randomIndex];
-            _schemeInfo.RequiredVillains = new List<string> { villain };
+            var villain = villainList[RandomHelper.Instance.Next(villainList.Count)];
+            _schemeInfo.RequiredVillains.Add(villain);
             villainList.Remove(villain);
             _schemeInfo.VillainsNotAllowed = villainList;
 

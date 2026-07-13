@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -131,6 +131,7 @@ namespace MarvelLegendary
 
     public class Henchmen
     {
+        public int Id { get; set; }
         public Set HenchmenSet { get; set; }
         public string HenchmenName { get; set; }
         public HenchmenInfo HenchmenInfo { get; set; }
@@ -148,7 +149,26 @@ namespace MarvelLegendary
 
             return new Henchmen
             {
+                Id = henchmenInfo.Id,
                 HenchmenName = henchmen,
+                HenchmenSet = henchmenInfo.HenchmenSetName,
+                HenchmenInfo = henchmenInfo
+            };
+        }
+
+        public static Henchmen GetNewHenchmen(string henchmenName, Set setName)
+        {
+            var henchmenInfo = HenchmenRepository.All.FirstOrDefault(h => h.HenchmenName == henchmenName && h.HenchmenSetName == setName);
+
+            if(henchmenInfo.IsDuplicate)
+            {
+                henchmenInfo = GetDuplicateHenchmen(henchmenInfo);
+            }
+
+            return new Henchmen
+            {
+                Id = henchmenInfo.Id,
+                HenchmenName = henchmenInfo.HenchmenName,
                 HenchmenSet = henchmenInfo.HenchmenSetName,
                 HenchmenInfo = henchmenInfo
             };
@@ -156,53 +176,17 @@ namespace MarvelLegendary
 
         public static Henchmen GetNewHenchmen(HenchmenInfo henchmenInfo)
         {
+            if (henchmenInfo.IsDuplicate)
+            {
+                henchmenInfo = GetDuplicateHenchmen(henchmenInfo);
+            }
+
             return new Henchmen
             {
+                Id = henchmenInfo.Id,
                 HenchmenName = henchmenInfo.HenchmenName,
                 HenchmenSet = henchmenInfo.HenchmenSetName,
                 HenchmenInfo = henchmenInfo
-            };
-        }
-
-        public static Henchmen GetNewHenchmen(List<string> exclusionHenchmen)
-        {
-            var henchmenName = GetRandomHenchmen();
-            var henchmen = HenchmenRepository.All.FirstOrDefault(x => x.HenchmenName == henchmenName.HenchmenName);
-
-            //In Phase 1 there were Henchmen that were clones of the Henchmen released in the base game.
-            //This will choose the base game versions of those Henchmen
-            if (henchmenName.IsDuplicate)
-            {
-                henchmen = GetDuplicateHenchmen(henchmenName);
-            }
-
-            if (exclusionHenchmen.Count < HenchmenRepository.All.Count)
-            {
-                while (exclusionHenchmen.Any(x => x == henchmen.HenchmenName.Split('_').First()))
-                {
-                    henchmen = HenchmenRepository.All[RandomHelper.Instance.Next(HenchmenRepository.All.Count)];
-                    if (henchmen.HenchmenName.Contains('('))
-                    {
-                        var tempName = henchmen.HenchmenName.Split('(')[1].Split(')')[0];
-                        henchmen = HenchmenRepository.All.FirstOrDefault(x => x.HenchmenName == tempName);
-                    }
-
-                    while (henchmen == null)
-                    {
-                        henchmen = HenchmenRepository.All[RandomHelper.Instance.Next(HenchmenRepository.All.Count)];
-                        if (henchmen.IsDuplicate)
-                        {
-                            henchmen = GetDuplicateHenchmen(henchmenName);
-                        }
-                    }
-                }
-            }
-
-            return new Henchmen
-            {
-                HenchmenName = henchmen.HenchmenName,
-                HenchmenSet = henchmen.HenchmenSetName,
-                HenchmenInfo = henchmen
             };
         }
 
@@ -226,6 +210,7 @@ namespace MarvelLegendary
                 returnList.Add(
                     new Henchmen
                     {
+                        Id = henchmenInfo.Id,
                         HenchmenName = henchmenInfo.HenchmenName,
                         HenchmenSet = henchmenInfo.HenchmenSetName,
                         HenchmenInfo = henchmenInfo
@@ -244,6 +229,7 @@ namespace MarvelLegendary
                 returnList.Add(
                     new Henchmen
                     {
+                        Id = henchmen.Id,
                         HenchmenName = henchmen.HenchmenName,
                         HenchmenSet = henchmen.HenchmenSetName,
                         HenchmenInfo = henchmen
@@ -259,7 +245,19 @@ namespace MarvelLegendary
             var henchmenList = ConvertToHenchmenList(HenchmenRepository.All.ToList());
 
             //Remove all Henchmen currently in the game from the list
-            var remainingHenchmen = henchmenList.Except(henchmenInGame).ToList();
+            var idsInGame = new HashSet<int>(henchmenInGame.Select(h => h.Id));
+            var remainingHenchmen = henchmenList.Where(h => !idsInGame.Contains(h.Id)).ToList();
+
+			//If a henchmen with duplicates is in the game then this will remove all duplicates from the pool to choose from
+            foreach (var henchmanInGame in henchmenInGame)
+            {
+                if(henchmanInGame.HenchmenInfo.IsDuplicate)
+                {
+                    var duplicateHenchmenList = HenchmenRepository.All.Where(h => henchmanInGame.HenchmenInfo.DuplicateHenchmenIds.Contains(h.Id)).ToList();
+                    idsInGame = new HashSet<int>(duplicateHenchmenList.Select(h => h.Id));
+                    remainingHenchmen = remainingHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
+                }
+            }
 
             //Get Henchmen that have played with the Scheme
             var schemeCard = new Card
@@ -271,9 +269,10 @@ namespace MarvelLegendary
 
             var henchmenCardsByScheme = SqlHelper.GetCardRelationships(CardType.Henchmen, schemeCard);
             var henchmenByScheme = ConvertToHenchmenList(henchmenCardsByScheme);
-            
+
             //Remove all Henchmen that have played with the scheme from the list
-            remainingHenchmen = remainingHenchmen.Except(henchmenByScheme).ToList();
+            idsInGame = new HashSet<int>(henchmenByScheme.Select(h => h.Id));
+            remainingHenchmen = remainingHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
 
             //Get Henchmen that have played with each of the Masterminds with
             foreach (var mastermind in allMastermindsInGame)
@@ -288,7 +287,9 @@ namespace MarvelLegendary
                 var henchmenCardsByMastermind = SqlHelper.GetCardRelationships(CardType.Henchmen, mastermindCard);
                 var henchmenByMastermind = ConvertToHenchmenList(henchmenCardsByMastermind);
                 //Remove all Henchmen that have played with the Mastermind(s)
-                remainingHenchmen = remainingHenchmen.Except(henchmenByMastermind).ToList();
+
+                idsInGame = new HashSet<int>(henchmenByMastermind.Select(h => h.Id));
+                remainingHenchmen = remainingHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
             }
 
             //Get Henchmen that have played with each of the Villains with
@@ -305,7 +306,8 @@ namespace MarvelLegendary
                 var henchmenByVillain = ConvertToHenchmenList(henchmenCardsByVillain);
 
                 //Remove all Henchmen that have played with the Villains
-                remainingHenchmen = remainingHenchmen.Except(henchmenByVillain).ToList();
+                idsInGame = new HashSet<int>(henchmenByVillain.Select(h => h.Id));
+                remainingHenchmen = remainingHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
             }
 
             //Get Henchmen that have played with each of the Henchmen with
@@ -322,7 +324,8 @@ namespace MarvelLegendary
                 var henchmenByHenchmen = ConvertToHenchmenList(henchmenCardsByHenchmen);
 
                 //Remove all Henchmen that have played with the Henchmen
-                remainingHenchmen = remainingHenchmen.Except(henchmenByHenchmen).ToList();
+                idsInGame = new HashSet<int>(henchmenByHenchmen.Select(hm => h.Id));
+                remainingHenchmen = remainingHenchmen.Where(hm => !idsInGame.Contains(h.Id)).ToList();
             }
 
             //Select Henchmen from remaining list
@@ -352,22 +355,6 @@ namespace MarvelLegendary
             return $"{returnString.Remove(returnString.Length - 2)}\r\n";
         }
 
-        public List<HenchmenInfo> ModifyHenchmenList(List<string> henchmenExclusions)
-        {
-            var returnList = new List<HenchmenInfo>(HenchmenRepository.All);
-
-            foreach (var henchmenExclusion in henchmenExclusions)
-            {
-                while (returnList.Any(x => x.HenchmenName == henchmenExclusion))
-                {
-                    var itemToRemove = returnList.Single(x => x.HenchmenName == henchmenExclusion);
-                    returnList.Remove(itemToRemove);
-                }
-            }
-
-            return returnList;
-        }
-
         public static List<string> GetListOfHenchmen()
         {
             var returnList = HenchmenRepository.All.Select(h => h.HenchmenName).ToList();
@@ -378,22 +365,6 @@ namespace MarvelLegendary
         {
             var henchmen = HenchmenRepository.All[RandomHelper.Instance.Next(HenchmenRepository.All.Count)];
             return henchmen;
-        }
-
-        public List<string> GetListOfHenchmenByX(string cardType, string name)
-        {
-            //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
-            var henchmenByTable = $"HenchmenBy{cardType}";
-            var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
-            var updatedName = name.Contains("'") ? name.Replace("'", "''") : name;
-
-            var allHenchmenBy = $@"select h.HenchmenName from Henchmen h
-                    inner join {henchmenByTable} hb ON h.Id = hb.HenchmenId
-                    inner join {tableName} t ON t.Id = hb.{cardType}Id
-                    where t.{cardType}Name = '{updatedName}'";
-
-            var allHenchmenByX = new DatabaseHelper().GetList(allHenchmenBy);
-            return allHenchmenByX;
         }
     }
 }

@@ -46,10 +46,10 @@ namespace MarvelLegendary
 
         //Henchmen
         public List<int> Henchmen { get; set; }
-        public List<string> RequiredHenchmen { get; set; }
+        public List<Henchmen> RequiredHenchmen { get; set; }
         public int NumberHenchmenInHeroDeck { get; set; }
         public List<int> HenchmenNextToSchemePerPlayer { get; set; }
-        public string HenchmenNextToScheme { get; set; }
+        public Henchmen HenchmenNextToScheme { get; set; }
         public bool IsHenchmenNextToScheme { get; set; }
         public bool HasAnnihilationHenchmen { get; set; }
         public bool IsHenchmenInHeroDeck { get; set; }
@@ -60,15 +60,15 @@ namespace MarvelLegendary
 
         //Villains
         public List<int> Villains { get; set; }
-        public List<string> RequiredVillains { get; set; }
-        public List<string> VillainsNotAllowed { get; set; }
+        public List<Villain> RequiredVillains { get; set; }
+        public List<Villain> VillainsNotAllowed { get; set; }
         public string VillainCardNextToScheme { get; set; }
         public bool IsVillainCardNextToScheme { get; set; }
         public bool IsMonsterPitDeck { get; set; }
         public bool IsQuantumRealmDeck { get; set; }
         public bool IsMarvelZombies { get; set; }
         public List<string> MarvelZombiesGroup { get; set; }
-        public string SchemeVillainName { get; set; }
+        public Villain SchemeVillain { get; set; }
         public Keywords ZombieKeyword { get; set; }
         public int NumberOfSchemeVillains { get; set; }
 

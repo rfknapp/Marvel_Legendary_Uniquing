@@ -431,7 +431,7 @@ namespace MarvelLegendary
             if (string.IsNullOrEmpty(heroName))
             {
                 var allHeroes = GetListOfHeroes();
-                heroName = allHeroes[new Random().Next(allHeroes.Count)];
+                heroName = allHeroes[RandomHelper.Instance.Next(allHeroes.Count)];
             }
 
             var heroInfo = HeroRepository.All.FirstOrDefault(h => h.HeroName == heroName);
@@ -449,7 +449,7 @@ namespace MarvelLegendary
         {
             var heroList = GetListOfHeroes();
             heroList.Except(excludedHeroes);
-            var heroName = heroList[new Random().Next(heroList.Count)];
+            var heroName = heroList[RandomHelper.Instance.Next(heroList.Count)];
             var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == heroName);
 
             return new Hero
@@ -623,7 +623,7 @@ namespace MarvelLegendary
                 heroList.Add(availableHeroes.First(x => x == "Nul, Breaker of Worlds"));
             }
 
-            var heroName = heroList[new Random().Next(heroList.Count)];
+            var heroName = heroList[RandomHelper.Instance.Next(heroList.Count)];
             var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == heroName);
 
             return new Hero
@@ -639,7 +639,7 @@ namespace MarvelLegendary
         {
             var heroes = (from item in availableHeroes select GetNewHero(item)).ToList();
             var heroList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
-            var hero = heroList[new Random().Next(heroList.Count)];
+            var hero = heroList[RandomHelper.Instance.Next(heroList.Count)];
             var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == hero.HeroName);
 
             return new Hero
@@ -655,7 +655,7 @@ namespace MarvelLegendary
         {
             var heroes = (from item in availableHeroes select GetNewHero(item)).ToList();
             var heroList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
-            var hero = heroList[new Random().Next(heroList.Count)];
+            var hero = heroList[RandomHelper.Instance.Next(heroList.Count)];
             var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == hero.HeroName);
 
             return new Hero
@@ -728,11 +728,6 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        public static int GetNumberOfHeroes()
-        {
-            return HeroRepository.All.Count;
-        }
-
         public static int GetHeroTeamMemberCount(HeroTeam heroTeam)
         {
             var returnList = new List<HeroInfo>(HeroRepository.All).Where(x=>x.HeroTeam==heroTeam);
@@ -780,29 +775,6 @@ namespace MarvelLegendary
             var returnList = HeroRepository.All
                 .Where(hero => hero.KeywordsList.Contains(keyword))
                 .Select(hero => hero.HeroName).ToList();
-
-            return returnList;
-        }
-
-        public static List<string> GetListOfHeroesByX(string cardType, string name)
-        {
-            //cardType can be Henchmen, Scheme, Hero, Villain, or Mastermind
-            var heroByTable = $"HeroBy{cardType}";
-            var tableName = (cardType == "Henchmen") ? "Henchmen" : (cardType == "Hero" ? "Heroes" : $"{cardType}s");
-            var updatedName = name.Contains("'") ? name.Replace("'", "''") : name;
-
-            var allHeroesBy = $@"select h.HeroName from Heroes h
-                    inner join {heroByTable} hb ON h.Id = hb.HeroId
-                    inner join {tableName} t ON t.Id = hb.{cardType}Id
-                    where t.{cardType}Name = '{updatedName}'";
-
-            var allHeroesByX = new DatabaseHelper().GetList(allHeroesBy);
-            return allHeroesByX;
-        }
-
-        public static List<HeroInfo> SetHeroList(List<string> heroNames)
-        {
-            var returnList = HeroRepository.All.Where(x => heroNames.Contains(x.HeroName)).ToList();
 
             return returnList;
         }
