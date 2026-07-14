@@ -9,6 +9,7 @@ namespace MarvelLegendary
 {
     public class MastermindInfo
     {
+        public int Id { get; set; }
         public string MastermindName { get; set; }
         public Set SetName { get; set; }
         public string RequiredVillain { get; set; }
@@ -26,5 +27,8 @@ namespace MarvelLegendary
         public int MastermindNumberOfHeroes { get; set; }
         public bool IncludeExtraVillain { get; internal set; }
         public int MastermindNumberOfVillains { get; internal set; }
+        public List<int> DuplicateMastermindIds { get; set; } = new List<int>();
+        public bool IsDuplicate { get; set; } = true;
+        public bool IsEnabled { get; set; } = true;
     }
 }

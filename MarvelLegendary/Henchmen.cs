@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,7 +61,7 @@ namespace MarvelLegendary
             new HenchmenInfo(2, "Hand Ninjas", Set.Core, new List<int> { 2, 30, 48}),
             new HenchmenInfo(3, "Savage Land Mutates", Set.Core, new List<int> { 3, 31, 49}),
             new HenchmenInfo(4, "Sentinel", Set.Core, new List<int> { 4, 29, 50}),
-
+            
             new HenchmenInfo(5, "Maggia Goons", Set.Dc),
             new HenchmenInfo(6, "Phalanx", Set.Dc),
             
@@ -136,26 +136,6 @@ namespace MarvelLegendary
         public string HenchmenName { get; set; }
         public HenchmenInfo HenchmenInfo { get; set; }
 
-        public static Henchmen GetNewHenchmen(string henchmenName = "")
-        {
-            var henchmen = henchmenName;
-            if (string.IsNullOrEmpty(henchmenName))
-            {
-                var allHenchmen = GetListOfHenchmen();
-                henchmen = allHenchmen[RandomHelper.Instance.Next(allHenchmen.Count)];
-            }
-
-            var henchmenInfo = HenchmenRepository.All.FirstOrDefault(h => h.HenchmenName == henchmen);
-
-            return new Henchmen
-            {
-                Id = henchmenInfo.Id,
-                HenchmenName = henchmen,
-                HenchmenSet = henchmenInfo.HenchmenSetName,
-                HenchmenInfo = henchmenInfo
-            };
-        }
-
         public static Henchmen GetNewHenchmen(string henchmenName, Set setName)
         {
             var henchmenInfo = HenchmenRepository.All.FirstOrDefault(h => h.HenchmenName == henchmenName && h.HenchmenSetName == setName);
@@ -202,7 +182,7 @@ namespace MarvelLegendary
             return newestHenchmen;
         }
 
-        private static List<Henchmen> ConvertToHenchmenList(List<HenchmenInfo> henchmenInfoList)
+        public static List<Henchmen> ConvertToHenchmenList(List<HenchmenInfo> henchmenInfoList)
         {
             var returnList = new List<Henchmen>();
             foreach (var henchmenInfo in henchmenInfoList)

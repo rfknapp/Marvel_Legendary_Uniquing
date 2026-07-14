@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MarvelLegendary.Exclusions;
+using MarvelLegendary.Enums;
 using MarvelLegendary.Tools;
 using Microsoft.Data.Sqlite;
 
@@ -42,6 +44,8 @@ namespace MarvelLegendary
                     Console.WriteLine($"Unveiled scheme is\r\n1) {game.UnveiledScheme.SchemeName}, {game.UnveiledScheme.SetName}\r\n\r\n");
                 }
 
+                //Need to rework this now that there is a different db schema
+                //var test = new GetExclusions().GetMastermindByMastermindExclusions(game.Mastermind);
                 //ConvertGames.ConvertTrackedGames();
 
                 Console.WriteLine("How many players are playing? (0 to quit)");

@@ -18,7 +18,6 @@ namespace MarvelLegendary
         public bool IncludeBindings { get; set; }
         public bool IncludeMadameHydra { get; set; }
         public List<Keywords> KeywordsList { get; set; } = new List<Keywords>();
-        public List<Set> DuplicateHeroSets { get; set; } = new List<Set>();
         public List<int> DuplicateHeroIds { get; set; } = new List<int>();
         public bool IsEnabled { get; set; } = true;
     }

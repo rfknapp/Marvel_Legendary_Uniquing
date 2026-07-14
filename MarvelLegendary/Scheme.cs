@@ -258,7 +258,6 @@ namespace MarvelLegendary
             //Need to code "Don't use multiple Heroes that have the same Hero Name
             new SchemeInfoBuilder().SetSchemeName("Go After Heroes' Loved Ones").SetSchemeSet(Set.WeaponX).SetSchemeTwists(new List<int>{ 8, 10, 10, 10, 11 }).AddAdditionalHero(1).NoDuplicates().SetLovedOnesDeck().Build(),
             new SchemeInfoBuilder().SetSchemeName("Wipe Heroes' Memories").SetSchemeSet(Set.WeaponX).SetSchemeTwists(new List<int>{ 5, 6, 7, 8, 9 }).Build(),
-
         };
 
         public static IReadOnlyList<SchemeInfo> All => _schemes;
@@ -319,6 +318,18 @@ namespace MarvelLegendary
             };
         }
 
+        public static Scheme GetNewScheme(string schemeName, Set set)
+        {
+            var scheme = schemeName;
+            var schemeInfo = SchemeRepository.All.FirstOrDefault(s => s.SchemeName == scheme && s.SetName == set);
+
+            return new Scheme
+            {
+                SchemeName = schemeInfo.SchemeName,
+                SetName = schemeInfo.SetName
+            };
+        }
+
         //TODO: Update this to also use SetName. Since there are schemes with the same name the output may not be the one you want every time
         public static Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName=null)
         {
@@ -337,9 +348,24 @@ namespace MarvelLegendary
             return newScheme;
         }
 
+        public static Scheme GetNewScheme(int playerCount, Mastermind mastermind, string schemeName, Set set)
+        {
+            SchemeInfo schemeInfo;
+
+            schemeInfo = GetSchemeInfo(schemeName, set);
+
+            var newScheme = ProcessSchemeInfo(playerCount, schemeInfo, mastermind);
+            return newScheme;
+        }
+
         private static SchemeInfo GetSchemeInfo(string schemeName)
         {
             return SchemeRepository.All.First(x => x.SchemeName == schemeName);
+        }
+
+        private static SchemeInfo GetSchemeInfo(string schemeName, Set set)
+        {
+            return SchemeRepository.All.First(x => x.SchemeName == schemeName && x.SetName == set);
         }
 
         private static SchemeInfo GetRandomScheme(Mastermind mastermind)

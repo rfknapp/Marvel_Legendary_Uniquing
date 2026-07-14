@@ -4,41 +4,62 @@ using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices;
 using static MarvelLegendary.Exclusions.GetExclusions;
+using MarvelLegendary.Enums;
 
 namespace MarvelLegendary.Exclusions
 {
     public interface IGetExclusions
     {
-        GameExclusions GetMastermindExclusion(string mastermindName);
-        GameExclusions GetMastermindExclusion(List<string> masterminds);
-        List<string> GetMastermindByMastermindExclusions(string mastermindName);
-        List<string> GetMastermindByMastermindExclusions(List<string> mastermindNames);
-        GameExclusions GetSchemeExclusions(string schemeName);
-        GameExclusions GetVillainExclusion(string villainName);
-        GameExclusions GetVillainExclusion(List<string> villains);
-        List<string> GetVillainByVillainExclusion(List<string> villainNames);
-        GameExclusions GetHenchmenExclusion(string henchmenGroup);
-        GameExclusions GetHenchmenExclusion(List<string> henchmenGroups);
-        List<string> GetHenchmenByHenchmenExclusions(List<string> henchmenGroups);
-        GameExclusions GetHeroExclusion(string heroGroup);
-        GameExclusions GetHeroExclusion(List<string> heroGroups);
-        List<string> GetHeroByHeroExclusions(string heroName);
-        List<string> GetHeroByHeroExclusions(List<string> heroNames);
+        List<List<Mastermind>> GetMastermindByMastermindExclusions(Mastermind mastermindName);
+        //List<string> GetMastermindByMastermindExclusions(List<string> mastermindNames);
+        //GameExclusions GetSchemeExclusions(string schemeName);
+        //GameExclusions GetVillainExclusion(string villainName);
+        //GameExclusions GetVillainExclusion(List<Villain> villains);
+        //List<string> GetVillainByVillainExclusion(List<string> villainNames);
+        //GameExclusions GetHenchmenExclusion(string henchmenGroup, Set set);
+        //GameExclusions GetHenchmenExclusion(List<Henchmen> henchmenGroups);
+        //GameExclusions GetHeroByHenchmenExclusion(List<Henchmen> henchmenGroups);
+        //List<string> GetHenchmenByHenchmenExclusions(List<string> henchmenGroups);
+        //List<string> GetHenchmenByHenchmenExclusions(List<Henchmen> henchmenGroups);
+        //GameExclusions GetHeroExclusion(string heroGroup);
+        //GameExclusions GetHeroExclusion(List<string> heroGroups);
+        //List<string> GetHeroByHeroExclusions(string heroName);
+        //List<string> GetHeroByHeroExclusions(List<string> heroNames);
     }
 
     public class GetExclusions : IGetExclusions
     {
         public class GameExclusions
         {
-            public List<string> SchemeList { get; set; }
-            public List<string> MastermindList { get; set; }
-            public List<string> HenchmenList { get; set; }
-            public List<string> HeroList { get; set; }
-            public List<string> VillainList { get; set; }
+            public List<Scheme> MastermindxSchemeList { get; set; }
+            public List<Mastermind> MastermindxMastermindList { get; set; }
+            public List<Villain> MastermindxVillainList { get; set; }
+            public List<Henchmen> MastermindxHenchmenList { get; set; }
+            public List<Hero> MastermindxHeroList { get; set; }
+            public List<Scheme> SchemexSchemeList { get; set; }
+            public List<Scheme> SchemexMastermindList { get; set; }
+            public List<Scheme> SchemexVillainList { get; set; }
+            public List<Scheme> SchemexHenchmenList { get; set; }
+            public List<Scheme> SchemexHeroList { get; set; }
+            public List<Scheme> VillainxSchemeList { get; set; }
+            public List<Mastermind> VillainxMastermindList { get; set; }
+            public List<Villain> VillainxVillainList { get; set; }
+            public List<Henchmen> VillainxHenchmenList { get; set; }
+            public List<Hero> VillainxHeroList { get; set; }
+            public List<Henchmen> HenchmenxSchemeList { get; set; }
+            public List<Henchmen> HenchmenxMastermindList { get; set; }
+            public List<Henchmen> HenchmenxVillainList { get; set; }
+            public List<Henchmen> HenchmenxHenchmenList { get; set; }
+            public List<Henchmen> HenchmenxHeroList { get; set; }
+            public List<Hero> HeroxSchemeList { get; set; }
+            public List<Hero> HeroxMastermindList { get; set; }
+            public List<Hero> HeroxVillainList { get; set; }
+            public List<Hero> HeroxHenchmenList { get; set; }
+            public List<Hero> HeroxHeroList { get; set; }
         }
 
         #region GetMastermindExclusion
-        public GameExclusions GetMastermindExclusion(string mastermindName)
+        /*public GameExclusions GetMastermindExclusion(Mastermind mastermindName)
         {
             var spreadsheet = new GetSpreadsheet();
             var spreadsheetInfo = spreadsheet.GetSpreadsheetInfo("By Mastermind");
@@ -48,10 +69,10 @@ namespace MarvelLegendary.Exclusions
             
             var combinations = spreadsheetInfo.ToList();
             combinations.RemoveAt(0);
-            var schemeList = new List<string>();
-            var villainList = new List<string>();
-            var henchmenList = new List<string>();
-            var heroList = new List<string>();
+            var schemeList = new List<Scheme>();
+            var villainList = new List<Villain>();
+            var henchmenList = new List<Henchmen>();
+            var heroList = new List<Hero>();
             var schemeSection = true;
             var villainSection = false;
             var henchmenSection = false;
@@ -78,36 +99,37 @@ namespace MarvelLegendary.Exclusions
                     heroSection = true;
                 }
             
+                //TODO: This has to be updated. I just added the set to make this pass
                 if (combinationList[mastermindIndex].ToString() == "X")
                 {
                     if (schemeSection)
-                        schemeList.Add(name);
+                        schemeList.Add(Scheme.GetNewScheme(name, Set.Core));
                     if (villainSection)
-                        villainList.Add(name);
+                        villainList.Add(Villain.GetNewVillain(name, Set.Core));
                     if (henchmenSection)
-                        henchmenList.Add(name);
+                        henchmenList.Add(Henchmen.GetNewHenchmen(name, Set.Core));
                     if (heroSection)
-                        heroList.Add(name);
+                        heroList.Add(Hero.GetNewHero(name, Set.Core));
                 }
             }
-
+        
             var gameExclusions = new GameExclusions()
             {
-                SchemeList = schemeList,
-                VillainList = villainList,
-                HenchmenList = henchmenList,
-                HeroList = heroList,
+                MastermindxSchemeList = schemeList,
+                MastermindxVillainList = villainList,
+                MastermindxHenchmenList = henchmenList,
+                MastermindxHeroList = heroList,
             };
             return gameExclusions;
-        }
+        }*/
 
-        public GameExclusions GetMastermindExclusion(List<string> masterminds)
+        /*public GameExclusions GetMastermindExclusion(List<string> masterminds)
         {
             var returnSchemeList = new List<string>();
             var returnVillainList = new List<string>();
             var returnHenchmenList = new List<string>();
             var returnHeroList = new List<string>();
-
+        
             foreach (var mastermind in masterminds)
             {
                 var tempExclusion = GetMastermindExclusion(mastermind);
@@ -132,7 +154,7 @@ namespace MarvelLegendary.Exclusions
                         returnHeroList.Add(hero);
                 }
             }
-
+        
             return new GameExclusions()
             {
                 SchemeList = returnSchemeList,
@@ -140,36 +162,55 @@ namespace MarvelLegendary.Exclusions
                 HenchmenList = returnHenchmenList,
                 HeroList = returnHeroList
             };
-        }
+        }*/
         #endregion
 
         #region GetMastermindByMastermindExclusions
-        public List<string> GetMastermindByMastermindExclusions(string mastermindName)
+        public List<List<Mastermind>> GetMastermindByMastermindExclusions(Mastermind mastermind)
         {
+            var returnList = new List<List<Mastermind>>();
+
+            //To get the id of the masterminds to associate it with the Mastermind object, just pass the index as the number for the set
+            //If every mastermind is in the spreadsheet it should line up with the ids in the code
             var spreadsheet = new GetSpreadsheet();
             var spreadsheetInfo = spreadsheet.GetSpreadsheetInfo("Mastermind x Mastermind");
-            var listOfMasterminds = spreadsheetInfo.First();
-            var mastermindIndex = listOfMasterminds.ItemArray.ToList().IndexOf(mastermindName);
+            var listOfMasterminds = spreadsheetInfo.First().ItemArray.ToList();
+            //listOfMasterminds.RemoveRange(0, 3);
+            var mastermindIndex = listOfMasterminds.IndexOf(mastermind.MastermindName);
 
             var combinations = spreadsheetInfo.ToList();
             combinations.RemoveAt(0);
-            var mastermindList = new List<string>();
+            var mastermindsInList = new List<string>();
 
             foreach (var combination in combinations)
             {
                 var combinationList = combination.ItemArray.ToList();
                 var name = combinationList[2].ToString();
 
-                if (combinationList[mastermindIndex].ToString() == "X" && !mastermindList.Contains(name))
+                if (combinationList[mastermindIndex].ToString() == "X" && !mastermindsInList.Contains(name))
                 {
-                    mastermindList.Add(name);
+                    mastermindsInList.Add(name);
                 }
             }
 
-            return mastermindList;
+            foreach (var mastermindInList in mastermindsInList)
+            {
+                var innerMastermind = Mastermind.ConvertToMastermind(MastermindRepository.All.FirstOrDefault(m => m.MastermindName == mastermindInList && m.Id == listOfMasterminds.IndexOf(mastermindInList) - 2));
+
+                if (mastermind.MastermindInfo.Id < innerMastermind.MastermindInfo.Id)
+                {
+                    returnList.Add(new List<Mastermind> { mastermind, innerMastermind });
+                }
+                else
+                {
+                    returnList.Add(new List<Mastermind> { innerMastermind, mastermind});
+                }
+            }
+
+            return returnList;
         }
 
-        public List<string> GetMastermindByMastermindExclusions(List<string> mastermindNames)
+        /*public List<string> GetMastermindByMastermindExclusions(List<string> mastermindNames)
         {
             var spreadsheet = new GetSpreadsheet();
             var spreadsheetInfo = spreadsheet.GetSpreadsheetInfo("Mastermind x Mastermind");
@@ -199,6 +240,7 @@ namespace MarvelLegendary.Exclusions
         }
         #endregion
 
+        #region GetSchemeExclusions
         public GameExclusions GetSchemeExclusions(string schemeName)
         {
             var spreadsheet = new GetSpreadsheet();
@@ -263,9 +305,10 @@ namespace MarvelLegendary.Exclusions
             };
             return gameExclusions;
         }
+        #endregion
 
         #region GetVillainExclusion
-        public GameExclusions GetVillainExclusion(string villainName)
+        public GameExclusions GetVillainExclusion(Villain villainName)
         {
             var spreadsheet = new GetSpreadsheet();
             var spreadsheetInfo = spreadsheet.GetSpreadsheetInfo("By Villain");
@@ -274,10 +317,10 @@ namespace MarvelLegendary.Exclusions
 
             var combinations = spreadsheetInfo.ToList();
             combinations.RemoveAt(0);
-            var schemeList = new List<string>();
-            var mastermindList = new List<string>();
-            var henchmenList = new List<string>();
-            var heroList = new List<string>();
+            var schemeList = new List<Scheme>();
+            var mastermindList = new List<Mastermind>();
+            var henchmenList = new List<Henchmen>();
+            var heroList = new List<Hero>();
             var schemeSection = true;
             var mastermindSection = false;
             var henchmenSection = false;
@@ -307,27 +350,27 @@ namespace MarvelLegendary.Exclusions
                 if (combinationList[mastermindIndex].ToString() == "X")
                 {
                     if (schemeSection)
-                        schemeList.Add(name);
+                        schemeList.Add(Scheme.GetNewScheme(name, Set.Core));
                     if (mastermindSection)
-                        mastermindList.Add(name);
+                        mastermindList.Add(Mastermind.GetNewMastermind(name, Set.Core));
                     if (henchmenSection)
-                        henchmenList.Add(name);
+                        henchmenList.Add(Henchmen.GetNewHenchmen(name, Set.Core));
                     if (heroSection)
-                        heroList.Add(name);
+                        heroList.Add(Hero.GetNewHero(name, Set.Core));
                 }
             }
 
             var gameExclusions = new GameExclusions()
             {
-                SchemeList = schemeList,
-                MastermindList = mastermindList,
-                HenchmenList = henchmenList,
-                HeroList = heroList,
+                VillainxSchemeList = schemeList,
+                VillainxMastermindList = mastermindList,
+                VillainxHenchmenList = henchmenList,
+                VillainxHeroList = heroList,
             };
             return gameExclusions;
         }
 
-        public GameExclusions GetVillainExclusion(List<string> villains)
+        public GameExclusions GetVillainExclusion(List<Villain> villains)
         {
             var returnSchemeList = new List<string>();
             var returnMastermindList = new List<string>();
@@ -401,11 +444,11 @@ namespace MarvelLegendary.Exclusions
         #endregion
 
         #region GetHenchmenExclusion
-        public GameExclusions GetHenchmenExclusion(string henchmenGroup)
+        public GameExclusions GetHenchmenExclusion(string henchmenGroup, Set set)
         {
             var spreadsheet = new GetSpreadsheet();
             var spreadsheetInfo = spreadsheet.GetSpreadsheetInfo("By Henchmen");
-            var henchmen = Henchmen.GetNewHenchmen(henchmenGroup);
+            var henchmen = Henchmen.GetNewHenchmen(henchmenGroup, set);
             henchmenGroup = henchmen.HenchmenName;
             
             var listOfHenchmen = spreadsheetInfo.First();
@@ -473,9 +516,50 @@ namespace MarvelLegendary.Exclusions
             var returnVillainList = new List<string>();
             var returnHeroList = new List<string>();
 
+            //foreach (var henchmenGroup in henchmenGroups)
+            //{
+            //    var tempExclusion = GetHenchmenExclusion(henchmenGroup);
+            //    foreach (var scheme in tempExclusion.SchemeList)
+            //    {
+            //        if (!returnSchemeList.Contains(scheme))
+            //            returnSchemeList.Add(scheme);
+            //    }
+            //    foreach (var mastermind in tempExclusion.MastermindList)
+            //    {
+            //        if (!returnMastermindList.Contains(mastermind))
+            //            returnMastermindList.Add(mastermind);
+            //    }
+            //    foreach (var villain in tempExclusion.VillainList)
+            //    {
+            //        if (!returnVillainList.Contains(villain))
+            //            returnVillainList.Add(villain);
+            //    }
+            //    foreach (var hero in tempExclusion.HeroList)
+            //    {
+            //        if (!returnHeroList.Contains(hero))
+            //            returnHeroList.Add(hero);
+            //    }
+            //}
+            
+            return new GameExclusions()
+            {
+                SchemeList = returnSchemeList,
+                MastermindList = returnMastermindList,
+                VillainList = returnVillainList,
+                HeroList = returnHeroList
+            };
+        }
+
+        public GameExclusions GetHenchmenExclusion(List<Henchmen> henchmenGroups)
+        {
+            var returnSchemeList = new List<string>();
+            var returnMastermindList = new List<string>();
+            var returnVillainList = new List<string>();
+            var returnHeroList = new List<string>();
+
             foreach (var henchmenGroup in henchmenGroups)
             {
-                var tempExclusion = GetHenchmenExclusion(henchmenGroup);
+                var tempExclusion = GetHenchmenExclusion(henchmenGroup.HenchmenName, henchmenGroup.HenchmenSet);
                 foreach (var scheme in tempExclusion.SchemeList)
                 {
                     if (!returnSchemeList.Contains(scheme))
@@ -506,10 +590,58 @@ namespace MarvelLegendary.Exclusions
                 HeroList = returnHeroList
             };
         }
+
+        public GameExclusions GetHeroByHenchmenExclusion(List<Henchmen> henchmenGroups)
+        {
+            var returnSchemeList = new List<Scheme>();
+            var returnMastermindList = new List<Mastermind>();
+            var returnVillainList = new List<Villain>();
+            var returnHeroList = new List<Hero>();
+
+            foreach (var henchmenGroup in henchmenGroups)
+            {
+                var tempExclusion = GetHenchmenExclusion(henchmenGroup.HenchmenName, henchmenGroup.HenchmenSet);
+                foreach (var scheme in tempExclusion.HeroxSchemeList)
+                {
+                    if (!returnSchemeList.Contains(Scheme.GetNewScheme(scheme, Set.Core)))
+                        returnSchemeList.Add(scheme);
+                }
+                foreach (var mastermind in tempExclusion.HeroxMastermindList)
+                {
+                    if (!returnMastermindList.Contains(mastermind))
+                        returnMastermindList.Add(mastermind);
+                }
+                foreach (var villain in tempExclusion.HeroxVillainList)
+                {
+                    if (!returnVillainList.Contains(villain))
+                        returnVillainList.Add(villain);
+                }
+                foreach (var hero in tempExclusion.HeroxHeroList)
+                {
+                    if (!returnHeroList.Contains(hero))
+                        returnHeroList.Add(hero);
+                }
+            }
+
+            return new GameExclusions()
+            {
+                SchemeList = returnSchemeList,
+                MastermindList = returnMastermindList,
+                VillainList = returnVillainList,
+                HeroList = returnHeroList
+            };
+        }
         #endregion
 
         #region GetHenchmenByHenchmenExclusions
+
+        //TODO: Need to remove this
         public List<string> GetHenchmenByHenchmenExclusions(List<string> henchmenGroups)
+        {
+            return null;
+        }
+
+        public List<string> GetHenchmenByHenchmenExclusions(List<Henchmen> henchmenGroups)
         {
             var henchmenList = new List<string>();
             var spreadsheet = new GetSpreadsheet();
@@ -703,7 +835,12 @@ namespace MarvelLegendary.Exclusions
 
             return heroList;
         }
-        #endregion
 
+        public GameExclusions GetVillainExclusion(string villainName)
+        {
+            throw new NotImplementedException();
+        }
+        */
+        #endregion
     }
 }

@@ -16,6 +16,7 @@ namespace MarvelLegendary
         {
             _mastermindInfo = new MastermindInfo
             {
+                Id = 0,
                 MastermindName = "",
                 SetName = Set.Core,
                 RequiredVillain = "",
@@ -30,8 +31,17 @@ namespace MarvelLegendary
                 IsZombieSoloVillain = false,
                 RequireVillain = false,
                 IncludeExtraHero = false,
-                MastermindNumberOfHeroes = 0
+                MastermindNumberOfHeroes = 0,
+                DuplicateMastermindIds = null,
+                IsDuplicate = false,
+                IsEnabled = true
             };
+        }
+
+        public MastermindInfoBuilder MastermindId(int id)
+        {
+            _mastermindInfo.Id = id;
+            return this;
         }
 
         public MastermindInfoBuilder SetMastermindName(string name)
@@ -141,6 +151,19 @@ namespace MarvelLegendary
         {
             _mastermindInfo.IncludeExtraVillain = true;
             _mastermindInfo.MastermindNumberOfVillains = 1;
+            return this;
+        }
+
+        public MastermindInfoBuilder Duplicates(List<int> duplicateCardIds)
+        {
+            _mastermindInfo.DuplicateMastermindIds = duplicateCardIds;
+            _mastermindInfo.IsDuplicate = true;
+            return this;
+        }
+
+        public MastermindInfoBuilder Disable()
+        {
+            _mastermindInfo.IsEnabled = false;
             return this;
         }
 

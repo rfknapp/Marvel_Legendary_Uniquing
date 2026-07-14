@@ -377,23 +377,22 @@ namespace MarvelLegendary
 
         public Hero() {}
 
-        public static List<string> GetHeroNameList(List<int> indicies)
+        public static List<Hero> GetHeroNameList(List<int> indicies)
         {
-            return (from index in indicies select HeroRepository.All.ElementAt(index-1).HeroName).ToList();
+            var heroInfoList = indicies.Select(index => HeroRepository.All.ElementAt(index - 1)).ToList();
+            return Hero.ConvertToHeroList(heroInfoList);
         }
 
-        public static List<Hero> GetAllHeroesByNamePart(string namePart, List<string> availableHeroes)
+        public static List<Hero> GetAllHeroesByNamePart(string namePart, List<Hero> availableHeroes)
         {
-            var heroes = availableHeroes.Where(x => x.Contains(namePart)).ToList();
+            var heroes = availableHeroes.Where(x => x.HeroName.Contains(namePart)).ToList();
 
-            if (namePart == "Hulk" && availableHeroes.Any(x=>x == "Nul, Breaker of Worlds"))
+            if (namePart == "Hulk" && availableHeroes.Any(x=>x.HeroName == "Nul, Breaker of Worlds"))
             {
-                heroes.Add(availableHeroes.First(x => x == "Nul, Breaker of Worlds"));
+                heroes.Add(availableHeroes.First(x => x.HeroName == "Nul, Breaker of Worlds"));
             }
 
-            var returnList = (from item in heroes select GetNewHero(item)).ToList();
-
-            return returnList;
+            return heroes;
         }
 
         public static bool IsEnoughHeroes(List<HeroTeam> heroTeams, int heroesPerTeam, List<string> exclusionHeroes)
@@ -426,23 +425,39 @@ namespace MarvelLegendary
             return heroesForTeams.Count >= heroesPerTeam;
         }
 
-        public static Hero GetNewHero(string heroName = null)
+        //public static Hero GetNewHero(string heroName = null)
+        //{
+        //    if (string.IsNullOrEmpty(heroName))
+        //    {
+        //        var allHeroes = GetListOfHeroes();
+        //        heroName = allHeroes[RandomHelper.Instance.Next(allHeroes.Count)];
+        //    }
+        //
+        //    var heroInfo = HeroRepository.All.FirstOrDefault(h => h.HeroName == heroName);
+        //
+        //    return new Hero
+        //    {
+        //        HeroName = heroInfo.HeroName,
+        //        SetName = heroInfo.SetName,
+        //        HeroTeam = heroInfo.HeroTeam,
+        //        HeroInfo = heroInfo
+        //    };
+        //}
+
+        public static Hero GetNewHero(string heroName = null, Set ?set = null)
         {
-            if (string.IsNullOrEmpty(heroName))
+            var heroInfo = new HeroInfo();
+            if (string.IsNullOrEmpty(heroName) || set == null)
             {
-                var allHeroes = GetListOfHeroes();
-                heroName = allHeroes[RandomHelper.Instance.Next(allHeroes.Count)];
+                var allHeroes = HeroRepository.All.ToList();
+                heroInfo = allHeroes[RandomHelper.Instance.Next(allHeroes.Count)];
+            }
+            else
+            {
+                heroInfo = HeroRepository.All.FirstOrDefault(h => h.HeroName == heroName && h.SetName == set);
             }
 
-            var heroInfo = HeroRepository.All.FirstOrDefault(h => h.HeroName == heroName);
-
-            return new Hero
-            {
-                HeroName = heroInfo.HeroName,
-                SetName = heroInfo.SetName,
-                HeroTeam = heroInfo.HeroTeam,
-                HeroInfo = heroInfo
-            };
+            return GetNewHero(heroInfo);
         }
 
         public static Hero GetNewHero(List<string> excludedHeroes)
@@ -452,28 +467,15 @@ namespace MarvelLegendary
             var heroName = heroList[RandomHelper.Instance.Next(heroList.Count)];
             var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == heroName);
 
-            return new Hero
-            {
-                HeroName = heroInfo.HeroName,
-                SetName = heroInfo.SetName,
-                HeroTeam = heroInfo.HeroTeam,
-                HeroInfo = heroInfo
-            };
+            return GetNewHero(heroInfo);
         }
 
-        private static List<Hero> ConvertToHeroList(List<HeroInfo> heroInfoList)
+        public static List<Hero> ConvertToHeroList(List<HeroInfo> heroInfoList)
         {
             var returnList = new List<Hero>();
             foreach (var heroInfo in heroInfoList)
             {
-                returnList.Add(
-                    new Hero
-                    {
-                        HeroName = heroInfo.HeroName,
-                        SetName = heroInfo.SetName,
-                        HeroTeam = heroInfo.HeroTeam,
-                        HeroInfo = heroInfo
-                    });
+                returnList.Add(GetNewHero(heroInfo));
             }
 
             return returnList;
@@ -485,17 +487,26 @@ namespace MarvelLegendary
             foreach (var heroCard in heroCards)
             {
                 var heroInfo = HeroRepository.All.FirstOrDefault(h => h.HeroName == heroCard.CardName && (int)h.SetName == heroCard.SetId);
-                returnList.Add(
-                    new Hero
-                    {
-                        HeroName = heroInfo.HeroName,
-                        SetName = heroInfo.SetName,
-                        HeroTeam = heroInfo.HeroTeam,
-                        HeroInfo = heroInfo
-                    });
+                returnList.Add(GetNewHero(heroInfo));
             }
 
             return returnList;
+        }
+
+        public static Hero GetNewHero(HeroInfo heroInfo)
+        {
+            if (heroInfo.IsDuplicate)
+            {
+                heroInfo = GetDuplicateHero(heroInfo);
+            }
+
+            return new Hero
+            {
+                HeroName = heroInfo.HeroName,
+                SetName = heroInfo.SetName,
+                HeroTeam = heroInfo.HeroTeam,
+                HeroInfo = heroInfo
+            };
         }
 
         //This is replacing the DetermineLists functionality
@@ -635,6 +646,7 @@ namespace MarvelLegendary
             };
         }
 
+        //TODO:  Need to refactor everything to use the next one and stop using this one
         public static Hero GetNewHeroByTeam(HeroTeam heroTeam, List<string> availableHeroes, bool inTeam = true)
         {
             var heroes = (from item in availableHeroes select GetNewHero(item)).ToList();
@@ -642,13 +654,18 @@ namespace MarvelLegendary
             var hero = heroList[RandomHelper.Instance.Next(heroList.Count)];
             var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == hero.HeroName);
 
-            return new Hero
-            {
-                HeroName = heroInfo.HeroName,
-                SetName = heroInfo.SetName,
-                HeroTeam = heroInfo.HeroTeam,
-                HeroInfo = heroInfo
-            };
+            return GetNewHero(heroInfo);
+        }
+
+        public static Hero GetNewHeroByTeam(HeroTeam heroTeam, List<Hero> availableHeroes, bool inTeam = true)
+        {
+            var heroes = new List<Hero>(availableHeroes);
+
+            var heroList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
+            var hero = heroList[RandomHelper.Instance.Next(heroList.Count)];
+            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == hero.HeroName);
+
+            return GetNewHero(heroInfo);
         }
 
         public static Hero GetNewHeroByTeam(HeroTeam heroTeam, List<string> availableHeroes, List<string> excludedHeroes, bool inTeam = true)

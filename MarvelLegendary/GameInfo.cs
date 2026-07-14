@@ -3,7 +3,6 @@ using System.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
 using MarvelLegendary.Exclusions;
-using MarvelLegendary.DetermineLists;
 using System.Xml.Linq;
 using MarvelLegendary.Enums;
 using MarvelLegendary.Helpers;
@@ -82,9 +81,9 @@ namespace MarvelLegendary
             UnveiledScheme = null;
         }
 
-        public void SetMastermind(string mastermindName = "")
+        public void SetMastermind(string mastermindName = "", Set ?set = null)
         {
-            Mastermind = Mastermind.GetNewMastermind(mastermindName);
+            Mastermind = Mastermind.GetNewMastermind(mastermindName, set);
             AllMastermindsInGame.Add(Mastermind);
         }
 
@@ -192,7 +191,7 @@ namespace MarvelLegendary
             if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen
                 || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
             {
-                var extraHenchmen = GetHenchmen(1, HenchmenList, SchemeHenchmen).FirstOrDefault();
+                var extraHenchmen = GetExtraHenchmen(1, HenchmenList, SchemeHenchmen).FirstOrDefault();
                 SchemeHenchmen.Add(extraHenchmen);
 
                 if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
@@ -268,57 +267,6 @@ namespace MarvelLegendary
                 SchemeHeroes.AddRange(from item in royalWeddingHeroes select Hero.GetNewHero(item.HeroName));
             }
         }
-
-        #region Masterminds
-        private static List<Mastermind> GetMasterminds(Scheme scheme, Mastermind mainMastermind)
-        {
-            var returnList = new List<Mastermind>();
-            var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
-            var extraMasterminds = new List<string>();
-            var mastermindList = Mastermind.GetListOfMasterminds();
-
-            for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
-            {
-                var remainingMasterminds = mastermindList.Except(mastermindsInGame).ToList();
-                var exclusions = DetermineMastermindList(mastermindsInGame);
-                var mastermindsToChooseFrom = remainingMasterminds.Except(exclusions).ToList();
-
-                var newMastermind = mastermindsToChooseFrom[RandomHelper.Instance.Next(mastermindsToChooseFrom.Count)];
-                mastermindsInGame.Add(newMastermind);
-                extraMasterminds.Add(newMastermind);
-            }
-
-            returnList.AddRange(from item in extraMasterminds
-                                select Mastermind.GetNewMastermind(item));
-
-            if (scheme.SchemeInfo.IsDrainedMastermind)
-            {
-                scheme.SchemeInfo.DrainedMastermind = Mastermind.GetNewMastermind(extraMasterminds.First());
-            }
-
-            return returnList;
-        }
-
-        private static List<string> DetermineMastermindList(List<string> mastermindsInGame)
-        {
-            var mastermindsToExcludeWith = new List<string>(mastermindsInGame);
-            var getExclusions = new GetExclusions();
-
-            for (int i = mastermindsToExcludeWith.Count - 1; i >= 0; i--)
-            {
-                var test = getExclusions.GetMastermindByMastermindExclusions(mastermindsToExcludeWith);
-                var mastermindList = Mastermind.GetListOfMasterminds();
-                var compareList = mastermindList.Except(mastermindsInGame).Except(test).ToList();
-                if (compareList.Count > 0)
-                {
-                    return test;
-                }
-                mastermindsToExcludeWith.RemoveAt(i);
-            }
-
-            return new List<string>();
-        }
-        #endregion
 
         #region Villains
         //currentVillains is the list of villains to be included in the villain deck
@@ -427,17 +375,21 @@ namespace MarvelLegendary
         //currentHenchmen is the list of henchmen to be included in the henchmen deck
         private List<Henchmen> GetHenchmen(int numberOfHenchmen, List<Henchmen> currentHenchmen, List<Henchmen> schemeHenchmen)
         {
-            var schemeHenchmenNames = schemeHenchmen.Select(x => x.HenchmenName).ToList();
+            //var schemeHenchmenNames = schemeHenchmen.Select(x => x.HenchmenName).ToList();
 
             //This will be the list of henchmen to include in the villain deck
             var henchmenList = new List<Henchmen>();
 
-            var allHenchmen = Henchmen.GetListOfHenchmen();
+            var allHenchmen = Henchmen.ConvertToHenchmenList(HenchmenRepository.All.ToList());
 
-            henchmenList.AddRange(from item in currentHenchmen select item);
+            henchmenList.AddRange(currentHenchmen);
+
+            //This will remove the henchmen that are currently in the game from the pool to choose from
+            var idsInGame = new HashSet<int>(schemeHenchmen.Select(h => h.Id));
+            var remainingHenchmen = allHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
 
             //This will remove all the henchmen that come in from the scheme from the list of henchmen to choose
-            allHenchmen = allHenchmen.Except(schemeHenchmenNames).ToList();
+            allHenchmen = allHenchmen.Except(schemeHenchmen).ToList();
 
             //If the scheme didn't bring in any henchmen or there are more than one henchmen group included we then include from the Mastermind
             //If this is a solo game, then the Mastermind Leads is ignored
@@ -470,6 +422,47 @@ namespace MarvelLegendary
 
             return henchmenList;
         }
+
+        //schemeHenchmenGroups is the list of henchmen that are set aside but needed to avoid being added to the list of henchmen
+        //to include in the henchmen deck
+        //currentHenchmen is the list of henchmen to be included in the henchmen deck
+        private List<Henchmen> GetExtraHenchmen(int numberOfHenchmen, List<Henchmen> currentHenchmen, List<Henchmen> schemeHenchmen)
+        {
+            var schemeHenchmenNames = schemeHenchmen.Select(x => x.HenchmenName).ToList();
+
+            //This will be the list of henchmen to include in the villain deck
+            var henchmenList = new List<Henchmen>(currentHenchmen);
+            var henchmentToExclude = new List<Henchmen>(currentHenchmen).Concat(schemeHenchmen).ToList();
+
+            var allHenchmen = Henchmen.ConvertToHenchmenList(HenchmenRepository.All.ToList());
+
+            //This will remove the henchmen that are currently in the game from the pool to choose from
+            var idsInGame = new HashSet<int>(henchmenList.Select(h => h.Id));
+            var remainingHenchmen = allHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
+
+            //This will remove the henchmen that are currently brought in by the scheme from the pool to choose from
+            idsInGame = new HashSet<int>(schemeHenchmen.Select(h => h.Id));
+            remainingHenchmen = remainingHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
+
+            var currentHenchmenCount = henchmenList.Count;
+            var totalHenchmenInGame = Scheme.NumberOfHenchmen + Scheme.SchemeInfo.NumberExtraHenchmenGroups;
+            var numRemainingHenchmen = totalHenchmenInGame - currentHenchmenCount;
+
+            //If the required number of henchmen from schemes and mastermind lead abilities hasn't reached the number of
+            //henchmen for the player count, it will do this
+            if (numRemainingHenchmen <= 0) return henchmenList;
+
+            var returnList = new List<Henchmen>();
+
+            while (numRemainingHenchmen > 0)
+            {
+                var henchmen = Henchmen.GetNewHenchmen(AllMastermindsInGame, Scheme, Villains, henchmentToExclude);
+                returnList.Add(henchmen);
+                numRemainingHenchmen--;
+            }
+
+            return returnList;
+        }
         #endregion
 
         #region Heroes
@@ -485,6 +478,11 @@ namespace MarvelLegendary
             }
 
             return heroList;
+        }
+
+        public List<Hero> GetHeroes(List<Hero> heroList, List<Hero> availableHeroes, List<Hero> excludedHeroes, IGetExclusions getExclusions)
+        {
+            return new List<Hero>();
         }
 
         private List<Hero> getHeroes(List<string> heroesInVillainDeck)
@@ -529,6 +527,36 @@ namespace MarvelLegendary
             return returnList;
         }
 
+        public List<Hero> GetHeroes(int numberOfHeroes, HeroTeam heroTeam, List<Hero> availableHeroes, List<Hero> exclusionList = null)
+        {
+            var returnList = new List<Hero>();
+
+            //This will set exclusion list to an empty list if it comes in as null otherwise it will keep the passed in value
+            exclusionList = exclusionList ?? new List<Hero>();
+
+            var currentHeroCount = 0;
+            if (numberOfHeroes > currentHeroCount)
+            {
+                for (int i = currentHeroCount; i < numberOfHeroes; i++)
+                {
+                    var newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes);
+                    var heroName = newHero.HeroName;
+
+                    //This will make sure there are no duplicate heroes in the list.
+                    //It will also ignore any heroes that will be included in the villain deck
+                    while (returnList.Any(x => x.HeroName == heroName && x.SetName == newHero.SetName) || exclusionList.Any(h => h.HeroName == heroName && h.SetName == newHero.SetName))
+                    {
+                        newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes);
+                        heroName = newHero.HeroName;
+                    }
+
+                    returnList.Add(newHero);
+                }
+            }
+
+            return returnList;
+        }
+
         private List<Hero> getHeroesNotInTeam(int numberOfHeroes, HeroTeam heroTeam, List<string> exclusionList, List<string> availableHeroes)
         {
             var returnList = new List<Hero>();
@@ -557,7 +585,7 @@ namespace MarvelLegendary
         //this will be going away, but documenting what it is
         private List<Hero> GetHeroesByTeam()
         {
-            var availableHeroes = Hero.GetListOfHeroes();
+            var availableHeroes = Hero.ConvertToHeroList(HeroRepository.All.ToList());
             var returnList = new List<Hero>();
             var usedHeroTeams = new List<HeroTeam>();
 
@@ -593,20 +621,20 @@ namespace MarvelLegendary
         }
 
         //This is kept around until I can fix the integration tests
-        public List<Hero> GetHeroes(List<string> exclusionHeroes, List<Hero> schemeHeroGroups, List<Hero> currentHeroes, List<string> availableHeroes, IGetExclusions getExclusions)
+        public List<Hero> GetHeroes(List<Hero> exclusionHeroes, List<Hero> schemeHeroGroups, List<Hero> currentHeroes, List<Hero> availableHeroes, IGetExclusions getExclusions)
         {
             var heroList = new List<Hero>(currentHeroes);
 
             //The second variable will only be a non-zero number if Alchemax Executives are the Mastermind
             var numberOfHeroes = Scheme.NumberOfHeroes + Mastermind.MastermindInfo.MastermindNumberOfHeroes;
 
-            var excludedHeroes = new List<string>();
+            var excludedHeroes = new List<Hero>();
 
             AllHeroesInGame.AddRange(from item in schemeHeroGroups select item);
             AllHeroesInGame.AddRange(from item in currentHeroes select item);
 
-            excludedHeroes.AddRange(from item in schemeHeroGroups select item.HeroName);
-            excludedHeroes.AddRange(from item in currentHeroes select item.HeroName);
+            excludedHeroes.AddRange(from item in schemeHeroGroups select item);
+            excludedHeroes.AddRange(from item in currentHeroes select item);
 
             if (Scheme.SchemeInfo.IsIncludeHeroTeam)
             {
@@ -626,7 +654,7 @@ namespace MarvelLegendary
                 AllHeroesInGame.AddRange(from item in nameLimitHeroes select item);
 
                 var heroesToExclude = Hero.GetListOfHeroes().Where(x => x.Contains(Scheme.SchemeInfo.CustomNameString)).ToList();
-                excludedHeroes.AddRange(from item in nameLimitHeroes select item.HeroName);
+                excludedHeroes.AddRange(from item in nameLimitHeroes select item);
             }
 
             var currentHeroCount = heroList.Count;
@@ -636,19 +664,25 @@ namespace MarvelLegendary
             if (numRemainingHeroes <= 0) return heroList;
 
             var returnList = new List<Hero>();
-            var heroes = GetHeroes(numRemainingHeroes, heroList, availableHeroes, excludedHeroes, getExclusions);
+            var heroes = new List<Hero>();
+
+            for (int i = numRemainingHeroes; i > 0; i--)
+            {
+                heroes.Concat(GetHeroes(heroList, availableHeroes, excludedHeroes, getExclusions));
+            }
+
+            //heroes = GetHeroes(numRemainingHeroes, heroList, availableHeroes, excludedHeroes, getExclusions);
 
             //returnList.AddRange(from item in heroesInGame select new Hero(item));
-            returnList.AddRange(from item in heroes select Hero.GetNewHero(item));
+            returnList.AddRange(heroes);
 
             return returnList;
         }
         
         public List<Hero> GetHeroes()
         {
-            var excludedHeroes = new List<string>();
             var heroList = new List<Hero>(Heroes);
-            var availableHeroes = Hero.GetListOfHeroes();
+            var availableHeroes = Hero.ConvertToHeroList(HeroRepository.All.ToList());
 
             //Alchemax Executives are the only Mastermind that brings in hero groups
             var numberOfHeroes = Scheme.NumberOfHeroes + Mastermind.MastermindInfo.MastermindNumberOfHeroes;
@@ -659,23 +693,26 @@ namespace MarvelLegendary
             //If those heroes are set, this will add them to a list of heroes in the game
             AllHeroesInGame.AddRange(from item in heroList select item);
             //This will create a list of hero names for all heroes in the game
-            excludedHeroes.AddRange(from item in AllHeroesInGame select item.HeroName);
+            var excludedHeroes = new List<Hero>(AllHeroesInGame);
 
             //This will remove any of the excluded heroes from the list of heroes to choose from
-            availableHeroes = availableHeroes.Except(excludedHeroes).ToList();
+            var idsInGame = new HashSet<int>(excludedHeroes.Select(h => h.HeroInfo.Id));
+            var remainingHeroes = availableHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
 
             //Schemes like "Distract the Hero" say to include X number of heroes from a certain team.
             //Should use GetHeroes(teamOneMembers, heroTeam, availableHeroes) to get the hero
+
+            var test = new List<string>();
             if (Scheme.SchemeInfo.IsIncludeHeroTeam)
             {
-                var heroGroupList = GetHeroes(Scheme.SchemeInfo.NumberOfHeroesFromTeam, Scheme.SchemeInfo.IncludeHeroTeam, availableHeroes);
+                var heroGroupList = GetHeroes(Scheme.SchemeInfo.NumberOfHeroesFromTeam, Scheme.SchemeInfo.IncludeHeroTeam, remainingHeroes);
                 foreach (var heroGroup in heroGroupList)
                 {
                     SchemeHeroes.Add(heroGroup);
                     heroList.Add(heroGroup);
                     
                     AllHeroesInGame.Add(heroGroup);
-                    excludedHeroes.Add(heroGroup.HeroName);
+                    excludedHeroes.Add(heroGroup);
                 }
             }
 
@@ -696,8 +733,8 @@ namespace MarvelLegendary
                 //This will remove all other heroes with that name. Deadpool Writes a Scheme doesn't require only the one Deadpool hero
                 if (Scheme.SchemeInfo.SchemeName != "Deadpool Writes a Scheme")
                 {
-                    var heroesToExclude = Hero.GetListOfHeroes().Where(x => x.Contains(Scheme.SchemeInfo.CustomNameString)).ToList();
-                    excludedHeroes.AddRange(from item in nameLimitHeroes select item.HeroName);
+                    var heroesToExclude = Hero.ConvertToHeroList(HeroRepository.All.Where(x => x.HeroName.Contains(Scheme.SchemeInfo.CustomNameString)).ToList());
+                    excludedHeroes.AddRange(heroesToExclude);
                 }
             }
 
@@ -712,28 +749,6 @@ namespace MarvelLegendary
             heroList.AddRange(from item in heroes select Hero.GetNewHero(item));
 
             return heroList;
-        }
-
-        public List<string> GetHeroes(int heroCount, List<Hero> heroList, List<string> availableHeroes, List<string> excludedHeroes, IGetExclusions getExclusions)
-        {
-            var heroesInGame = new List<string>(heroList.Select(x => x.HeroName));
-
-            var availableHeroesWithoutExcludedHeroes = new List<string>(availableHeroes);
-            availableHeroesWithoutExcludedHeroes = availableHeroesWithoutExcludedHeroes.Except(excludedHeroes).ToList();
-
-            //If the required number of heroes from schemes hasn't reached the number of heroes for the player count, it will do this
-            for (int i = 0; i < heroCount; i++)
-            {
-                var exclusions = DetermineHeroes.DetermineHeroList(Villains, AllMastermindsInGame, HenchmenList, Scheme, heroesInGame, availableHeroesWithoutExcludedHeroes, getExclusions);
-
-                var exclusionsWithoutHeroesInGame = availableHeroesWithoutExcludedHeroes.Except(heroesInGame).ToList();
-                var heroesToChooseFrom = exclusionsWithoutHeroesInGame.Except(exclusions).ToList();
-                var heroName = heroesToChooseFrom[RandomHelper.Instance.Next(heroesToChooseFrom.Count)];
-
-                heroesInGame.Add(heroName);
-            }
-
-            return heroesInGame;
         }
 
         //This will replace the above function. It will be the main function to get the list of heroes for the game.
@@ -751,7 +766,7 @@ namespace MarvelLegendary
             return heroesInGame;
         }
 
-        public List<Hero> GetNameLimitHeroes(string heroNamePart, List<string> availableHeroes, int numberOfHeroes)
+        public List<Hero> GetNameLimitHeroes(string heroNamePart, List<Hero> availableHeroes, int numberOfHeroes)
         {
             var heroList = new List<Hero>();
             var listOfHeroes = Hero.GetAllHeroesByNamePart(heroNamePart, availableHeroes);
