@@ -127,6 +127,8 @@ namespace MarvelLegendary
         };
 
         public static IReadOnlyList<HenchmenInfo> All => _henchmen;
+
+        public static IReadOnlyList<Henchmen> AllHenchmen => Henchmen.ConvertToHenchmenList(_henchmen);
     }
 
     public class Henchmen
@@ -136,22 +138,21 @@ namespace MarvelLegendary
         public string HenchmenName { get; set; }
         public HenchmenInfo HenchmenInfo { get; set; }
 
+        public static List<HenchmenInfo> GetAllHenchmenInfo()
+        {
+            return HenchmenRepository.All.ToList();
+        }
+
+        public static List<Henchmen> GetAllHenchmen()
+        {
+            return HenchmenRepository.AllHenchmen.ToList();
+        }
+
         public static Henchmen GetNewHenchmen(string henchmenName, Set setName)
         {
-            var henchmenInfo = HenchmenRepository.All.FirstOrDefault(h => h.HenchmenName == henchmenName && h.HenchmenSetName == setName);
+            var henchmenInfo = GetNewHenchmenInfo(henchmenName, setName);
 
-            if(henchmenInfo.IsDuplicate)
-            {
-                henchmenInfo = GetDuplicateHenchmen(henchmenInfo);
-            }
-
-            return new Henchmen
-            {
-                Id = henchmenInfo.Id,
-                HenchmenName = henchmenInfo.HenchmenName,
-                HenchmenSet = henchmenInfo.HenchmenSetName,
-                HenchmenInfo = henchmenInfo
-            };
+            return GetNewHenchmen(henchmenInfo);
         }
 
         public static Henchmen GetNewHenchmen(HenchmenInfo henchmenInfo)
@@ -168,6 +169,18 @@ namespace MarvelLegendary
                 HenchmenSet = henchmenInfo.HenchmenSetName,
                 HenchmenInfo = henchmenInfo
             };
+        }
+
+        public static HenchmenInfo GetNewHenchmenInfo(string henchmenName, Set setName)
+        {
+            var henchmenInfo = GetAllHenchmenInfo().FirstOrDefault(h => h.HenchmenName == henchmenName && h.HenchmenSetName == setName);
+
+            if (henchmenInfo.IsDuplicate)
+            {
+                henchmenInfo = GetDuplicateHenchmen(henchmenInfo);
+            }
+
+            return henchmenInfo;
         }
 
         private static HenchmenInfo GetDuplicateHenchmen(HenchmenInfo henchmenName)
@@ -187,14 +200,7 @@ namespace MarvelLegendary
             var returnList = new List<Henchmen>();
             foreach (var henchmenInfo in henchmenInfoList)
             {
-                returnList.Add(
-                    new Henchmen
-                    {
-                        Id = henchmenInfo.Id,
-                        HenchmenName = henchmenInfo.HenchmenName,
-                        HenchmenSet = henchmenInfo.HenchmenSetName,
-                        HenchmenInfo = henchmenInfo
-                    });
+                returnList.Add(GetNewHenchmen(henchmenInfo));
             }
 
             return returnList;
@@ -205,15 +211,8 @@ namespace MarvelLegendary
             var returnList = new List<Henchmen>();
             foreach (var henchmenCard in henchmenCards)
             {
-                var henchmen = HenchmenRepository.All.FirstOrDefault(h => h.HenchmenName == henchmenCard.CardName && (int)h.HenchmenSetName == henchmenCard.SetId);
-                returnList.Add(
-                    new Henchmen
-                    {
-                        Id = henchmen.Id,
-                        HenchmenName = henchmen.HenchmenName,
-                        HenchmenSet = henchmen.HenchmenSetName,
-                        HenchmenInfo = henchmen
-                    });
+                var henchmen = GetNewHenchmenInfo(henchmenCard.CardName, (Set)henchmenCard.SetId);
+                returnList.Add(GetNewHenchmen(henchmen));
             }
 
             return returnList;
@@ -222,7 +221,7 @@ namespace MarvelLegendary
         public static Henchmen GetNewHenchmen(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villains, List<Henchmen> henchmenInGame)
         {
             //Get Henchmen
-            var henchmenList = ConvertToHenchmenList(HenchmenRepository.All.ToList());
+            var henchmenList = GetAllHenchmen();
 
             //Remove all Henchmen currently in the game from the list
             var idsInGame = new HashSet<int>(henchmenInGame.Select(h => h.Id));
@@ -310,12 +309,7 @@ namespace MarvelLegendary
 
             //Select Henchmen from remaining list
             var henchmen = remainingHenchmen[RandomHelper.Instance.Next(remainingHenchmen.Count)];
-            var henchmenInfo = HenchmenRepository.All.First(h => h.HenchmenName == henchmen.HenchmenName);
-
-            if(henchmenInfo.IsDuplicate)
-            {
-                henchmenInfo = GetDuplicateHenchmen(henchmenInfo);
-            }
+            var henchmenInfo = GetNewHenchmenInfo(henchmen.HenchmenName, henchmen.HenchmenSet);
 
             return GetNewHenchmen(henchmenInfo);
         }
@@ -333,18 +327,6 @@ namespace MarvelLegendary
             }
 
             return $"{returnString.Remove(returnString.Length - 2)}\r\n";
-        }
-
-        public static List<string> GetListOfHenchmen()
-        {
-            var returnList = HenchmenRepository.All.Select(h => h.HenchmenName).ToList();
-            return returnList;
-        }
-
-        public static HenchmenInfo GetRandomHenchmen()
-        {
-            var henchmen = HenchmenRepository.All[RandomHelper.Instance.Next(HenchmenRepository.All.Count)];
-            return henchmen;
         }
     }
 }

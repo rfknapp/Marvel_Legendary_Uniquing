@@ -154,7 +154,7 @@ namespace MarvelLegendary
             //so it isn't going to be one of the henchmen groups
             if (Scheme.SchemeInfo.IsInfectedDeck)
             {
-                var henchmen = Henchmen.GetNewHenchmen(HenchmenRepository.All.FirstOrDefault(h => h.HenchmenName == "Cytoplasm Spikes" && h.HenchmenSetName == Set.Wwh));
+                var henchmen = Henchmen.GetNewHenchmen("Cytoplasm Spikes", Set.Wwh);
                 InfectedHenchmen.Add(henchmen);
                 SchemeHenchmen.Add(henchmen);
             }
@@ -380,7 +380,7 @@ namespace MarvelLegendary
             //This will be the list of henchmen to include in the villain deck
             var henchmenList = new List<Henchmen>();
 
-            var allHenchmen = Henchmen.ConvertToHenchmenList(HenchmenRepository.All.ToList());
+            var allHenchmen = Henchmen.GetAllHenchmen();
 
             henchmenList.AddRange(currentHenchmen);
 
@@ -434,7 +434,7 @@ namespace MarvelLegendary
             var henchmenList = new List<Henchmen>(currentHenchmen);
             var henchmentToExclude = new List<Henchmen>(currentHenchmen).Concat(schemeHenchmen).ToList();
 
-            var allHenchmen = Henchmen.ConvertToHenchmenList(HenchmenRepository.All.ToList());
+            var allHenchmen = Henchmen.GetAllHenchmen();
 
             //This will remove the henchmen that are currently in the game from the pool to choose from
             var idsInGame = new HashSet<int>(henchmenList.Select(h => h.Id));
