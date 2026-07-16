@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using MarvelLegendary.Enums;
 using MarvelLegendary.Helpers;
@@ -206,7 +205,7 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Romulus").SetMastermindSet(Set.WeaponX).LeadsVillain("Weapon Plus", Set.WeaponX).MastermindId(156).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Romulus").SetMastermindSet(Set.WeaponX).LeadsVillain("Weapon Plus", Set.WeaponX).MastermindId(157).Build(),
 
-            new MastermindInfoBuilder().SetMastermindName("Doctor Doom").SetMastermindSet(Set.Core2E).LeadsHenchmen("Doombot Legion", Set.Core2E).MastermindId(158).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Doctor Doom").SetMastermindSet(Set.Core2E).LeadsHenchmen("Doombot Legion", Set.Core2E).Duplicates(new List<int>{1, 158}).MastermindId(158).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Doctor Doom").SetMastermindSet(Set.Core2E).LeadsHenchmen("Doombot Legion", Set.Core2E).MastermindId(159).Build(),
             new MastermindInfoBuilder().SetMastermindName("Doctor Octopus").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> { "Sinister" }).MastermindId(160).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Doctor Octopus").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> { "Sinister" }).MastermindId(161).Build(),

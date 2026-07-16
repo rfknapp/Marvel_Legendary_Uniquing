@@ -1,6 +1,4 @@
-﻿using MarvelLegendary.Exclusions;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using MarvelLegendary.Enums;
 using MarvelLegendary.Helpers;
@@ -13,7 +11,6 @@ namespace MarvelLegendary
         public string VillainName { get; set; }
         public Set VillainSetName { get; set; }
         public bool IsDuplicate { get; set; }
-        public string DuplicateName { get; set; }
         public bool IncludeBindings { get; set; }
         public List<Keywords> KeywordsList { get; set; }
         public List<int> DuplicateVillainIds { get; set; } = new List<int>();
@@ -25,7 +22,6 @@ namespace MarvelLegendary
             VillainName = name;
             VillainSetName = set;
             IsDuplicate = false;
-            DuplicateName = "";
             IncludeBindings = includeBindings;
             KeywordsList = new List<Keywords>();
             IsEnabled = true;
@@ -36,8 +32,7 @@ namespace MarvelLegendary
             Id = id;
             VillainName = name;
             VillainSetName = set;
-            IsDuplicate = false;
-            DuplicateName = "";
+            IsDuplicate = true;
             IncludeBindings = includeBindings;
             KeywordsList = new List<Keywords>();
             DuplicateVillainIds = duplicateIdList;
@@ -362,7 +357,7 @@ namespace MarvelLegendary
 
             //Select Villain from remaining list
             var villain = remainingVillains[RandomHelper.Instance.Next(remainingVillains.Count)];
-            var villainInfo = VillainRepository.All.First(v => v.VillainName == villain.VillainName);
+            var villainInfo = VillainRepository.All.First(v => v.VillainName == villain.VillainName && v.VillainSetName == villain.SetName);
 
             return GetNewVillain(villainInfo);
         }

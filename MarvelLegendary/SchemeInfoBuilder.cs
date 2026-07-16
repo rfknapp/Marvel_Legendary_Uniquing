@@ -96,7 +96,7 @@ namespace MarvelLegendary
                 //Heroes
                 Heroes = new List<int> { 3, 5, 5, 5, 6 },
                 RequiredHeroes = new List<string>(),
-                HeroesInVillainDeck = new List<string>(),
+                HeroesInVillainDeck = new List<Hero>(),
                 IsHeroesInVillainDeck = false,
                 IsRandomHeroesInVillainDeck = false,
                 NumberOfHeroesInVillainDeck = 0,
@@ -306,9 +306,9 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder SetSoulsDeck(string heroName)
+        public SchemeInfoBuilder SetSoulsDeck(string heroName, Set set)
         {
-            _schemeInfo.SoulsHero = Hero.GetNewHero(heroName);
+            _schemeInfo.SoulsHero = Hero.GetNewHero(heroName, set);
             _schemeInfo.IsSoulsHero = true;
             return this;
         }
@@ -318,7 +318,7 @@ namespace MarvelLegendary
             var keywordHeroes = Hero.GetListOfHeroesWithKeyword(Keywords.Size);
 
             var randomIndex = RandomHelper.Instance.Next(keywordHeroes.Count);
-            _schemeInfo.ShrinkTechHero = Hero.GetNewHero(keywordHeroes[randomIndex]);
+            _schemeInfo.ShrinkTechHero = keywordHeroes[randomIndex];
             _schemeInfo.IsShrinkTechHero = true;
             return this;
         }
@@ -403,9 +403,9 @@ namespace MarvelLegendary
             return this;
         }
 
-        public SchemeInfoBuilder HeroesInVillainDeck(string heroName)
+        public SchemeInfoBuilder HeroesInVillainDeck(string heroName, Set set)
         {
-            _schemeInfo.HeroesInVillainDeck = new List<string> { heroName };
+            _schemeInfo.HeroesInVillainDeck = new List<Hero> { Hero.GetNewHero(heroName, set) };
             _schemeInfo.NumberOfHeroesInVillainDeck = _schemeInfo.HeroesInVillainDeck.Count;
             _schemeInfo.IsHeroesInVillainDeck = true;
             return this;
@@ -420,8 +420,11 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder HeroesInVillainDeckWithNameLike(int numberOfHeroesWithNameString, string nameString)
         {
-            var heroes = Hero.GetListOfHeroes();
-            var namedHeroes = heroes.Where(x => x.Contains(nameString)).ToList();
+            _schemeInfo.NumberOfHeroesInVillainDeck = numberOfHeroesWithNameString;
+            _schemeInfo.IsRandomHeroesInVillainDeck = true;
+
+            var heroesInfo = Hero.GetAllHeroesInfo();
+            var namedHeroes = Hero.ConvertToHeroList(heroesInfo.Where(x => x.HeroName.Contains(nameString)).ToList());
 
             while (_schemeInfo.HeroesInVillainDeck.Count < numberOfHeroesWithNameString && namedHeroes.Count > 0)
             {

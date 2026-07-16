@@ -1,9 +1,5 @@
-using MarvelLegendary.Exclusions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data.SqlClient;
-using System.Configuration;
 using MarvelLegendary.Enums;
 using MarvelLegendary.Helpers;
 
@@ -49,7 +45,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Organized Crimewave").SetSchemeSet(Set.Dc).SetRequiredHenchmen(Henchmen.GetNewHenchmen("Maggia Goons", Set.Dc)).Build(),
             new SchemeInfoBuilder().SetSchemeName("Save Humanity").SetSchemeSet(Set.Dc).SetHeroBystanderCount(new List<int> { 12, 24, 24, 24, 24}).Build(),
             new SchemeInfoBuilder().SetSchemeName("Steal the Weaponized Plutonium").SetSchemeSet(Set.Dc).AddAdditionalVillain(1).Build(),
-            new SchemeInfoBuilder().SetSchemeName("Transform Citizens into Demons").SetSchemeSet(Set.Dc).HeroesInVillainDeck("Jean Grey").SetBystanderCount(0).Build(),
+            new SchemeInfoBuilder().SetSchemeName("Transform Citizens into Demons").SetSchemeSet(Set.Dc).HeroesInVillainDeck("Jean Grey", Set.Dc).SetBystanderCount(0).Build(),
             new SchemeInfoBuilder().SetSchemeName("X-Cutioner's Song").SetSchemeSet(Set.Dc).HeroesInVillainDeck(1).SetBystanderCount(0).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Bathe Earth in Cosmic Rays").SetSchemeSet(Set.Ff).SetSchemeTwists(6).Build(),
@@ -128,7 +124,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Mutant-Hunting Super Sentinels").SetSchemeSet(Set.XMen).SetSchemeTwists(9).AddAdditionalHenchmen(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Nuclear Armageddon").SetSchemeSet(Set.XMen).SetSchemeTwists(5).Build(),
             new SchemeInfoBuilder().SetSchemeName("Televised Deathtraps of Mojo World").SetSchemeSet(Set.XMen).SetSchemeTwists(11).SetWoundCount(true, 6).Build(),
-            new SchemeInfoBuilder().SetSchemeName("The Dark Phoenix Saga").SetSchemeSet(Set.XMen).SetSchemeTwists(10).SetRequiredVillains("Hellfire Club", Set.XMen).HeroesInVillainDeck("Jean Grey").Build(),
+            new SchemeInfoBuilder().SetSchemeName("The Dark Phoenix Saga").SetSchemeSet(Set.XMen).SetSchemeTwists(10).SetRequiredVillains("Hellfire Club", Set.XMen).HeroesInVillainDeck("Jean Grey", Set.Dc).Build(),
             new SchemeInfoBuilder().SetSchemeName("X-Men Danger Room goes Berserk").SetSchemeSet(Set.XMen).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Distract the Hero").SetSchemeSet(Set.Sm).IncludeHeroTeams(1, HeroTeam.SpiderFriends).Build(),
@@ -170,7 +166,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Symbiotic Absorption").SetSchemeSet(Set.Venom).SetSchemeTwists(11).SetDrainedMastermind().Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Earthquake Drains the Ocean").SetSchemeSet(Set.Revelations).SetSchemeTwists(11).AddAdditionalVillain(1).Build(),
-            new SchemeInfoBuilder().SetSchemeName("House of M").SetSchemeSet(Set.Revelations).HeroesInVillainDeck("Scarlet Witch").Is4v2().Build(),
+            new SchemeInfoBuilder().SetSchemeName("House of M").SetSchemeSet(Set.Revelations).HeroesInVillainDeck("Scarlet Witch", Set.Revelations).Is4v2().Build(),
             new SchemeInfoBuilder().SetSchemeName("The Korvac Saga").SetSchemeSet(Set.Revelations).Build(),
             new SchemeInfoBuilder().SetSchemeName("Secret HYDRA Corruption").SetSchemeSet(Set.Revelations).SetSchemeTwists(new List<int>{7,9,9,11,11}).Build(),
 
@@ -192,7 +188,7 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("Annihilation Conquest").SetSchemeSet(Set.Cosmos).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("The Contest of Champions").SetSchemeSet(Set.Cosmos).SetSchemeTwists(11).AddAdditionalHero(1).Build(),
             new SchemeInfoBuilder().SetSchemeName("Destroy the Nova Corps").SetSchemeSet(Set.Cosmos).SetSchemeTwists(9).SetHeroCount(new List<int>(){ 5, 5, 5, 5, 6 }).SetNumberOfHeroWithNameLike(1, "Nova").Build(),
-            new SchemeInfoBuilder().SetSchemeName("Turn the Soul of Adam Warlock").SetSchemeSet(Set.Cosmos).SetSchemeTwists(14).SetSoulsDeck("Adam Warlock").Build(),
+            new SchemeInfoBuilder().SetSchemeName("Turn the Soul of Adam Warlock").SetSchemeSet(Set.Cosmos).SetSchemeTwists(14).SetSoulsDeck("Adam Warlock", Set.Cosmos).Build(),
 
             new SchemeInfoBuilder().SetSchemeName("Devolve with Xerogen Crystals").SetSchemeSet(Set.Inhumans).SetSchemeTwists(new List<int>{4,5,6,7,8}).AddXerogenHenchmen().Build(),
             new SchemeInfoBuilder().SetSchemeName("Ruin the Perfect Wedding").SetSchemeSet(Set.Inhumans).SetRoyalWedding().Build(),
@@ -276,7 +272,7 @@ namespace MarvelLegendary
 
         public int NumberOfHeroes { get; set; }
         public List<string> RequiredHeroes { get; set; }
-        public List<string> HeroesInVillainDeck { get; set; }
+        public List<Hero> HeroesInVillainDeck { get; set; }
         public int RandomHeroesInVillainDeck { get; set; }
 
         public int NumberOfVillains { get; set; }
@@ -404,7 +400,7 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        private static Scheme ProcessSchemeInfo(int playerCount, SchemeInfo schemeInfo, Mastermind mastermind)
+        public static Scheme ProcessSchemeInfo(int playerCount, SchemeInfo schemeInfo, Mastermind mastermind)
         {
             var newScheme = new Scheme();
             if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)

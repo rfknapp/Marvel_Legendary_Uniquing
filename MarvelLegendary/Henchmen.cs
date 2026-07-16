@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MarvelLegendary.Enums;
 using MarvelLegendary.Helpers;
 
@@ -81,8 +78,8 @@ namespace MarvelLegendary
             new HenchmenInfo(17, "Cape-killers", Set.Cw),
             new HenchmenInfo(18, "Mandroids", Set.Cw),
             
-            new HenchmenInfo(19, "Circus of Crime", Set.ThreeD),
-            new HenchmenInfo(20, "Spider-Slayer", Set.ThreeD),
+            new HenchmenInfo(19, "Circus of Crime", Set.ThreeD, new List<int> { 19, 33}),
+            new HenchmenInfo(20, "Spider-Slayer", Set.ThreeD, new List<int> { 20, 34}),
             
             new HenchmenInfo(21, "The Brood", Set.XMen),
             new HenchmenInfo(22, "Hellfire Cult", Set.XMen),
@@ -99,9 +96,9 @@ namespace MarvelLegendary
             new HenchmenInfo(31, "HYDRA Spies", Set.P1, new List<int> { 3, 31, 49}),
             new HenchmenInfo(32, "Ten Rings Fanatics", Set.P1, new List<int> { 1, 32, 47}),
 
-            new HenchmenInfo(33, "Circus of Crime", Set.Dimensions),
-            new HenchmenInfo(34, "Spider-Slayer", Set.Dimensions),
-            
+            new HenchmenInfo(33, "Circus of Crime", Set.Dimensions, new List<int> { 19, 33}),
+            new HenchmenInfo(34, "Spider-Slayer", Set.Dimensions, new List<int> { 20, 34}),
+
             new HenchmenInfo(35, "HYDRA Base", Set.Revelations),
             new HenchmenInfo(36, "Mandarin's Rings", Set.Revelations),
             
