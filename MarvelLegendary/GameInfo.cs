@@ -289,7 +289,7 @@ namespace MarvelLegendary
             //This will be the list of villians to include in the villain deck
             var villainList = new List<Villain>();
 
-            var allVillains = Villain.ConvertToVillainList(VillainRepository.All.ToList());
+            var allVillains = VillainRepository.AllVillains.ToList();
 
             //villainsNotAllowed is a list of villains that are not allowed to be in the game based on the scheme
             var villainsNotAllowed = Scheme.SchemeInfo.VillainsNotAllowed;

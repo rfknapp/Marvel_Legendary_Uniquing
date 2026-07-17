@@ -98,7 +98,7 @@ namespace MarvelLegendary
 
         public MastermindInfoBuilder LeadsVillainsByKind(List<string> villainKinds)
         {
-            var villainsList = Villain.ConvertToVillainList(VillainRepository.All.ToList());
+            var villainsList = VillainRepository.AllVillains.ToList();
             var listOfVillains = new List<Villain>();
             foreach (var villainKind in villainKinds)
             {

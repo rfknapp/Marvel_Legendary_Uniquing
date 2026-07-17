@@ -238,6 +238,8 @@ namespace MarvelLegendary
         };
 
         public static IReadOnlyList<VillainInfo> All => _villains;
+
+        public static IReadOnlyList<Villain> AllVillains => Villain.ConvertToVillainList(_villains);
     }
 
     public class Villain
@@ -289,7 +291,7 @@ namespace MarvelLegendary
 
         public static Villain GetNewVillain(List<Mastermind> allMastermindsInGame, Scheme scheme, List<Villain> villainsInGame)
         {
-            var villainList = ConvertToVillainList(VillainRepository.All.ToList());
+            var villainList = VillainRepository.AllVillains.ToList();
 
             //Remove all Villains currently in the game from the list
             var idsInGame = new HashSet<int>(villainsInGame.Select(v => v.Id));
@@ -319,7 +321,8 @@ namespace MarvelLegendary
             var villainsByScheme = ConvertToVillainList(villainCardssByScheme);
 
             //Remove all Villains that have played with the scheme from the list
-            remainingVillains = remainingVillains.Except(villainsByScheme).ToList();
+            idsInGame = new HashSet<int>(villainsByScheme.Select(v => v.Id));
+            remainingVillains = remainingVillains.Where(h => !idsInGame.Contains(h.Id)).ToList();
 
             //Get Villains that have played with each of the Masterminds with
             foreach (var mastermind in allMastermindsInGame)
@@ -335,7 +338,8 @@ namespace MarvelLegendary
                 var villainCardsByMastermind = SqlHelper.GetCardRelationships(CardType.Villain, mastermindCard);
                 var villainsByMastermind = ConvertToVillainList(villainCardsByMastermind);
 
-                remainingVillains = remainingVillains.Except(villainsByMastermind).ToList();
+                idsInGame = new HashSet<int>(villainsByMastermind.Select(v => v.Id));
+                remainingVillains = remainingVillains.Where(h => !idsInGame.Contains(h.Id)).ToList();
             }
 
             //Get Villains that have played with each of the Villains with
@@ -352,7 +356,8 @@ namespace MarvelLegendary
                 var villainsByVillain = ConvertToVillainList(villainCardsByVillain);
 
                 //Remove all Villains that have played with the Villains(s)
-                remainingVillains = remainingVillains.Except(villainsByVillain).ToList();
+                idsInGame = new HashSet<int>(villainsByVillain.Select(vi => vi.Id));
+                remainingVillains = remainingVillains.Where(h => !idsInGame.Contains(h.Id)).ToList();
             }
 
             //Select Villain from remaining list
@@ -390,22 +395,6 @@ namespace MarvelLegendary
             return $"{returnString.Remove(returnString.Length-2)}\r\n";
         }
 
-        public List<VillainInfo> ModifyVillainList(List<string> villainExclusions)
-        {
-            var returnList = VillainRepository.All.ToList();
-
-            foreach (var villainExclusion in villainExclusions)
-            {
-                while (returnList.Any(x => x.VillainName == villainExclusion))
-                {
-                    var itemToRemove = returnList.Single(x => x.VillainName == villainExclusion);
-                    returnList.Remove(itemToRemove);
-                }
-            }
-
-            return returnList;
-        }
-
         public static List<string> GetListOfVillains()
         {
             var returnList = VillainRepository.All.Select(v => v.VillainName).ToList();
@@ -414,8 +403,7 @@ namespace MarvelLegendary
 
         public static List<Villain> GetListOfVillainsWithKeyword(Keywords keyword)
         {
-            var returnList = VillainRepository.All
-                .Where(villain => villain.KeywordsList.Contains(keyword)).ToList();
+            var returnList = VillainRepository.All.Where(villain => villain.KeywordsList.Contains(keyword)).ToList();
 
             return ConvertToVillainList(returnList);
         }
