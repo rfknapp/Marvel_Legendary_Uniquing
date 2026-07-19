@@ -25,6 +25,9 @@ namespace MarvelLegendary
         public bool IncludeHorrors { get; set; }
         public bool IsRoyalWedding { get; set; }
         public bool isVeiled { get; set; }
+        public int Id { get; set; }
+        public List<int> DuplicateSchemeIds { get; set; }
+        public bool IsDuplicate { get; set; }
 
         //Wounds/Bindings
         public int WoundCount { get; set; }
@@ -83,6 +86,7 @@ namespace MarvelLegendary
         public bool IsWorldWarHulkMasterminds { get; set; }
         public bool IsDrainedMastermind { get; set; }
         public Mastermind DrainedMastermind { get; set; }
+        public bool IsEnshroudedMastermind { get; set; }
 
         //Heroes
         public List<int> Heroes { get; set; }
@@ -108,10 +112,17 @@ namespace MarvelLegendary
         public bool IsShrinkTechHero { get; set; }
         public Hero ShrinkTechHero { get; set; }
         public int RoyalWeddingHeroCount { get; set; }
+        public bool IsRandomHeroCardsInVillainDeck { get; set; }
+        public int NumberRandomHeroCardsInVillainDeck { get; set; }
+        public bool NoDuplicates { get; internal set; }
 
         //Sidekicks
         public int SidekicksInVillainDeck { get; set; }
         public bool IsSidekickInVillainDeck { get; set; }
         public bool IsLovedOne { get; internal set; }
+
+        //Officers
+        public int OfficersNextToMastermind { get; set; }
+        public bool IsOfficersNextToMastermind { get; set; }
     }
 }

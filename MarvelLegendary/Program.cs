@@ -14,7 +14,7 @@ namespace MarvelLegendary
         static void Main()
         {
             SqlHelper.SetupDatabase();
-            
+
             Console.WriteLine("How many players are playing? (1-5)");
             var playerCount = Console.ReadLine();
 
@@ -44,12 +44,35 @@ namespace MarvelLegendary
                     Console.WriteLine($"Unveiled scheme is\r\n1) {game.UnveiledScheme.SchemeName}, {game.UnveiledScheme.SetName}\r\n\r\n");
                 }
 
+                //WatchForDuplicates(game);
+
                 //Need to rework this now that there is a different db schema
                 //var test = new GetExclusions().GetMastermindByMastermindExclusions(game.Mastermind);
                 //ConvertGames.ConvertTrackedGames();
 
                 Console.WriteLine("How many players are playing? (0 to quit)");
                 playerCount = Console.ReadLine();
+            }
+
+            void WatchForDuplicates(GameInfo game)
+            {
+                if (game.Villains.GroupBy(v => new { v.VillainName, v.SetName }).Any(g => g.Count() > 1))
+                {
+                    var duplicates = game.Villains.GroupBy(v => new { v.VillainName, v.SetName }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
+                    Console.WriteLine(Villain.ToString(duplicates));
+                }
+
+                if (game.HenchmenList.GroupBy(h => new { h.HenchmenName, h.HenchmenSet }).Any(g => g.Count() > 1))
+                {
+                    var duplicates = game.HenchmenList.GroupBy(h => new { h.HenchmenName, h.HenchmenSet }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
+                    Console.WriteLine(Henchmen.ToString(duplicates));
+                }
+
+                if (game.Heroes.GroupBy(h => new { h.HeroName, h.SetName }).Any(g => g.Count() > 1))
+                {
+                    var duplicates = game.Heroes.GroupBy(h => new { h.HeroName, h.SetName }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
+                    Console.WriteLine(Hero.ToString(duplicates));
+                }
             }
         }
 
@@ -71,6 +94,7 @@ namespace MarvelLegendary
             var twistsNextToScheme = scheme.IsSchemeTwistsNextToScheme ? $"Place {scheme.NumberTwistsNextToScheme} Twists next to the Scheme\r\n": "";
             var heroBystandersOutput = scheme.IsBystandersInHeroDeck ? $"Place {scheme.BystandersInHeroDeck} Bystanders in the Hero deck.\r\n" : "";
             var heroesInVillainDeck = schemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Include the following Heroes in the Villain deck:{Hero.ToString(game.VillainHeroes)}\r\n" : "";
+            var randomHeroeCardsInVillainDeck = schemeInfo.IsRandomHeroCardsInVillainDeck ? $"Shuffle {game.Scheme.SchemeInfo.NumberRandomHeroCardsInVillainDeck} random cards from the Hero Deck into the Villain Deck\r\n" : "";
             var heroHenchmen = schemeInfo.IsHenchmenInHeroDeck ? $"Include 6 cards from the following Henchmen group to the Hero deck:{Henchmen.ToString(game.SchemeHenchmen)}\r\n" : "";
             var bindingsInGame = schemeInfo.CustomBindingCount && !schemeInfo.HasBetryalDeck ? $"The Bindings stack holds {game.BindingNumber} Bindings.\r\n" : "";
             var henchmenNextToScheme = schemeInfo.IsHenchmenNextToScheme ? $"Stack {game.NumberHenchmenNextToScheme} of the following Henchmen next to the plot.{Henchmen.ToString(game.SchemeHenchmen)}\r\n" : "";

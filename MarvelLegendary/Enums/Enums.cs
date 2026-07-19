@@ -90,7 +90,9 @@ namespace MarvelLegendary.Enums
         [Description("Weapon X")]
         WeaponX = 40,
         [Description("Core Second Edition")]
-        Core2E = 41
+        Core2E = 41,
+        [Description("Unknown")]
+        Unknown = 10000,
     }
 
     public enum Keywords

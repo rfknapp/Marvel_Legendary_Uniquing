@@ -35,6 +35,9 @@ namespace MarvelLegendary
                 IncludeHorrors = false,
                 IsRoyalWedding = false,
                 isVeiled = false,
+                Id = 0,
+                DuplicateSchemeIds = null,
+                IsDuplicate = false,
 
                 //Wounds/Bindings
                 WoundCount = -1,
@@ -92,6 +95,7 @@ namespace MarvelLegendary
                 IsExtraMasterminds = false,
                 IsWorldWarHulkMasterminds = false,
                 IsDrainedMastermind = false,
+                IsEnshroudedMastermind = false,
 
                 //Heroes
                 Heroes = new List<int> { 3, 5, 5, 5, 6 },
@@ -116,14 +120,34 @@ namespace MarvelLegendary
                 ShrinkTechHero = null,
                 RoyalWeddingHeroCount = 0,
                 IsLovedOne = false,
+                IsRandomHeroCardsInVillainDeck = false,
+                NumberRandomHeroCardsInVillainDeck = 0,
+                NoDuplicates = false,
 
                 //Sidekicks
                 SidekicksInVillainDeck = 0,
-                IsSidekickInVillainDeck = false
+                IsSidekickInVillainDeck = false,
+
+                //Officers
+                OfficersNextToMastermind = 0,
+                IsOfficersNextToMastermind = false
             };
         }
 
-        public SchemeInfoBuilder SetSchemesNextToTwist(int twistsNextToScheme)
+        public SchemeInfoBuilder Duplicates(List<int> duplicateCardIds)
+        {
+            _schemeInfo.DuplicateSchemeIds = duplicateCardIds;
+            _schemeInfo.IsDuplicate = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SchemeId(int id)
+        {
+            _schemeInfo.Id = id;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetTwistsNextToScheme(int twistsNextToScheme)
         {
             _schemeInfo.IsSchemeTwistsNextToScheme = true;
             _schemeInfo.NumberTwistsNextToScheme = twistsNextToScheme;
@@ -615,7 +639,22 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder NoDuplicates()
         {
-            //TODO - work on this
+            _schemeInfo.NoDuplicates = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetEnshroudedGame()
+        {
+            _schemeInfo.IsEnshroudedMastermind = true;
+            _schemeInfo.OfficersNextToMastermind = 3;
+            _schemeInfo.IsOfficersNextToMastermind = true;
+            return this;
+        }
+
+        public SchemeInfoBuilder SetRandomHeroCardsInVillainDeck(int randomHeroCardsInVillainDeck)
+        {
+            _schemeInfo.IsRandomHeroCardsInVillainDeck = true;
+            _schemeInfo.NumberRandomHeroCardsInVillainDeck = randomHeroCardsInVillainDeck;
             return this;
         }
     }
