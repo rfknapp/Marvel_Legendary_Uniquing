@@ -38,6 +38,8 @@ namespace MarvelLegendary
                 Id = 0,
                 DuplicateSchemeIds = null,
                 IsDuplicate = false,
+                NumberOfPlayers = 0,
+                IsEnabled = true,
 
                 //Wounds/Bindings
                 WoundCount = -1,
@@ -655,6 +657,12 @@ namespace MarvelLegendary
         {
             _schemeInfo.IsRandomHeroCardsInVillainDeck = true;
             _schemeInfo.NumberRandomHeroCardsInVillainDeck = randomHeroCardsInVillainDeck;
+            return this;
+        }
+
+        public SchemeInfoBuilder Disable()
+        {
+            _schemeInfo.IsEnabled = false;
             return this;
         }
     }

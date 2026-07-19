@@ -28,6 +28,8 @@ namespace MarvelLegendary
         public int Id { get; set; }
         public List<int> DuplicateSchemeIds { get; set; }
         public bool IsDuplicate { get; set; }
+        public int NumberOfPlayers { get; set; }
+        public bool IsEnabled { get; set; }
 
         //Wounds/Bindings
         public int WoundCount { get; set; }

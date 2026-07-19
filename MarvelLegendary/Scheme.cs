@@ -338,10 +338,12 @@ namespace MarvelLegendary
             if (string.IsNullOrEmpty(schemeName) || setName == Set.Unknown)
             {
                 schemeInfo = GetRandomScheme(mastermind);
+                schemeInfo.NumberOfPlayers = playerCount;
             }
             else
             {
                 schemeInfo = GetSchemeInfo(schemeName, setName);
+                schemeInfo.NumberOfPlayers = playerCount;
             }
 
             var newScheme = ProcessSchemeInfo(playerCount, schemeInfo, mastermind);
@@ -370,14 +372,35 @@ namespace MarvelLegendary
             var idsInGame = new HashSet<int>(schemesPlayedWithMastermind.Select(s => s.Id));
             var remainingSchemes = schemeNameList.Where(s => !idsInGame.Contains(s.Id)).ToList();
 
+            SchemeInfo schemeInfo;
+
             if(remainingSchemes.Count > 0)
             {
-                return remainingSchemes[RandomHelper.Instance.Next(remainingSchemes.Count)];
+                schemeInfo = remainingSchemes[RandomHelper.Instance.Next(remainingSchemes.Count)];
             }
             else
             {
-                return schemeNameList[RandomHelper.Instance.Next(schemeNameList.Count)];
+                schemeInfo = schemeNameList[RandomHelper.Instance.Next(schemeNameList.Count)];
             }
+
+            if(schemeInfo.IsDuplicate)
+            {
+                schemeInfo = GetDuplicateScheme(schemeInfo);
+            }
+
+            return schemeInfo;
+        }
+
+        private static SchemeInfo GetDuplicateScheme(SchemeInfo schemeInfo)
+        {
+            var listOfInts = schemeInfo.DuplicateSchemeIds;
+            var matchingSchemeInfo = SchemeRepository.All.Where(x => listOfInts.Contains(x.Id)).ToList();
+
+            var enabledSchemeInfo = matchingSchemeInfo.Where(x => x.IsEnabled).ToList();
+
+            var newestSchemeInfo = enabledSchemeInfo.OrderByDescending(x => (int)x.SetName).FirstOrDefault();
+
+            return newestSchemeInfo;
         }
 
         private static List<SchemeInfo> ConvertToSchemeList(List<Card> cardList)
@@ -397,11 +420,13 @@ namespace MarvelLegendary
             if (schemeInfo.RequiredVillains != null && schemeInfo.RequiredVillains.Count > 0 && playerCount < 3)
             {
                 playerCount = 3;
+                schemeInfo.NumberOfPlayers = 3;
             }
 
             if (schemeInfo.RequiredHenchmen.Count > 0 || mastermind.DoesLeadHenchmen)
             {
                 playerCount = 4;
+                schemeInfo.NumberOfPlayers = 4;
             }
 
             newScheme.SchemeName = schemeInfo.SchemeName;
