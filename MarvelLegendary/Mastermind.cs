@@ -9,10 +9,10 @@ namespace MarvelLegendary
     {
         private static readonly List<MastermindInfo> _masterminds = new List<MastermindInfo>()
         {
-            new MastermindInfoBuilder().SetMastermindName("Dr. Doom").LeadsHenchmen("Doombot Legion", Set.Core).Duplicates(new List<int>{1, 158}).MastermindId(1).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Loki").LeadsVillain("Enemies of Asgard", Set.Core).Duplicates(new List<int>{2, 67, 162}).MastermindId(2).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Magneto").LeadsVillain("Brotherhood", Set.Core).Duplicates(new List<int>{3, 164}).MastermindId(3).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Red Skull").LeadsVillain("HYDRA", Set.Core).Duplicates(new List<int>{4, 68, 166}).MastermindId(4).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Dr. Doom").LeadsHenchmen("Doombot Legion", Set.Core).Duplicates(new List<int>{1, 160}).MastermindId(1).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Loki").LeadsVillain("Enemies of Asgard", Set.Core).Duplicates(new List<int>{2, 67, 164}).MastermindId(2).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Magneto").LeadsVillain("Brotherhood", Set.Core).Duplicates(new List<int>{3, 166}).MastermindId(3).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Red Skull").LeadsVillain("HYDRA", Set.Core).Duplicates(new List<int>{4, 68, 168}).MastermindId(4).Build(),
 
             new MastermindInfoBuilder().SetMastermindName("Apocalypse").SetMastermindSet(Set.Dc).LeadsVillain("Four Horsemen", Set.Dc).MastermindId(5).Build(),
             new MastermindInfoBuilder().SetMastermindName("Kingpin").SetMastermindSet(Set.Dc).LeadsVillain("Streets of New York", Set.Dc).MastermindId(6).Build(),
@@ -174,13 +174,13 @@ namespace MarvelLegendary
 
             new MastermindInfoBuilder().SetMastermindName("Ebony Maw").SetMastermindSet(Set.InfinitySaga).LeadsVillain("Children of Thanos", Set.InfinitySaga).MastermindId(131).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Ebony Maw").SetMastermindSet(Set.InfinitySaga).LeadsVillain("Children of Thanos", Set.InfinitySaga).MastermindId(132).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Thanos (Infinity Saga)").SetMastermindSet(Set.InfinitySaga).LeadsVillain("Infinity Stones", Set.InfinitySaga).MastermindId(133).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Thanos (Infinity Saga)").SetMastermindSet(Set.InfinitySaga).LeadsVillain("Infinity Stones", Set.InfinitySaga).MastermindId(134).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Thanos").SetMastermindSet(Set.InfinitySaga).LeadsVillain("Infinity Stones", Set.InfinitySaga).MastermindId(133).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Thanos").SetMastermindSet(Set.InfinitySaga).LeadsVillain("Infinity Stones", Set.InfinitySaga).MastermindId(134).Build(),
 
             new MastermindInfoBuilder().SetMastermindName("Lilith, Mother of Demons").SetMastermindSet(Set.MidnightSons).LeadsVillain("Lilin", Set.MidnightSons).MastermindId(135).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Lilith, Mother of Demons").SetMastermindSet(Set.MidnightSons).LeadsVillain("Lilin", Set.MidnightSons).MastermindId(136).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Zarathos").SetMastermindSet(Set.MidnightSons).LeadsVillain("The Fallen", Set.MidnightSons).MastermindId(137).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Zarathos").SetMastermindSet(Set.MidnightSons).LeadsVillain("The Fallen", Set.MidnightSons).MastermindId(138).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Zarathos").SetMastermindSet(Set.MidnightSons).LeadsVillain("Fallen", Set.MidnightSons).MastermindId(137).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Zarathos").SetMastermindSet(Set.MidnightSons).LeadsVillain("Fallen", Set.MidnightSons).MastermindId(138).Build(),
 
             new MastermindInfoBuilder().SetMastermindName("Hank Pym, Yellowjacket").SetMastermindSet(Set.WhatIf).MastermindId(139).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Hank Pym, Yellowjacket").SetMastermindSet(Set.WhatIf).MastermindId(140).Build(),
@@ -191,7 +191,7 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Zombie Scarlet Witch").SetMastermindSet(Set.WhatIf).LeadsVillain("Zombie Avengers", Set.WhatIf).SetZombieSoloVillains().MastermindId(145).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Zombie Scarlet Witch").SetMastermindSet(Set.WhatIf).LeadsVillain("Zombie Avengers", Set.WhatIf).SetZombieSoloVillains().MastermindId(146).Build(),
 
-            new MastermindInfoBuilder().SetMastermindName("Darrin Cross").SetMastermindSet(Set.AntmanWasp).LeadsVillain("Cross Technologies", Set.AntmanWasp).MastermindId(147).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Darren Cross").SetMastermindSet(Set.AntmanWasp).LeadsVillain("Cross Technologies", Set.AntmanWasp).MastermindId(147).Build(),
             new MastermindInfoBuilder().SetMastermindName("Ghost, Master Thief").SetMastermindSet(Set.AntmanWasp).LeadsVillain("Ghost Chasers", Set.AntmanWasp).MastermindId(148).Build(),
             new MastermindInfoBuilder().SetMastermindName("Kang, Quantum Conqueror").SetMastermindSet(Set.AntmanWasp).LeadsVillain("Armada of Kang", Set.AntmanWasp).MastermindId(149).Build(),
 
@@ -204,18 +204,19 @@ namespace MarvelLegendary
             new MastermindInfoBuilder().SetMastermindName("Epic Omega Red").SetMastermindSet(Set.WeaponX).MastermindId(155).Build(),
             new MastermindInfoBuilder().SetMastermindName("Romulus").SetMastermindSet(Set.WeaponX).LeadsVillain("Weapon Plus", Set.WeaponX).MastermindId(156).Build(),
             new MastermindInfoBuilder().SetMastermindName("Epic Romulus").SetMastermindSet(Set.WeaponX).LeadsVillain("Weapon Plus", Set.WeaponX).MastermindId(157).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Sabretooth").SetMastermindSet(Set.WeaponX).LeadsVillain("Berserkers", Set.WeaponX).MastermindId(158).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Sabretooth").SetMastermindSet(Set.WeaponX).LeadsVillain("Berserkers", Set.WeaponX).MastermindId(159).Build(),
 
-            new MastermindInfoBuilder().SetMastermindName("Doctor Doom").SetMastermindSet(Set.Core2E).LeadsHenchmen("Doombot Legion", Set.Core2E).Duplicates(new List<int>{1, 158}).MastermindId(158).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Doctor Doom").SetMastermindSet(Set.Core2E).LeadsHenchmen("Doombot Legion", Set.Core2E).MastermindId(159).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Doctor Octopus").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> { "Sinister" }).MastermindId(160).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Doctor Octopus").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> { "Sinister" }).MastermindId(161).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Loki").SetMastermindSet(Set.Core2E).LeadsVillain("Enemies of Asgard", Set.Core2E).Duplicates(new List<int>{2, 67, 162}).MastermindId(162).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Loki").SetMastermindSet(Set.Core2E).LeadsVillain("Enemies of Asgard", Set.Core2E).MastermindId(163).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Magneto").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> {"Brotherhood", "X-Men" }).MastermindId(164).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Magneto").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> {"Brotherhood", "X-Men" }).MastermindId(165).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Red Skull, HYDRA Overlord").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> {"Hydra" }).Duplicates(new List<int>{4, 68, 166}).MastermindId(166).Build(),
-            new MastermindInfoBuilder().SetMastermindName("Epic Red Skull, HYDRA Overlord").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> {"Hydra" }).MastermindId(167).Build(),
-
+            new MastermindInfoBuilder().SetMastermindName("Doctor Doom").SetMastermindSet(Set.Core2E).LeadsHenchmen("Doombot Legion", Set.Core2E).Duplicates(new List<int>{1, 160}).MastermindId(160).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Doctor Doom").SetMastermindSet(Set.Core2E).LeadsHenchmen("Doombot Legion", Set.Core2E).MastermindId(161).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Doctor Octopus").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> { "Sinister" }).MastermindId(162).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Doctor Octopus").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> { "Sinister" }).MastermindId(163).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Loki").SetMastermindSet(Set.Core2E).LeadsVillain("Enemies of Asgard", Set.Core2E).Duplicates(new List<int>{2, 67, 164}).MastermindId(164).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Loki").SetMastermindSet(Set.Core2E).LeadsVillain("Enemies of Asgard", Set.Core2E).MastermindId(165).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Magneto").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> {"Brotherhood", "X-Men" }).Duplicates(new List<int>{3, 166}).MastermindId(166).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Magneto").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> {"Brotherhood", "X-Men" }).MastermindId(167).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Red Skull, HYDRA Overlord").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> {"Hydra" }).Duplicates(new List<int>{4, 68, 168}).MastermindId(168).Build(),
+            new MastermindInfoBuilder().SetMastermindName("Epic Red Skull, HYDRA Overlord").SetMastermindSet(Set.Core2E).LeadsVillainsByKind(new List<string> {"Hydra" }).MastermindId(169).Build()
         };
 
         public static IReadOnlyList<MastermindInfo> All => _masterminds;

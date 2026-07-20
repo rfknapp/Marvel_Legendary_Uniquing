@@ -112,14 +112,13 @@ namespace MarvelLegendary
             new HenchmenInfo(42, "Ultron Sentries", Set.WhatIf),
             new HenchmenInfo(43, "Vibranium Liberator Drones", Set.WhatIf),
             
-            new HenchmenInfo(44, "Quantonauts", Set.AntmanWasp),
-            new HenchmenInfo(45, "Quantum Hounds", Set.AntmanWasp),
-            new HenchmenInfo(46, "Tardigrade", Set.AntmanWasp),
+            new HenchmenInfo(44, "Quantum Hound", Set.AntmanWasp),
+            new HenchmenInfo(45, "Tardigrade", Set.AntmanWasp),
             
-            new HenchmenInfo(47, "Doombot Legion", Set.Core2E, new List<int> { 1, 32, 47}),
-            new HenchmenInfo(48, "Hand Ninjas", Set.Core2E, new List<int> { 2, 30, 48}),
-            new HenchmenInfo(49, "Savage Land Mutates", Set.Core2E, new List<int> { 3, 31, 49}),
-            new HenchmenInfo(50, "Sentinel", Set.Core2E, new List<int> { 4, 29, 50}),
+            new HenchmenInfo(46, "Doombot Legion", Set.Core2E, new List<int> { 1, 32, 47}),
+            new HenchmenInfo(47, "Hand Ninjas", Set.Core2E, new List<int> { 2, 30, 48}),
+            new HenchmenInfo(48, "Savage Land Mutates", Set.Core2E, new List<int> { 3, 31, 49}),
+            new HenchmenInfo(49, "Sentinel", Set.Core2E, new List<int> { 4, 29, 50}),
 
         };
 

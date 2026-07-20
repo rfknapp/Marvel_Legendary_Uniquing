@@ -180,9 +180,9 @@ namespace MarvelLegendary
             new VillainInfo(91, "Celestials", Set.Cosmos),
             new VillainInfo(92, "From Beyond", Set.Cosmos),
             new VillainInfo(93, "Elders of the Universe", Set.Cosmos),
-            
-            new VillainInfo(94, "Shi'ar Imperial Elite", Set.Inhumans),
-            new VillainInfo(95, "Inhuman Rebellion", Set.Inhumans),
+
+            new VillainInfo(94, "Inhuman Rebellion", Set.Inhumans),
+            new VillainInfo(95, "Shi'ar Imperial Elite", Set.Inhumans),
             
             new VillainInfo(96, "Annihilation Wave", Set.Annihilation),
             new VillainInfo(97, "Timelines of Kang", Set.Annihilation),
@@ -207,7 +207,7 @@ namespace MarvelLegendary
             new VillainInfo(110, "Children of Thanos", Set.InfinitySaga),
             new VillainInfo(111, "Infinity Stones", Set.InfinitySaga),
             
-            new VillainInfo(112, "The Fallen", Set.MidnightSons),
+            new VillainInfo(112, "Fallen", Set.MidnightSons),
             new VillainInfo(113, "Lilin", Set.MidnightSons),
             
             new VillainInfo(114, "Black Order Guards", Set.WhatIf),
