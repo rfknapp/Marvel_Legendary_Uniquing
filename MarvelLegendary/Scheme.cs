@@ -326,7 +326,8 @@ namespace MarvelLegendary
             return new Scheme
             {
                 SchemeName = schemeInfo.SchemeName,
-                SetName = schemeInfo.SetName
+                SetName = schemeInfo.SetName,
+                SchemeInfo = schemeInfo
             };
         }
 

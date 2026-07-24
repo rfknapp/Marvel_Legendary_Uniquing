@@ -44,6 +44,44 @@ namespace MarvelLegendary
                 }
 
                 CreateTables(connection);
+                FillTables(connection);
+            }
+        }
+
+        private static void FillTables(SqliteConnection connection)
+        {
+            using (connection)
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+
+                foreach (var mastermind in Mastermind.ConvertToMastermindList(MastermindRepository.All.ToList()))
+                {
+                    command.Parameters.Clear();
+                    command.CommandText =
+                        @"INSERT OR IGNORE INTO Card (CardName, CardType, SetId)
+                    VALUES (@cardName, @cardType, @setId)";
+
+                    command.Parameters.AddWithValue("@cardName", mastermind.MastermindName);
+                    command.Parameters.AddWithValue("@cardType", (int)CardType.Mastermind);
+                    command.Parameters.AddWithValue("@setId", (int)mastermind.SetName);
+
+                    command.ExecuteNonQuery();
+                }
+
+                foreach (var schemeInfo in SchemeRepository.All.ToList())
+                {
+                    command.Parameters.Clear();
+                    command.CommandText =
+                        @"INSERT OR IGNORE INTO Card (CardName, CardType, SetId)
+                    VALUES (@cardName, @cardType, @setId)";
+
+                    command.Parameters.AddWithValue("@cardName", schemeInfo.SchemeName);
+                    command.Parameters.AddWithValue("@cardType", (int)CardType.Scheme);
+                    command.Parameters.AddWithValue("@setId", (int)schemeInfo.SetName);
+
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
@@ -58,7 +96,8 @@ namespace MarvelLegendary
                     SetId       INTEGER NOT NULL,
                     Enabled     INTEGER NOT NULL DEFAULT 1,
 
-                    CHECK (CardType IN (1,2,3,4,5))
+                    CHECK (CardType IN (1,2,3,4,5)),
+                    UNIQUE (CardName, CardType, SetId)
                 );
 
                 CREATE INDEX IF NOT EXISTS IX_Card_CardType
@@ -143,43 +182,38 @@ namespace MarvelLegendary
 
         public static T RunCommandScalar<T>(SqliteCommand command)
         {
-            command.Connection.Open();
+            var result = command.ExecuteScalar();
 
-            try
-            {
-                var result = command.ExecuteScalar();
+            if (result == null || result == DBNull.Value)
+                return default(T);
 
-                if (result == null || result == DBNull.Value)
-                    return default(T);
-
-                return (T)Convert.ChangeType(result, typeof(T));
-            }
-            finally
-            {
-                command.Connection.Close();
-            }
+            return (T)Convert.ChangeType(result, typeof(T));
         }
 
         public static List<Card> GetCardRelationships(CardType typeEnum, Card card)
         {
-            //This will return the CardId for the card that combinations are queried for
-            var command = GetConnection().CreateCommand();
-            command.CommandText =
-                @"SELECT CardId
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+
+                //This will return the CardId for the card that combinations are queried for
+                var command = connection.CreateCommand();
+                command.CommandText =
+                    @"SELECT CardId
                   FROM Card
                   WHERE CardName = $name
                     AND SetId = $setId";
 
-            command.Parameters.AddWithValue("$name", card.CardName);
-            command.Parameters.AddWithValue("$setId", card.SetId);
+                command.Parameters.AddWithValue("$name", card.CardName);
+                command.Parameters.AddWithValue("$setId", card.SetId);
 
-            var cardId = RunCommandScalar<int>(command);
+                var cardId = RunCommandScalar<int>(command);
 
-            //This will return all cards, that match typeEnum, that were played with the card that was queried for
-            command.Parameters.Clear();
-            command = GetConnection().CreateCommand();
-            command.CommandText =
-                @"SELECT c.CardId,
+                //This will return all cards, that match typeEnum, that were played with the card that was queried for
+                command.Parameters.Clear();
+                //command = GetConnection().CreateCommand();
+                command.CommandText =
+                    @"SELECT c.CardId,
                          c.CardName,
                          c.SetId,
                          c.CardType
@@ -192,25 +226,26 @@ namespace MarvelLegendary
                   WHERE (cr.Card1Id = $cardId OR cr.Card2Id = $cardId)
                     AND c.CardType = $cardTypeId;";
 
-            command.Parameters.AddWithValue("$cardId", cardId);
-            command.Parameters.AddWithValue("$cardTypeId", (int)typeEnum);
-            
-            var cardsPlayedWithQuery = RunCommand(command);
-            var cardNames = cardsPlayedWithQuery.Select(c => c.CardName).ToList();
+                command.Parameters.AddWithValue("$cardId", cardId);
+                command.Parameters.AddWithValue("$cardTypeId", (int)typeEnum);
 
-            //This returns List<string> but needs to return List<Card>
+                var cardsPlayedWithQuery = RunCommand(command);
+                var cardNames = cardsPlayedWithQuery.Select(c => c.CardName).ToList();
 
-            return cardsPlayedWithQuery;
-            //return cardNames;
+                //This returns List<string> but needs to return List<Card>
+
+                return cardsPlayedWithQuery;
+                //return cardNames;
+            }
         }
 
         public static List<Card> RunCommand(SqliteCommand command)
         {
             var cards = new List<Card>();
-            command.Connection.Open();
+            //command.Connection.Open();
 
-            try
-            {
+            //try
+            //{
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -224,11 +259,11 @@ namespace MarvelLegendary
                         });
                     }
                 }
-            }
-            finally
-            {
-                command.Connection.Close();
-            }
+            //}
+            //finally
+            //{
+            //    command.Connection.Close();
+            //}
 
             return cards;
         }

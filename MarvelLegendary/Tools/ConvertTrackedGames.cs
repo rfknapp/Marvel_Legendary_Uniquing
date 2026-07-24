@@ -1,4 +1,5 @@
-﻿using MarvelLegendary.Exclusions;
+﻿using MarvelLegendary.Enums;
+using MarvelLegendary.Exclusions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,131 +10,120 @@ namespace MarvelLegendary.Tools
 {
     public static class ConvertGames
     {
-        //public static HashSet<Enums.Set> targetSets = new HashSet<Enums.Set>(new[]
-        //{
-        //    Enums.Set.MidnightSons,
-        //    Enums.Set.WhatIf,
-        //    Enums.Set.AntmanWasp,
-        //    Enums.Set.TwentyNintyNine
-        //});
+        public static HashSet<Enums.Set> targetSets = new HashSet<Enums.Set>{
+           Enums.Set.MidnightSons,
+           Enums.Set.WhatIf,
+           Enums.Set.AntmanWasp,
+           Enums.Set.TwentyNintyNine
+        };
 
         //Need to rework this now that there is a different db schema
         public static void ConvertTrackedGames()
         {
-            //ConvertMastermindGames();
+            ConvertMastermindGames();
             //ConvertSchemeGames();
             //ConvertVillainGames();
             //ConvertHenchmenGames();
             //ConvertHeroGames();
         }
 
-        //private static void ConvertMastermindGames()
-        //{
-        //    var outputMbS = "INSERT INTO MastermindByScheme (MastermindId, SchemeId) VALUES\r\n";
-        //    var outputMbV = "INSERT INTO MastermindByVillain (MastermindId, VillainId) VALUES\r\n";
-        //    var outputMbH = "INSERT INTO MastermindByHenchmen (MastermindId, HenchmenId) VALUES\r\n";
-        //    var outputMbHo = "INSERT INTO MastermindByHero (MastermindId, HeroId) VALUES\r\n";
-        //    var outputMbM = "";
-        //    var listOfMasterminds = Mastermind.ConvertToMastermindList(MastermindRepository.All.ToList());
-        //
-        //    foreach (var mastermind in listOfMasterminds)
-        //    {
-        //        var newMastermind = mastermind;
-        //        var setName = newMastermind.SetName;
-        //
-        //        if (!targetSets.Contains(setName))
-        //        {
-        //            var getExclusions = new GetExclusions();
-        //            var exclusions = getExclusions.GetMastermindExclusion(mastermind);
-        //
-        //            var schemeExclusions = exclusions.MastermindxSchemeList;
-        //            var villainExclusions = exclusions.MastermindxVillainList;
-        //            var henchmenExclusions = exclusions.MastermindxHenchmenList;
-        //            var heroExclusions = exclusions.MastermindxHeroList;
-        //            var mastermindExclusions = getExclusions.GetMastermindByMastermindExclusions(mastermind);
-        //
-        //            var mastermindId = new DatabaseHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{mastermind}'");
-        //
-        //            foreach (var item2 in schemeExclusions)
-        //            {
-        //                var schemeIdSql = "SELECT ID FROM Schemes WHERE SchemeName = @SchemeName";
-        //                var schemeIdParameters = new Dictionary<string, object>
-        //                {
-        //                    { "@SchemeName", item2 }
-        //                };
-        //                var schemeId = new DatabaseHelper().GetResult(schemeIdSql, schemeIdParameters);
-        //
-        //                var countSql = @"SELECT COUNT(*) FROM MastermindByScheme WHERE MastermindId = @MastermindId AND SchemeId = @SchemeId";
-        //                var countParameters = new Dictionary<string, object>
-        //                {
-        //                    { "@MastermindId", mastermindId },
-        //                    { "@SchemeId", schemeId }
-        //                };
-        //                var itemCount = new DatabaseHelper().GetResult(countSql, countParameters);
-        //                //var itemCount = new SqlHelper().GetResult($"SELECT COUNT(*) FROM MastermindByScheme WHERE MastermindId = {mastermindId} AND SchemeId = {schemeId}");
-        //
-        //                if (itemCount == "0")
-        //                {
-        //                    outputMbS = $"{outputMbS}({mastermindId}, {schemeId}),\r\n";
-        //                }
-        //
-        //                enterIntoByTable("Mastermind", "Scheme", mastermind.MastermindName, item2.SchemeName);
-        //            }
-        //
-        //            foreach (var item2 in villainExclusions)
-        //            {
-        //                var villainId = new DatabaseHelper().GetResult($"SELECT ID from Villains WHERE VillainName = '{item2}'");
-        //                var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByVillain WHERE MastermindId = {mastermindId} AND VillainId = {villainId}");
-        //
-        //                if (itemCount == "0")
-        //                {
-        //                    outputMbV = $"{outputMbV}({mastermindId}, {villainId}),\r\n";
-        //                }
-        //
-        //                enterIntoByTable("Mastermind", "Villain", mastermind.MastermindName, item2.VillainName);
-        //            }
-        //
-        //            foreach (var item2 in henchmenExclusions)
-        //            {
-        //                var henchmenId = new DatabaseHelper().GetResult($"SELECT ID from Henchmen WHERE HenchmenName = '{item2}'");
-        //                var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHenchmen WHERE MastermindId = {mastermindId} AND HenchmenId = {henchmenId}");
-        //
-        //                if (itemCount == "0")
-        //                {
-        //                    outputMbH = $"{outputMbH}({mastermindId}, {henchmenId}),\r\n";
-        //                }
-        //
-        //                enterIntoByTable("Mastermind", "Henchmen", mastermind.MastermindName, item2.HenchmenName);
-        //            }
-        //
-        //            foreach (var item2 in heroExclusions)
-        //            {
-        //                var heroId = new DatabaseHelper().GetResult($"SELECT ID from Heroes WHERE HeroName = '{item2}'");
-        //                var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHero WHERE MastermindId = {mastermindId} AND HeroId = {heroId}");
-        //
-        //                if (itemCount == "0")
-        //                {
-        //                    outputMbHo = $"{outputMbHo}({mastermindId}, {heroId}),\r\n";
-        //                }
-        //
-        //                enterIntoByTable("Mastermind", "Hero", mastermind.MastermindName, item2.HeroName);
-        //            }
-        //
-        //            foreach (var item2 in mastermindExclusions)
-        //            {
-        //                var mastermind2Id = new DatabaseHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{item2}'");
-        //                var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByMastermind WHERE MastermindId = {mastermindId} AND Mastermind2Id = {mastermind2Id}");
-        //
-        //                if (itemCount == "0")
-        //                {
-        //                    outputMbM = $"{outputMbM}({mastermindId}, {mastermind2Id}),\r\n";
-        //                }
-        //
-        //                enterIntoByTable("Mastermind", "Mastermind", mastermind.MastermindName, item2);
-        //            }
-        //        }
-        //    }
-        //}
+        private static void ConvertMastermindGames()
+        {
+            var listOfMasterminds = Mastermind.ConvertToMastermindList(MastermindRepository.All.ToList());
+
+            //foreach (var mastermind in listOfMasterminds)
+            //{
+                var mastermind = Mastermind.GetNewMastermind("Dr. Doom", Set.Core);
+                var newMastermind = mastermind;
+                var setName = newMastermind.SetName;
+        
+                if (!targetSets.Contains(setName))
+                {
+                    var getExclusions = new GetExclusions();
+                    var exclusions = getExclusions.GetMastermindExclusion(mastermind);
+        
+                    var schemeExclusions = exclusions.MastermindxSchemeList;
+                    var villainExclusions = exclusions.MastermindxVillainList;
+                    var henchmenExclusions = exclusions.MastermindxHenchmenList;
+                    var heroExclusions = exclusions.MastermindxHeroList;
+                    var mastermindExclusions = getExclusions.GetMastermindByMastermindExclusions(mastermind);
+        
+                    //var mastermindId = new DatabaseHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{mastermind}'");
+                    var mastermindId = mastermind.Id;
+
+                    var mastermindCard = new Card
+                    {
+                        CardName = mastermind.MastermindName,
+                        CardType = (int)CardType.Mastermind,
+                        SetId = (int)mastermind.SetName
+                    };
+
+                    foreach (var scheme in schemeExclusions)
+                    {
+                        var schemeCard = new Card
+                        {
+                            CardName = scheme.SchemeName,
+                            CardType = (int)CardType.Scheme,
+                            SetId = (int)scheme.SetName
+                        };
+
+                        InsertIntoCardRelationshipTable(mastermindCard, schemeCard);
+                    }
+        
+                    //foreach (var item2 in villainExclusions)
+                    //{
+                    //    var villainId = new DatabaseHelper().GetResult($"SELECT ID from Villains WHERE VillainName = '{item2}'");
+                    //    var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByVillain WHERE MastermindId = {mastermindId} AND VillainId = {villainId}");
+                    //
+                    //    if (itemCount == "0")
+                    //    {
+                    //        outputMbV = $"{outputMbV}({mastermindId}, {villainId}),\r\n";
+                    //    }
+                    //
+                    //    //EnterIntoByTable("Mastermind", "Villain", mastermind.MastermindName, item2.VillainName);
+                    //}
+                    //
+                    //foreach (var item2 in henchmenExclusions)
+                    //{
+                    //    var henchmenId = new DatabaseHelper().GetResult($"SELECT ID from Henchmen WHERE HenchmenName = '{item2}'");
+                    //    var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHenchmen WHERE MastermindId = {mastermindId} AND HenchmenId = {henchmenId}");
+                    //
+                    //    if (itemCount == "0")
+                    //    {
+                    //        outputMbH = $"{outputMbH}({mastermindId}, {henchmenId}),\r\n";
+                    //    }
+                    //
+                    //    //EnterIntoByTable("Mastermind", "Henchmen", mastermind.MastermindName, item2.HenchmenName);
+                    //}
+                    //
+                    //foreach (var item2 in heroExclusions)
+                    //{
+                    //    var heroId = new DatabaseHelper().GetResult($"SELECT ID from Heroes WHERE HeroName = '{item2}'");
+                    //    var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByHero WHERE MastermindId = {mastermindId} AND HeroId = {heroId}");
+                    //
+                    //    if (itemCount == "0")
+                    //    {
+                    //        outputMbHo = $"{outputMbHo}({mastermindId}, {heroId}),\r\n";
+                    //    }
+                    //
+                    //    //EnterIntoByTable("Mastermind", "Hero", mastermind.MastermindName, item2.HeroName);
+                    //}
+                    //
+                    //foreach (var item2 in mastermindExclusions)
+                    //{
+                    //    var mastermind2Id = new DatabaseHelper().GetResult($"SELECT ID from Masterminds WHERE MastermindName = '{item2}'");
+                    //    var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM MastermindByMastermind WHERE MastermindId = {mastermindId} AND Mastermind2Id = {mastermind2Id}");
+                    //
+                    //    if (itemCount == "0")
+                    //    {
+                    //        outputMbM = $"{outputMbM}({mastermindId}, {mastermind2Id}),\r\n";
+                    //    }
+                    //
+                    //    //EnterIntoByTable("Mastermind", "Mastermind", mastermind.MastermindName, item2);
+                    //}
+                }
+            //}
+        }
 
         //private static void ConvertSchemeGames()
         //{
@@ -161,25 +151,25 @@ namespace MarvelLegendary.Tools
         //            foreach (var item2 in mastermindExclusions)
         //            {
         //                outputSbM = $"{outputSbM}{scheme}, {item2}\r\n";
-        //                enterIntoByTable("Scheme", "Mastermind", scheme, item2);
+        //                EnterIntoByTable("Scheme", "Mastermind", scheme, item2);
         //            }
         //
         //            foreach (var item2 in villainExclusions)
         //            {
         //                outputSbV = $"{outputSbV}{scheme}, {item2}\r\n";
-        //                enterIntoByTable("Scheme", "Villain", scheme, item2);
+        //                EnterIntoByTable("Scheme", "Villain", scheme, item2);
         //            }
         //
         //            foreach (var item2 in henchmenExclusions)
         //            {
         //                outputSbH = $"{outputSbH}{scheme}, {item2}\r\n";
-        //                enterIntoByTable("Scheme", "Henchmen", scheme, item2);
+        //                EnterIntoByTable("Scheme", "Henchmen", scheme, item2);
         //            }
         //
         //            foreach (var item2 in heroExclusions)
         //            {
         //                outputSbHo = $"{outputSbHo}{scheme}, {item2}\r\n";
-        //                enterIntoByTable("Scheme", "Hero", scheme, item2);
+        //                EnterIntoByTable("Scheme", "Hero", scheme, item2);
         //            }
         //        }
         //    }
@@ -352,7 +342,7 @@ namespace MarvelLegendary.Tools
         ////tableSuffix = Scheme
         ////prefixItem = Magnito
         ////suffixItem = The Legacy Virus
-        //private static void enterIntoByTable(string tablePrefix, string tableSuffix, string prefixItem, string suffixItem)
+        //private static void EnterIntoByTable(string tablePrefix, string tableSuffix, string prefixItem, string suffixItem)
         //{
         //    var prefixTableName = (tablePrefix == "Henchmen") ? "Henchmen" : (tablePrefix == "Hero" ? "Heroes" : (prefixItem.StartsWith(".") ? "UnveiledSchemes" : $"{tablePrefix}s"));
         //    var updatedPrefixItem = prefixItem.Contains("'") ? prefixItem.Replace("'", "''") : prefixItem;
@@ -376,5 +366,55 @@ namespace MarvelLegendary.Tools
         //        new DatabaseHelper().InsertInto(sqlQuery);
         //    }
         //}
+
+        private static void InsertIntoCardRelationshipTable(Card card1, Card card2)
+        {
+            using (var connection = SqlHelper.GetConnection())
+            {
+                connection.Open();
+
+                //Steps
+                //1. Get the id of the first card in the Card table
+                var command = connection.CreateCommand();
+                command.CommandText =
+                    @"SELECT CardId
+                  FROM Card
+                  WHERE CardName = $name
+                    AND SetId = $setId";
+
+                command.Parameters.AddWithValue("$name", card1.CardName);
+                command.Parameters.AddWithValue("$setId", card1.SetId);
+
+                var card1Id = SqlHelper.RunCommandScalar<int>(command);
+
+                //2. Get the id of the second card in the card game
+                command.Parameters.Clear();
+                command.CommandText =
+                    @"SELECT CardId
+                  FROM Card
+                  WHERE CardName = $name
+                    AND SetId = $setId";
+
+                command.Parameters.AddWithValue("$name", card2.CardName);
+                command.Parameters.AddWithValue("$setId", card2.SetId);
+
+                var card2Id = SqlHelper.RunCommandScalar<int>(command);
+
+                var cardsToEnter = (First: Math.Min(card1Id, card2Id), Second: Math.Max(card1Id, card2Id));
+                
+                //3. Insert it into
+                command.Parameters.Clear();
+                command.CommandText =
+                    @"INSERT INTO CardRelationship (Card1Id, Card2Id, TimesPlayed)
+                  VALUES (@card1Id, @card2Id, 1)
+                  ON CONFLICT(Card1Id, Card2Id)
+                  DO UPDATE SET TimesPlayed = TimesPlayed + 1;";
+
+                command.Parameters.AddWithValue("@card1Id", cardsToEnter.First);
+                command.Parameters.AddWithValue("@card2Id", cardsToEnter.Second);
+
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }

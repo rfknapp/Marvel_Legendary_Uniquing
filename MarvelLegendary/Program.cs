@@ -14,6 +14,7 @@ namespace MarvelLegendary
         static void Main()
         {
             SqlHelper.SetupDatabase();
+            ConvertGames.ConvertTrackedGames();
 
             Console.WriteLine("How many players are playing? (1-5)");
             var playerCount = Console.ReadLine();
@@ -23,19 +24,19 @@ namespace MarvelLegendary
                 var game = new GameInfo(int.Parse(playerCount));
                 game.SetMastermind();
                 game.SetScheme();
-
+                
                 if (game.Scheme.SchemeInfo.NumberExtraMasterminds > 0)
                     game.SetExtraMasterminds();
-
+                
                 game.SetVillains();
                 game.SetHenchmen();
                 game.SetHeroes();
-
+                
                 var gameText = GameTextBuilder(game);
-
+                
                 Console.Clear();
                 Console.Out.Write(gameText);
-
+                
                 if (game.Scheme.SchemeInfo.isVeiled)
                 {
                     game.SetUnVeiledScheme();
@@ -48,7 +49,6 @@ namespace MarvelLegendary
 
                 //Need to rework this now that there is a different db schema
                 //var test = new GetExclusions().GetMastermindByMastermindExclusions(game.Mastermind);
-                //ConvertGames.ConvertTrackedGames();
 
                 Console.WriteLine("How many players are playing? (0 to quit)");
                 playerCount = Console.ReadLine();
