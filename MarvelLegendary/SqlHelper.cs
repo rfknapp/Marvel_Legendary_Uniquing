@@ -62,7 +62,7 @@ namespace MarvelLegendary
                         @"INSERT OR IGNORE INTO Card (CardName, CardType, SetId)
                     VALUES (@cardName, @cardType, @setId)";
 
-                    command.Parameters.AddWithValue("@cardName", mastermind.MastermindName);
+                    command.Parameters.AddWithValue("@cardName", mastermind.Name);
                     command.Parameters.AddWithValue("@cardType", (int)CardType.Mastermind);
                     command.Parameters.AddWithValue("@setId", (int)mastermind.SetName);
 
@@ -76,9 +76,65 @@ namespace MarvelLegendary
                         @"INSERT OR IGNORE INTO Card (CardName, CardType, SetId)
                     VALUES (@cardName, @cardType, @setId)";
 
-                    command.Parameters.AddWithValue("@cardName", schemeInfo.SchemeName);
+                    command.Parameters.AddWithValue("@cardName", schemeInfo.Name);
                     command.Parameters.AddWithValue("@cardType", (int)CardType.Scheme);
                     command.Parameters.AddWithValue("@setId", (int)schemeInfo.SetName);
+
+                    command.ExecuteNonQuery();
+                }
+
+                foreach (var unveiledSchemeInfo in UnveiledScheme.All.ToList())
+                {
+                    command.Parameters.Clear();
+                    command.CommandText =
+                        @"INSERT OR IGNORE INTO Card (CardName, CardType, SetId)
+                    VALUES (@cardName, @cardType, @setId)";
+
+                    command.Parameters.AddWithValue("@cardName", unveiledSchemeInfo.Name);
+                    command.Parameters.AddWithValue("@cardType", (int)CardType.Scheme);
+                    command.Parameters.AddWithValue("@setId", (int)unveiledSchemeInfo.SetName);
+
+                    command.ExecuteNonQuery();
+                }
+
+                foreach (var villain in VillainRepository.AllVillains.ToList())
+                {
+                    command.Parameters.Clear();
+                    command.CommandText =
+                        @"INSERT OR IGNORE INTO Card (CardName, CardType, SetId)
+                    VALUES (@cardName, @cardType, @setId)";
+
+                    command.Parameters.AddWithValue("@cardName", villain.Name);
+                    command.Parameters.AddWithValue("@cardType", (int)CardType.Villain);
+                    command.Parameters.AddWithValue("@setId", (int)villain.SetName);
+
+                    command.ExecuteNonQuery();
+                }
+
+                foreach (var henchmen in HenchmenRepository.AllHenchmen.ToList())
+                {
+                    command.Parameters.Clear();
+                    command.CommandText =
+                        @"INSERT OR IGNORE INTO Card (CardName, CardType, SetId)
+                    VALUES (@cardName, @cardType, @setId)";
+
+                    command.Parameters.AddWithValue("@cardName", henchmen.Name);
+                    command.Parameters.AddWithValue("@cardType", (int)CardType.Henchmen);
+                    command.Parameters.AddWithValue("@setId", (int)henchmen.SetName);
+
+                    command.ExecuteNonQuery();
+                }
+
+                foreach (var hero in HeroRepository.AllHeroes.ToList())
+                {
+                    command.Parameters.Clear();
+                    command.CommandText =
+                        @"INSERT OR IGNORE INTO Card (CardName, CardType, SetId)
+                    VALUES (@cardName, @cardType, @setId)";
+
+                    command.Parameters.AddWithValue("@cardName", hero.Name);
+                    command.Parameters.AddWithValue("@cardType", (int)CardType.Hero);
+                    command.Parameters.AddWithValue("@setId", (int)hero.SetName);
 
                     command.ExecuteNonQuery();
                 }

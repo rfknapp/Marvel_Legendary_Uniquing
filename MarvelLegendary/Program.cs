@@ -14,7 +14,7 @@ namespace MarvelLegendary
         static void Main()
         {
             SqlHelper.SetupDatabase();
-            ConvertGames.ConvertTrackedGames();
+            //ConvertGames.ConvertTrackedGames();
 
             Console.WriteLine("How many players are playing? (1-5)");
             var playerCount = Console.ReadLine();
@@ -42,7 +42,7 @@ namespace MarvelLegendary
                     game.SetUnVeiledScheme();
                     Console.WriteLine("Press any key to reveal unveiled scheme.");
                     Console.ReadLine();
-                    Console.WriteLine($"Unveiled scheme is\r\n1) {game.UnveiledScheme.SchemeName}, {game.UnveiledScheme.SetName}\r\n\r\n");
+                    Console.WriteLine($"Unveiled scheme is\r\n1) {game.UnveiledScheme.Name}, {game.UnveiledScheme.SetName}\r\n\r\n");
                 }
 
                 //WatchForDuplicates(game);
@@ -56,21 +56,21 @@ namespace MarvelLegendary
 
             void WatchForDuplicates(GameInfo game)
             {
-                if (game.Villains.GroupBy(v => new { v.VillainName, v.SetName }).Any(g => g.Count() > 1))
+                if (game.Villains.GroupBy(v => new { v.Name, v.SetName }).Any(g => g.Count() > 1))
                 {
-                    var duplicates = game.Villains.GroupBy(v => new { v.VillainName, v.SetName }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
+                    var duplicates = game.Villains.GroupBy(v => new { v.Name, v.SetName }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
                     Console.WriteLine(Villain.ToString(duplicates));
                 }
 
-                if (game.HenchmenList.GroupBy(h => new { h.HenchmenName, h.HenchmenSet }).Any(g => g.Count() > 1))
+                if (game.HenchmenList.GroupBy(h => new { h.Name, h.SetName }).Any(g => g.Count() > 1))
                 {
-                    var duplicates = game.HenchmenList.GroupBy(h => new { h.HenchmenName, h.HenchmenSet }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
+                    var duplicates = game.HenchmenList.GroupBy(h => new { h.Name, h.SetName }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
                     Console.WriteLine(Henchmen.ToString(duplicates));
                 }
 
-                if (game.Heroes.GroupBy(h => new { h.HeroName, h.SetName }).Any(g => g.Count() > 1))
+                if (game.Heroes.GroupBy(h => new { h.Name, h.SetName }).Any(g => g.Count() > 1))
                 {
-                    var duplicates = game.Heroes.GroupBy(h => new { h.HeroName, h.SetName }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
+                    var duplicates = game.Heroes.GroupBy(h => new { h.Name, h.SetName }).Where(g => g.Count() > 1).SelectMany(g => g).ToList();
                     Console.WriteLine(Hero.ToString(duplicates));
                 }
             }
@@ -112,7 +112,7 @@ namespace MarvelLegendary
             var tacticsInVillainDeck = schemeInfo.IsTacticsInVillainDeck ? "Shuffle the Mastermind Tactics into the Villain deck.\r\n" : "";
             var monumentDeck = schemeInfo.IsMonumentDeck ? "Shuffle 18 Bystanders and 14 Wounds, then deal them evenly into eight decks.\r\n" : "";
             var smugglerHenchmen = schemeInfo.IsSmugglerHenchmen ? $"Include the following Henchmen as Smugglers with the Striker ability.{Henchmen.ToString(game.SchemeHenchmen)}\r\n" : "";
-            var monsterDeck = schemeInfo.IsMonsterPitDeck ? $"Shuffle 8 of the Villains into a face-down \"Monster Pit\" deck.\r\n{game.SchemeVillains[0].VillainName}, {game.SchemeVillains[0].SetName}\r\n" : "";
+            var monsterDeck = schemeInfo.IsMonsterPitDeck ? $"Shuffle 8 of the Villains into a face-down \"Monster Pit\" deck.\r\n{game.SchemeVillains[0].Name}, {game.SchemeVillains[0].SetName}\r\n" : "";
             var infectedDeck = schemeInfo.IsInfectedDeck ? $"Shuffle together 20 Bystanders and 10 of the following Henchmen as an \"Infected Deck.\"{Henchmen.ToString(game.SchemeHenchmen)}\r\n" : "";
             var mutationDeck = schemeInfo.IsMutationDeck ? $"Take 14 cards from the following hero and put them in a face-up \"Mutation Pile\".:{Hero.ToString(game.SchemeHeroes)}\r\n" : "";
             var hulkDeck = schemeInfo.IsHulkDeck ? $"Take 14 cards from the following Hero and shuffle them into a \"Hulk Deck\":{Hero.ToString(game.SchemeHeroes)}\r\n" : "";
@@ -123,13 +123,13 @@ namespace MarvelLegendary
             var hasMadameHydra = game.Heroes.Any(x => x.HeroInfo.IncludeMadameHydra) || game.AllMastermindsInGame.Any(x => x.MastermindInfo.IncludeMadameHydra) || game.Scheme.SchemeInfo.IncludeMadameHydra ? "Include Madame Hydra.\r\n" : "";
             var hasHorrors = game.Mastermind.MastermindInfo.IncludeHorrors || game.Scheme.SchemeInfo.IncludeHorrors ? "Include horrors.\r\n" : "";
             var hasDarkLoyalty = game.Scheme.SchemeInfo.IsDarkLoyalty ? $"Include 5 cards that cost 5 or less from the hero {game.Scheme.SchemeInfo.DarkLoyaltyHero}.\r\n" : "";
-            var isContestOfChampions = game.Scheme.SchemeInfo.SchemeName == "The Contest of Champions" ? "Put 11 random cards from the Hero Deck face up in a Contest Row\r\n" : "";
-            var isInvasionHero = game.Scheme.SchemeInfo.SchemeName.Contains("Skrull Shapeshifters") ? "Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.\r\n" : "";
-            var sneakAttackString = game.Scheme.SchemeInfo.SchemeName == "Sneak Attack the Heroes" ? SneakAttackRuleGenerator(game.PlayerCount, game.Heroes) : "";
+            var isContestOfChampions = game.Scheme.SchemeInfo.Name == "The Contest of Champions" ? "Put 11 random cards from the Hero Deck face up in a Contest Row\r\n" : "";
+            var isInvasionHero = game.Scheme.SchemeInfo.Name.Contains("Skrull Shapeshifters") ? "Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.\r\n" : "";
+            var sneakAttackString = game.Scheme.SchemeInfo.Name == "Sneak Attack the Heroes" ? SneakAttackRuleGenerator(game.PlayerCount, game.Heroes) : "";
             var zombieVillainsString = game.Mastermind.MastermindInfo.IsZombieSoloVillain && game.PlayerCount == 1 ? "Treat the Villain group as having the Zombie keyword.\r\n" : "";
-            var quantumRealmString = game.Scheme.SchemeInfo.IsQuantumRealmDeck ? $"Set aside the {game.SchemeVillains.FirstOrDefault().VillainName} ({game.SchemeVillains[0].SetName}) Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.\r\n" : "";
-            var pastHeroDeck = game.Scheme.SchemeName == "The Time Heist" ? "Set half of the hero groups in the main city. The other half of the hero groups make a Past Hero Deck." : "";
-            var shrinkTechDeck = game.Scheme.SchemeInfo.IsShrinkTechHero ? $"Set aside all 14 cards of the {game.Scheme.SchemeInfo.ShrinkTechHero.HeroName} hero group as Shrink Tech.\r\n" : "";
+            var quantumRealmString = game.Scheme.SchemeInfo.IsQuantumRealmDeck ? $"Set aside the {game.SchemeVillains.FirstOrDefault().Name} ({game.SchemeVillains[0].SetName}) Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.\r\n" : "";
+            var pastHeroDeck = game.Scheme.Name == "The Time Heist" ? "Set half of the hero groups in the main city. The other half of the hero groups make a Past Hero Deck." : "";
+            var shrinkTechDeck = game.Scheme.SchemeInfo.IsShrinkTechHero ? $"Set aside all 14 cards of the {game.Scheme.SchemeInfo.ShrinkTechHero.Name} hero group as Shrink Tech.\r\n" : "";
             var lovedOnesDeck = game.Scheme.SchemeInfo.IsLovedOne ? $"Set aside a lowest-cost card for each hero Name, face up,w ith 2 face up Bystanders under it as Loved Ones.\r\n" : "";
 
             var returnString = playerCount + mastermindOutput + schemeOutput + villainOutput + villainHeroOutput + henchmenOutput + heroesOutput + twistsBystanderAndMasterStrikeOutput + woundsOutput
@@ -147,7 +147,7 @@ namespace MarvelLegendary
             var returnString = "";
             for (int i = 0; i < playerCount; i++)
             {
-                returnString = $"{returnString}Player {i + 1} chooses three non-rare cards with different names from the {heroes[i].HeroName} deck and three wounds and adds them to their deck.\r\n";
+                returnString = $"{returnString}Player {i + 1} chooses three non-rare cards with different names from the {heroes[i].Name} deck and three wounds and adds them to their deck.\r\n";
             }
             
             return returnString;
