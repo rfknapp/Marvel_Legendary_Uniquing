@@ -10,7 +10,7 @@ namespace MarvelLegendary
     public class MastermindInfo
     {
         public int Id { get; set; }
-        public string MastermindName { get; set; }
+        public string Name { get; set; }
         public Set SetName { get; set; }
         public string RequiredVillain { get; set; }
         public Villain LeadsVillain { get; set; }

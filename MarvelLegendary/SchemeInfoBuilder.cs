@@ -16,7 +16,7 @@ namespace MarvelLegendary
         {
             _schemeInfo = new SchemeInfo
             {
-                SchemeName = "",
+                Name = "",
                 SchemeTwists = new List<int> { 8, 8, 8, 8, 8 },
                 SetName = Set.Core,
                 CannotBeSolo = false,
@@ -158,7 +158,7 @@ namespace MarvelLegendary
 
         public SchemeInfoBuilder SetSchemeName(string name)
         {
-            _schemeInfo.SchemeName = name;
+            _schemeInfo.Name = name;
             return this;
         }
 
@@ -450,7 +450,7 @@ namespace MarvelLegendary
             _schemeInfo.IsRandomHeroesInVillainDeck = true;
 
             var heroesInfo = Hero.GetAllHeroesInfo();
-            var namedHeroes = Hero.ConvertToHeroList(heroesInfo.Where(x => x.HeroName.Contains(nameString)).ToList());
+            var namedHeroes = Hero.ConvertToHeroList(heroesInfo.Where(x => x.Name.Contains(nameString)).ToList());
 
             while (_schemeInfo.HeroesInVillainDeck.Count < numberOfHeroesWithNameString && namedHeroes.Count > 0)
             {

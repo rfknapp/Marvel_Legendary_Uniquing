@@ -375,7 +375,7 @@ namespace MarvelLegendary
 
     public class Hero
     {
-        public string HeroName { get; set; }
+        public string Name { get; set; }
         public Set SetName { get; set; }
         public HeroTeam HeroTeam { get; set; }
         public HeroInfo HeroInfo { get; set; }
@@ -401,7 +401,7 @@ namespace MarvelLegendary
             }
             else
             {
-                heroInfo = HeroRepository.All.FirstOrDefault(h => h.HeroName == heroName && h.SetName == set);
+                heroInfo = HeroRepository.All.FirstOrDefault(h => h.Name == heroName && h.SetName == set);
             }
 
             return GetNewHero(heroInfo);
@@ -421,7 +421,7 @@ namespace MarvelLegendary
         public static Hero GetRandomHero(List<Hero> heroList)
         {
             var heroName = heroList[RandomHelper.Instance.Next(heroList.Count)];
-            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == heroName.HeroName && x.SetName == heroName.SetName);
+            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.Name == heroName.Name && x.SetName == heroName.SetName);
 
             return GetNewHero(heroInfo);
         }
@@ -442,7 +442,7 @@ namespace MarvelLegendary
             var returnList = new List<Hero>();
             foreach (var heroCard in heroCards)
             {
-                var heroInfo = HeroRepository.All.FirstOrDefault(h => h.HeroName == heroCard.CardName && (int)h.SetName == heroCard.SetId);
+                var heroInfo = HeroRepository.All.FirstOrDefault(h => h.Name == heroCard.CardName && (int)h.SetName == heroCard.SetId);
                 returnList.Add(GetNewHero(heroInfo));
             }
 
@@ -458,7 +458,7 @@ namespace MarvelLegendary
 
             return new Hero
             {
-                HeroName = heroInfo.HeroName,
+                Name = heroInfo.Name,
                 SetName = heroInfo.SetName,
                 HeroTeam = heroInfo.HeroTeam,
                 HeroInfo = heroInfo
@@ -467,9 +467,9 @@ namespace MarvelLegendary
 
         public static List<Hero> GetAllHeroesByNamePart(string namePart, List<Hero> availableHeroes)
         {
-            var heroes = availableHeroes.Where(x => x.HeroName.Contains(namePart)).ToList();
+            var heroes = availableHeroes.Where(x => x.Name.Contains(namePart)).ToList();
 
-            if (namePart == "Hulk" && availableHeroes.Any(x=>x.HeroName == "Nul, Breaker of Worlds"))
+            if (namePart == "Hulk" && availableHeroes.Any(x=>x.Name == "Nul, Breaker of Worlds"))
             {
                 heroes.Add(GetNewHero("Nul, Breaker of Worlds", Set.Fi));
             }
@@ -484,7 +484,7 @@ namespace MarvelLegendary
                 var heroesForTeams = HeroRepository.All.Where(x => x.HeroTeam == heroTeam).ToList();
                 foreach (var exclusionHero in exclusionHeroes)
                 {
-                    var itemToRemove = heroesForTeams.SingleOrDefault(x => x.HeroName == exclusionHero);
+                    var itemToRemove = heroesForTeams.SingleOrDefault(x => x.Name == exclusionHero);
                     if(itemToRemove != null)
                         heroesForTeams.Remove(itemToRemove);
                 }
@@ -500,7 +500,7 @@ namespace MarvelLegendary
             var heroesForTeams = HeroRepository.All.Where(x => x.HeroTeam != heroTeam).ToList();
             foreach (var exclusionHero in exclusionHeroes)
             {
-                var itemToRemove = heroesForTeams.SingleOrDefault(x => x.HeroName == exclusionHero);
+                var itemToRemove = heroesForTeams.SingleOrDefault(x => x.Name == exclusionHero);
                 if (itemToRemove != null)
                     heroesForTeams.Remove(itemToRemove);
             }
@@ -519,7 +519,7 @@ namespace MarvelLegendary
             //Get Heroes that have played with the Scheme
             var schemeCard = new Card
             {
-                CardName = scheme.SchemeName,
+                CardName = scheme.Name,
                 CardType = (int)CardType.Scheme,
                 SetId = (int)scheme.SetName
             };
@@ -535,7 +535,7 @@ namespace MarvelLegendary
             {
                 var mastermindCard = new Card
                 {
-                    CardName = mastermind.MastermindName,
+                    CardName = mastermind.Name,
                     CardType = (int)CardType.Mastermind,
                     SetId = (int)mastermind.SetName
                 };
@@ -553,7 +553,7 @@ namespace MarvelLegendary
             {
                 var villainCard = new Card
                 {
-                    CardName = villain.VillainName,
+                    CardName = villain.Name,
                     CardType = (int)CardType.Villain,
                     SetId = (int)villain.SetName
                 };
@@ -571,9 +571,9 @@ namespace MarvelLegendary
             {
                 var henchmenCard = new Card
                 {
-                    CardName = henchmen.HenchmenName,
+                    CardName = henchmen.Name,
                     CardType = (int)CardType.Henchmen,
-                    SetId = (int)henchmen.HenchmenSet
+                    SetId = (int)henchmen.SetName
                 };
 
                 var heroCardsByHenchmen = SqlHelper.GetCardRelationships(CardType.Hero, henchmenCard);
@@ -589,7 +589,7 @@ namespace MarvelLegendary
             {
                 var heroCard = new Card
                 {
-                    CardName = hero.HeroName,
+                    CardName = hero.Name,
                     CardType = (int)CardType.Henchmen,
                     SetId = (int)hero.SetName
                 };
@@ -606,7 +606,7 @@ namespace MarvelLegendary
             //This will remove all duplicates of heroes currently in the game
             if (scheme.SchemeInfo.NoDuplicates)
             {
-                var duplicateHeroes = heroesInGame.SelectMany(hero => HeroRepository.AllHeroes.Where(h => h.HeroName == hero.HeroName)).ToList();
+                var duplicateHeroes = heroesInGame.SelectMany(hero => HeroRepository.AllHeroes.Where(h => h.Name == hero.Name)).ToList();
 
                 idsInGame = new HashSet<int>(duplicateHeroes.Select(h => h.HeroInfo.Id));
                 remainingHeroes = remainingHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
@@ -632,8 +632,8 @@ namespace MarvelLegendary
 
         public static List<Hero> GetDuplicateHeroes(Hero heroName)
         {
-            var duplicateHeroes = HeroRepository.AllHeroes.Where(h => h.HeroName == heroName.HeroName).ToList();
-            duplicateHeroes = ConvertToHeroList(HeroRepository.All.Where(h => h.HeroName == heroName.HeroName).ToList());
+            var duplicateHeroes = HeroRepository.AllHeroes.Where(h => h.Name == heroName.Name).ToList();
+            duplicateHeroes = ConvertToHeroList(HeroRepository.All.Where(h => h.Name == heroName.Name).ToList());
 
             //Waiting on clarification. I don't think I should add these, but if they count as the same hero name I can uncomment ths
             //if (new[] { "Hulk", "Nul, Breaker of Worlds" }.Contains(heroName.HeroName))
@@ -680,7 +680,7 @@ namespace MarvelLegendary
             //}
             foreach (var hero in heroList)
             {
-                returnList.AddRange(HeroRepository.AllHeroes.Where(h => h.HeroName == hero.HeroName).ToList());
+                returnList.AddRange(HeroRepository.AllHeroes.Where(h => h.Name == hero.Name).ToList());
             }
 
             return returnList;
@@ -697,7 +697,7 @@ namespace MarvelLegendary
             }
 
             var heroName = heroList[RandomHelper.Instance.Next(heroList.Count)];
-            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == heroName);
+            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.Name == heroName);
 
             return GetNewHero(heroInfo);
         }
@@ -709,7 +709,7 @@ namespace MarvelLegendary
             var heroes = (from item in availableHeroes select GetNewHero(item, Set.Core)).ToList();
             var heroList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
             var hero = heroList[RandomHelper.Instance.Next(heroList.Count)];
-            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == hero.HeroName);
+            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.Name == hero.Name);
 
             return GetNewHero(heroInfo);
         }
@@ -720,7 +720,7 @@ namespace MarvelLegendary
 
             var heroList = inTeam ? heroes.Where(x => x.HeroTeam == heroTeam).ToList() : heroes.Where(x => x.HeroTeam != heroTeam).ToList();
             var hero = heroList[RandomHelper.Instance.Next(heroList.Count)];
-            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.HeroName == hero.HeroName);
+            var heroInfo = HeroRepository.All.FirstOrDefault(x => x.Name == hero.Name);
 
             return GetNewHero(heroInfo);
         }
@@ -815,7 +815,7 @@ namespace MarvelLegendary
             if (orderedHeroList.Count == 0) return returnString;
             foreach (var hero in orderedHeroList)
             {
-                returnString = $"{returnString}{counter}) ({hero.HeroTeam.GetDescription()}) {hero.HeroName.Split('_').First()}, {hero.SetName.GetDescription()} ({hero.Order})\r\n";
+                returnString = $"{returnString}{counter}) ({hero.HeroTeam.GetDescription()}) {hero.Name.Split('_').First()}, {hero.SetName.GetDescription()} ({hero.Order})\r\n";
                 counter++;
             }
             returnString = $"{returnString.Remove(returnString.Length - 2)}\r\n";
@@ -825,7 +825,7 @@ namespace MarvelLegendary
 
         public static List<string> GetListOfHeroes()
         {
-            return HeroRepository.All.ToList().Select(x => x.HeroName).ToList();
+            return HeroRepository.All.ToList().Select(x => x.Name).ToList();
         }
 
         public static List<Hero> GetListOfHeroesWithKeyword(Keywords keyword)

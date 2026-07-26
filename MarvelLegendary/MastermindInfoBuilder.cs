@@ -17,7 +17,7 @@ namespace MarvelLegendary
             _mastermindInfo = new MastermindInfo
             {
                 Id = 0,
-                MastermindName = "",
+                Name = "",
                 SetName = Set.Core,
                 RequiredVillain = "",
                 LeadsVillain = null,
@@ -46,7 +46,7 @@ namespace MarvelLegendary
 
         public MastermindInfoBuilder SetMastermindName(string name)
         {
-            _mastermindInfo.MastermindName = name;
+            _mastermindInfo.Name = name;
             return this;
         }
 
@@ -88,7 +88,7 @@ namespace MarvelLegendary
 
             foreach (var henchmanKind in henchmenKind)
             {
-                henchmenInfoList = henchmenInfoList.Concat(henchmenList.Where(item => item.HenchmenName.Contains(henchmanKind)).ToList()).ToList();
+                henchmenInfoList = henchmenInfoList.Concat(henchmenList.Where(item => item.Name.Contains(henchmanKind)).ToList()).ToList();
             }
 
             _mastermindInfo.LeadsHenchmen = Henchmen.GetNewHenchmen(henchmenInfoList[RandomHelper.Instance.Next(henchmenInfoList.Count)]);
@@ -102,7 +102,7 @@ namespace MarvelLegendary
             var listOfVillains = new List<Villain>();
             foreach (var villainKind in villainKinds)
             {
-                listOfVillains.AddRange((villainsList.Where(item => item.VillainName.Contains(villainKind))).ToList());
+                listOfVillains.AddRange((villainsList.Where(item => item.Name.Contains(villainKind))).ToList());
             }
 
             _mastermindInfo.LeadsVillain = listOfVillains[RandomHelper.Instance.Next(listOfVillains.Count)];

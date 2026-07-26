@@ -225,7 +225,7 @@ namespace MarvelLegendary
     public class Mastermind
     {
         public int Id { get; set; }
-        public string MastermindName { get; set; }
+        public string Name { get; set; }
         public Set SetName { get; set; }
         public Henchmen LeadsHenchmen { get; set; }
         public Villain LeadsVillain { get; set; }
@@ -239,7 +239,7 @@ namespace MarvelLegendary
             return new Mastermind
             {
                 Id = mastermindInfo.Id,
-                MastermindName = mastermindInfo.MastermindName,
+                Name = mastermindInfo.Name,
                 SetName = mastermindInfo.SetName,
                 LeadsHenchmen = mastermindInfo.LeadsHenchmen,
                 LeadsVillain = mastermindInfo.LeadsVillain,
@@ -256,7 +256,7 @@ namespace MarvelLegendary
 
             if(!string.IsNullOrEmpty(mastermindName) && mastermindSet != null)
             {
-                mastermindInfo = MastermindRepository.All.FirstOrDefault(m => m.MastermindName == mastermindName && m.SetName == mastermindSet);
+                mastermindInfo = MastermindRepository.All.FirstOrDefault(m => m.Name == mastermindName && m.SetName == mastermindSet);
             }
             else
             {
@@ -268,7 +268,7 @@ namespace MarvelLegendary
 
         public static string ToString(Mastermind mastermind)
         {
-            return $"\r\n{mastermind.MastermindName}, {mastermind.SetName.GetDescription()}";
+            return $"\r\n{mastermind.Name}, {mastermind.SetName.GetDescription()}";
         }
 
         public static string ToString(List<Mastermind> mastermindList)
@@ -280,7 +280,7 @@ namespace MarvelLegendary
 
             foreach (var mastermind in orderedMastermindList)
             {
-                returnString = $"{returnString}{counter}) {mastermind.MastermindName.Split('_').First()}, {mastermind.SetName.GetDescription()}\r\n";
+                returnString = $"{returnString}{counter}) {mastermind.Name.Split('_').First()}, {mastermind.SetName.GetDescription()}\r\n";
                 counter++;
             }
 
@@ -289,7 +289,7 @@ namespace MarvelLegendary
 
         public static List<string> GetListOfMasterminds()
         {
-            var allMasterminds = MastermindRepository.All.Select(m => m.MastermindName).ToList();
+            var allMasterminds = MastermindRepository.All.Select(m => m.Name).ToList();
             return allMasterminds;
         }
 
@@ -304,7 +304,7 @@ namespace MarvelLegendary
             var returnList = new List<Mastermind>();
             foreach (var mastermindCard in mastermindCards)
             {
-                var mastermindInfo = MastermindRepository.All.FirstOrDefault(m => m.MastermindName == mastermindCard.CardName && (int)m.SetName == mastermindCard.SetId);
+                var mastermindInfo = MastermindRepository.All.FirstOrDefault(m => m.Name == mastermindCard.CardName && (int)m.SetName == mastermindCard.SetId);
                 returnList.Add(ConvertToMastermind(mastermindInfo));
             }
 
@@ -333,7 +333,7 @@ namespace MarvelLegendary
 
             var schemeCard = new Card
             {
-                CardName = scheme.SchemeName,
+                CardName = scheme.Name,
                 CardType = (int)CardType.Scheme,
                 SetId = (int)scheme.SetName
             };
@@ -350,7 +350,7 @@ namespace MarvelLegendary
             {
                 var mastermindCard = new Card
                 {
-                    CardName = mastermindInGame.MastermindName,
+                    CardName = mastermindInGame.Name,
                     CardType = (int)CardType.Mastermind,
                     SetId = (int)mastermindInGame.SetName
                 };

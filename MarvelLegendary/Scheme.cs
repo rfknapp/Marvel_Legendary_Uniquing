@@ -7,10 +7,10 @@ namespace MarvelLegendary
 {
     public class UnveiledScheme
     {
-        public string SchemeName { get; set; }
+        public string Name { get; set; }
         public Set SetName { get; set; }
 
-        private readonly List<SchemeInfo> _unveiledSchemes = new List<SchemeInfo>()
+        private static readonly List<SchemeInfo> _unveiledSchemes = new List<SchemeInfo>()
         {
             new SchemeInfoBuilder().SetSchemeName("...Control The Mutant Messiah").SetSchemeSet(Set.Messiah).Build(),
             new SchemeInfoBuilder().SetSchemeName("...Open Rifts To Future Timelines").SetSchemeSet(Set.Messiah).Build(),
@@ -18,10 +18,12 @@ namespace MarvelLegendary
             new SchemeInfoBuilder().SetSchemeName("...Unleash An Anti-Mutant Bioweapon").SetSchemeSet(Set.Messiah).Build()
         };
 
+        public static IReadOnlyList<SchemeInfo> All => _unveiledSchemes;
+
         public UnveiledScheme(string schemeName = "")
         {
-            var schemeInfo = schemeName == "" ? _unveiledSchemes[RandomHelper.Instance.Next(_unveiledSchemes.Count)] : _unveiledSchemes.First(x => x.SchemeName == schemeName);
-            SchemeName = schemeInfo.SchemeName;
+            var schemeInfo = schemeName == "" ? _unveiledSchemes[RandomHelper.Instance.Next(_unveiledSchemes.Count)] : _unveiledSchemes.First(x => x.Name == schemeName);
+            Name = schemeInfo.Name;
             SetName = schemeInfo.SetName;
         }
     }
@@ -270,7 +272,7 @@ namespace MarvelLegendary
     
     public class Scheme
     {
-        public string SchemeName { get; set; }
+        public string Name { get; set; }
         public Set SetName { get; set; }
         public int Twists { get; set; }
         public int NumberOfSchemeTwists { get; set; }
@@ -314,18 +316,24 @@ namespace MarvelLegendary
 
             return new Scheme
             {
-                SchemeName = schemeInfo.SchemeName,
+                Name = schemeInfo.Name,
                 SetName = schemeInfo.SetName
             };
         }
 
         public static Scheme GetNewScheme(string schemeName, Set set)
         {
-            var schemeInfo = SchemeRepository.All.FirstOrDefault(s => s.SchemeName == schemeName && s.SetName == set);
+            if(schemeName.StartsWith("..."))
+            {
+
+            }
+            var schemeInfo = schemeName.StartsWith("...") ? UnveiledScheme.All.FirstOrDefault(s=>s.Name == schemeName && s.SetName == set)
+                : SchemeRepository.All.FirstOrDefault(s => s.Name == schemeName && s.SetName == set);
+            //var schemeInfo = SchemeRepository.All.FirstOrDefault(s => s.Name == schemeName && s.SetName == set);
 
             return new Scheme
             {
-                SchemeName = schemeInfo.SchemeName,
+                Name = schemeInfo.Name,
                 SetName = schemeInfo.SetName,
                 SchemeInfo = schemeInfo
             };
@@ -352,14 +360,14 @@ namespace MarvelLegendary
 
         private static SchemeInfo GetSchemeInfo(string schemeName, Set set)
         {
-            return SchemeRepository.All.First(x => x.SchemeName == schemeName && x.SetName == set);
+            return SchemeRepository.All.First(x => x.Name == schemeName && x.SetName == set);
         }
 
         private static SchemeInfo GetRandomScheme(Mastermind mastermind)
         {
             var mastermindCard = new Card
             {
-                CardName = mastermind.MastermindName,
+                CardName = mastermind.Name,
                 CardType = (int)CardType.Mastermind,
                 SetId = (int)mastermind.SetName
             };
@@ -408,7 +416,7 @@ namespace MarvelLegendary
             List<SchemeInfo> returnList = new List<SchemeInfo>();
             foreach (var card in cardList)
             {
-                returnList.Add(SchemeRepository.All.First(s => s.SchemeName == card.CardName && (int)s.SetName == card.SetId));
+                returnList.Add(SchemeRepository.All.First(s => s.Name == card.CardName && (int)s.SetName == card.SetId));
             }
 
             return returnList;
@@ -429,10 +437,10 @@ namespace MarvelLegendary
                 schemeInfo.NumberOfPlayers = 4;
             }
 
-            newScheme.SchemeName = schemeInfo.SchemeName;
+            newScheme.Name = schemeInfo.Name;
             newScheme.SetName = schemeInfo.SetName;
             newScheme.Twists = schemeInfo.SchemeTwists[playerCount - 1];
-            newScheme.NumberOfSchemeTwists = newScheme.SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith" ? 1 : schemeInfo.SchemeTwists[playerCount - 1];
+            newScheme.NumberOfSchemeTwists = newScheme.Name == "Ritual Sacrifice to Summon Chthon" && mastermind.Name == "Lilith" ? 1 : schemeInfo.SchemeTwists[playerCount - 1];
             newScheme.SchemeInfo = schemeInfo;
             newScheme.IsSchemeTwistsNextToScheme = schemeInfo.IsSchemeTwistsNextToScheme;
             newScheme.NumberTwistsNextToScheme = schemeInfo.NumberTwistsNextToScheme;
@@ -443,13 +451,13 @@ namespace MarvelLegendary
             newScheme.NumberOfVillains = schemeInfo.Villains[playerCount - 1];
             
             //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is Lilith
-            if (newScheme.SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName == "Lilith")
+            if (newScheme.Name == "Ritual Sacrifice to Summon Chthon" && mastermind.Name == "Lilith")
                 newScheme.NumberOfVillains++;
 
             newScheme.RequiredVillains = schemeInfo.RequiredVillains;
 
             //This covers the case in the Ritual Sacrifice to Summon Chthon where the mastermind is not Lilith
-            if (newScheme.SchemeName == "Ritual Sacrifice to Summon Chthon" && mastermind.MastermindName != "Lilith")
+            if (newScheme.Name == "Ritual Sacrifice to Summon Chthon" && mastermind.Name != "Lilith")
                 newScheme.RequiredVillains.Add(Villain.GetNewVillain("Lilin", Set.MidnightSons));
 
             newScheme.NumberOfHenchmen = schemeInfo.Henchmen[playerCount - 1];
@@ -473,13 +481,13 @@ namespace MarvelLegendary
 
         public static List<string> GetListOfSchemes()
         {
-            var allSchemes = SchemeRepository.All.Select(s => s.SchemeName).ToList();
+            var allSchemes = SchemeRepository.All.Select(s => s.Name).ToList();
             return allSchemes;
         }
 
         public static string ToString(Scheme scheme)
         {
-            return $"{scheme.SchemeName}, {scheme.SetName.GetDescription()}";
+            return $"{scheme.Name}, {scheme.SetName.GetDescription()}";
         }
     }
 }

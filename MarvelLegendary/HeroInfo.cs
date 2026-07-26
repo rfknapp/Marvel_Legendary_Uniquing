@@ -9,7 +9,7 @@ namespace MarvelLegendary
     public class HeroInfo
     {
         public int Id { get; set; }
-        public string HeroName { get; set; }
+        public string Name { get; set; }
         public Set SetName { get; set; }
         public HeroTeam HeroTeam { get; set; }
         public bool IsDuplicate { get; set; }

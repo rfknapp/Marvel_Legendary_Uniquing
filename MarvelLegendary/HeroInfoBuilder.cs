@@ -15,7 +15,7 @@ namespace MarvelLegendary
             _heroInfo = new HeroInfo
             {
                 Id = 0,
-                HeroName = "",
+                Name = "",
                 SetName = Set.Core,
                 HeroTeam = HeroTeam.Avengers,
                 IsDuplicate = false,
@@ -37,7 +37,7 @@ namespace MarvelLegendary
 
         public HeroInfoBuilder SetHeroName(string name)
         {
-            _heroInfo.HeroName = name;
+            _heroInfo.Name = name;
             return this;
         }
 

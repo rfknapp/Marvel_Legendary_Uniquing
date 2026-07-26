@@ -8,7 +8,7 @@ namespace MarvelLegendary
     public class VillainInfo
     {
         public int Id { get; set; }
-        public string VillainName { get; set; }
+        public string Name { get; set; }
         public Set VillainSetName { get; set; }
         public bool IsDuplicate { get; set; }
         public bool IncludeBindings { get; set; }
@@ -19,7 +19,7 @@ namespace MarvelLegendary
         public VillainInfo(int id, string name, Set set, bool includeBindings = false)
         {
             Id = id;
-            VillainName = name;
+            Name = name;
             VillainSetName = set;
             IsDuplicate = false;
             IncludeBindings = includeBindings;
@@ -30,7 +30,7 @@ namespace MarvelLegendary
         public VillainInfo(int id, string name, Set set, List<int> duplicateIdList, bool includeBindings = false)
         {
             Id = id;
-            VillainName = name;
+            Name = name;
             VillainSetName = set;
             IsDuplicate = true;
             IncludeBindings = includeBindings;
@@ -245,13 +245,13 @@ namespace MarvelLegendary
     public class Villain
     {
         public int Id { get; set; }
-        public string VillainName { get; set; }
+        public string Name { get; set; }
         public Set SetName { get; set; }
         public VillainInfo VillainInfo { get; set; }
 
         public static Villain GetNewVillain(string villainName, Set setName)
         {
-            var villainInfo = VillainRepository.All.FirstOrDefault(v => v.VillainName == villainName && v.VillainSetName == setName);
+            var villainInfo = VillainRepository.All.FirstOrDefault(v => v.Name == villainName && v.VillainSetName == setName);
             return GetNewVillain(villainInfo);
         }
 
@@ -266,7 +266,7 @@ namespace MarvelLegendary
             var returnList = new List<Villain>();
             foreach (var villainCard in villainCards)
             {
-                var villain = VillainRepository.All.FirstOrDefault(v => v.VillainName== villainCard.CardName && (int)v.VillainSetName == villainCard.SetId);
+                var villain = VillainRepository.All.FirstOrDefault(v => v.Name== villainCard.CardName && (int)v.VillainSetName == villainCard.SetId);
                 returnList.Add(GetNewVillain(villain));
             }
 
@@ -283,7 +283,7 @@ namespace MarvelLegendary
             return new Villain
             {
                 Id = villainInfo.Id,
-                VillainName = villainInfo.VillainName,
+                Name = villainInfo.Name,
                 SetName = villainInfo.VillainSetName,
                 VillainInfo = villainInfo
             };
@@ -311,7 +311,7 @@ namespace MarvelLegendary
             //Get Villains that have played with the Scheme
             var schemeCard = new Card
             {
-                CardName = scheme.SchemeName,
+                CardName = scheme.Name,
                 CardType = (int)CardType.Scheme,
                 SetId = (int)scheme.SetName
             };
@@ -329,7 +329,7 @@ namespace MarvelLegendary
             {
                 var mastermindCard = new Card
                 {
-                    CardName = mastermind.MastermindName,
+                    CardName = mastermind.Name,
                     CardType = (int)CardType.Mastermind,
                     SetId = (int)mastermind.SetName
                 };
@@ -347,7 +347,7 @@ namespace MarvelLegendary
             {
                 var villainCard = new Card
                 {
-                    CardName = v.VillainName,
+                    CardName = v.Name,
                     CardType = (int)CardType.Villain,
                     SetId = (int)v.SetName
                 };
@@ -362,7 +362,7 @@ namespace MarvelLegendary
 
             //Select Villain from remaining list
             var villain = remainingVillains[RandomHelper.Instance.Next(remainingVillains.Count)];
-            var villainInfo = VillainRepository.All.First(v => v.VillainName == villain.VillainName && v.VillainSetName == villain.SetName);
+            var villainInfo = VillainRepository.All.First(v => v.Name == villain.Name && v.VillainSetName == villain.SetName);
 
             return GetNewVillain(villainInfo);
         }
@@ -388,7 +388,7 @@ namespace MarvelLegendary
 
             foreach (var villain in orderedVillainList)
             {
-                returnString = $"{returnString}{counter}) {villain.VillainName}, {villain.SetName.GetDescription()}\r\n";
+                returnString = $"{returnString}{counter}) {villain.Name}, {villain.SetName.GetDescription()}\r\n";
                 counter++;
             }
 
@@ -397,7 +397,7 @@ namespace MarvelLegendary
 
         public static List<string> GetListOfVillains()
         {
-            var returnList = VillainRepository.All.Select(v => v.VillainName).ToList();
+            var returnList = VillainRepository.All.Select(v => v.Name).ToList();
             return returnList;
         }
 

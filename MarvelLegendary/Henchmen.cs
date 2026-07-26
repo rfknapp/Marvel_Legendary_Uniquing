@@ -8,8 +8,8 @@ namespace MarvelLegendary
     public class HenchmenInfo
     {
         public int Id { get; set; }
-        public string HenchmenName { get; set; }
-        public Set HenchmenSetName { get; set; }
+        public string Name { get; set; }
+        public Set SetName { get; set; }
         public bool IsDuplicate { get; set; }
         public string DuplicateName { get; set; }
         public bool IncludeNewRecruits { get; set; }
@@ -19,8 +19,8 @@ namespace MarvelLegendary
         public HenchmenInfo(int id, string name, Set set, bool includeNewRecruits = false)
         {
             Id = id;
-            HenchmenName = name;
-            HenchmenSetName = set;
+            Name = name;
+            SetName = set;
             IsDuplicate = false;
             DuplicateName = "";
             IncludeNewRecruits = includeNewRecruits;
@@ -29,8 +29,8 @@ namespace MarvelLegendary
         public HenchmenInfo(int id, string name, Set set, List<int> duplicateIdList, bool includeNewRecruits = false)
         {
             Id = id;
-            HenchmenName = name;
-            HenchmenSetName = set;
+            Name = name;
+            SetName = set;
             IsDuplicate = true;
             DuplicateHenchmenIds = duplicateIdList;
             IncludeNewRecruits = includeNewRecruits;
@@ -130,8 +130,8 @@ namespace MarvelLegendary
     public class Henchmen
     {
         public int Id { get; set; }
-        public Set HenchmenSet { get; set; }
-        public string HenchmenName { get; set; }
+        public Set SetName { get; set; }
+        public string Name { get; set; }
         public HenchmenInfo HenchmenInfo { get; set; }
 
         public static List<HenchmenInfo> GetAllHenchmenInfo()
@@ -161,15 +161,15 @@ namespace MarvelLegendary
             return new Henchmen
             {
                 Id = henchmenInfo.Id,
-                HenchmenName = henchmenInfo.HenchmenName,
-                HenchmenSet = henchmenInfo.HenchmenSetName,
+                Name = henchmenInfo.Name,
+                SetName = henchmenInfo.SetName,
                 HenchmenInfo = henchmenInfo
             };
         }
 
         public static HenchmenInfo GetNewHenchmenInfo(string henchmenName, Set setName)
         {
-            var henchmenInfo = GetAllHenchmenInfo().FirstOrDefault(h => h.HenchmenName == henchmenName && h.HenchmenSetName == setName);
+            var henchmenInfo = GetAllHenchmenInfo().FirstOrDefault(h => h.Name == henchmenName && h.SetName == setName);
 
             if (henchmenInfo.IsDuplicate)
             {
@@ -186,7 +186,7 @@ namespace MarvelLegendary
 
             var enabledHenchmen = matchingHenchmen.Where(x => x.IsEnabled).ToList();
 
-            var newestHenchmen = enabledHenchmen.OrderByDescending(x => (int)x.HenchmenSetName).FirstOrDefault();
+            var newestHenchmen = enabledHenchmen.OrderByDescending(x => (int)x.SetName).FirstOrDefault();
 
             return newestHenchmen;
         }
@@ -237,7 +237,7 @@ namespace MarvelLegendary
             //Get Henchmen that have played with the Scheme
             var schemeCard = new Card
             {
-                CardName = scheme.SchemeName,
+                CardName = scheme.Name,
                 CardType = (int)CardType.Scheme,
                 SetId = (int)scheme.SetName
             };
@@ -254,7 +254,7 @@ namespace MarvelLegendary
             {
                 var mastermindCard = new Card
                 {
-                    CardName = mastermind.MastermindName,
+                    CardName = mastermind.Name,
                     CardType = (int)CardType.Mastermind,
                     SetId = (int)mastermind.SetName
                 };
@@ -272,7 +272,7 @@ namespace MarvelLegendary
             {
                 var villainCard = new Card
                 {
-                    CardName = villain.VillainName,
+                    CardName = villain.Name,
                     CardType = (int)CardType.Villain,
                     SetId = (int)villain.SetName
                 };
@@ -290,9 +290,9 @@ namespace MarvelLegendary
             {
                 var henchmenCard = new Card
                 {
-                    CardName = h.HenchmenName,
+                    CardName = h.Name,
                     CardType = (int)CardType.Henchmen,
-                    SetId = (int)h.HenchmenSet
+                    SetId = (int)h.SetName
                 };
 
                 var henchmenCardsByHenchmen = SqlHelper.GetCardRelationships(CardType.Henchmen, henchmenCard);
@@ -305,7 +305,7 @@ namespace MarvelLegendary
 
             //Select Henchmen from remaining list
             var henchmen = remainingHenchmen[RandomHelper.Instance.Next(remainingHenchmen.Count)];
-            var henchmenInfo = GetNewHenchmenInfo(henchmen.HenchmenName, henchmen.HenchmenSet);
+            var henchmenInfo = GetNewHenchmenInfo(henchmen.Name, henchmen.SetName);
 
             return GetNewHenchmen(henchmenInfo);
         }
@@ -314,11 +314,11 @@ namespace MarvelLegendary
         {
             var returnString = "\r\n";
             var counter = 1;
-            var orderedHenchmenList = henchmenList.OrderBy(x => (int)x.HenchmenSet).ToList();
+            var orderedHenchmenList = henchmenList.OrderBy(x => (int)x.SetName).ToList();
 
             foreach (var henchmen in orderedHenchmenList)
             {
-                returnString = $"{returnString}{counter}) {henchmen.HenchmenName.Split('_').First()}, {henchmen.HenchmenSet.GetDescription()}\r\n";
+                returnString = $"{returnString}{counter}) {henchmen.Name.Split('_').First()}, {henchmen.SetName.GetDescription()}\r\n";
                 counter++;
             }
 

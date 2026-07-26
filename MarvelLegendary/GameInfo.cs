@@ -94,7 +94,7 @@ namespace MarvelLegendary
             }
             else
             {
-                var schemeInfo = SchemeRepository.All.FirstOrDefault(s => s.SchemeName == schemeName && s.SetName == set);
+                var schemeInfo = SchemeRepository.All.FirstOrDefault(s => s.Name == schemeName && s.SetName == set);
                 Scheme = Scheme.ProcessSchemeInfo(PlayerCount, schemeInfo, Mastermind);
             }
 
@@ -118,7 +118,7 @@ namespace MarvelLegendary
                 var mastermind = Mastermind.GetExtraMastermind(Scheme, AllMastermindsInGame);
                 ExtraMasterminds.Add(mastermind);
                 AllMastermindsInGame.Add(mastermind);
-                if(Scheme.SchemeName == "Symbiotic Absorption" && Scheme.SetName == Set.Venom)
+                if(Scheme.Name == "Symbiotic Absorption" && Scheme.SetName == Set.Venom)
                 {
                     Scheme.SchemeInfo.DrainedMastermind = mastermind;
                 }
@@ -258,7 +258,7 @@ namespace MarvelLegendary
             if (Scheme.SchemeInfo.IsDarkLoyalty)
             {
                 DarkLoyaltyHero = Hero.GetNewHero();
-                Scheme.SchemeInfo.DarkLoyaltyHero = DarkLoyaltyHero.HeroName;
+                Scheme.SchemeInfo.DarkLoyaltyHero = DarkLoyaltyHero.Name;
                 SchemeHeroes.Add(DarkLoyaltyHero);
             }
 
@@ -272,8 +272,8 @@ namespace MarvelLegendary
             if (Scheme.SchemeInfo.IsRoyalWedding)
             {
                 var excludedHeroes = new List<string>();
-                excludedHeroes.AddRange(from item in SchemeHeroes select item.HeroName);
-                excludedHeroes.AddRange(from item in Heroes select item.HeroName);
+                excludedHeroes.AddRange(from item in SchemeHeroes select item.Name);
+                excludedHeroes.AddRange(from item in Heroes select item.Name);
 
                 //var royalWeddingHeroes = GetHeroes(Scheme.SchemeInfo.RoyalWeddingHeroCount, SchemeHeroes, allHeroes, excludedHeroes, getExclusions);
                 var royalWeddingHeroes = GetHeroes(Scheme.SchemeInfo.NumberOfHeroesInVillainDeck);
@@ -299,10 +299,12 @@ namespace MarvelLegendary
             var villainsNotAllowed = Scheme.SchemeInfo.VillainsNotAllowed;
 
             //This will remove all the villians not allowed by the scheme from the list of villians to choose from
-            allVillains = allVillains.Except(villainsNotAllowed).ToList();
+            var idsInGame = new HashSet<int>(villainsNotAllowed.Select(v => v.Id));
+            var remainingVillains = allVillains.Where(h => !idsInGame.Contains(h.Id)).ToList();
 
             //This will remove all the villains coming from the schemes from the list of villains to choose from
-            allVillains = allVillains.Except(schemeVillains).ToList();
+            idsInGame = new HashSet<int>(schemeVillains.Select(v => v.Id));
+            remainingVillains = remainingVillains.Where(h => !idsInGame.Contains(h.Id)).ToList();
 
             villainList.AddRange(from item in currentVillains select item);
 
@@ -314,8 +316,8 @@ namespace MarvelLegendary
             {
                 //If the masterminds leads one of the villains brought in through the scheme, it won't be added twice
                 var mastermindLeadsVillain = Mastermind.LeadsVillain;
-                var mastermindLeadsVillainName = mastermindLeadsVillain.VillainName;
-                if (villainList.All(x => x.VillainName != mastermindLeadsVillainName))
+                var mastermindLeadsVillainName = mastermindLeadsVillain.Name;
+                if (villainList.All(x => x.Name != mastermindLeadsVillainName))
                 {
                     villainList.Add(mastermindLeadsVillain);
                 }
@@ -327,7 +329,7 @@ namespace MarvelLegendary
                 var mastermindVillain = Mastermind.MastermindInfo.LeadsVillain;
 
                 //If the Mastermind leads a villain group with the "Rise of the Living Dead" keyword then this shouldn't grab another one
-                if (mastermindVillain != null && allKeywordVillains.Any(v => v.VillainName == mastermindVillain.VillainName))
+                if (mastermindVillain != null && allKeywordVillains.Any(v => v.Name == mastermindVillain.Name))
                 {
                     allKeywordVillains.Remove(mastermindVillain);
                     schemeInfo.VillainsNotAllowed = allKeywordVillains;
@@ -412,7 +414,7 @@ namespace MarvelLegendary
             {
                 //If the masterminds leads one of the henchmen brought in through the scheme twist, it won't be added twice
                 var mastermindLeadsHenchmen = Mastermind.LeadsHenchmen; 
-                if (henchmenList.All(x => x.HenchmenName != mastermindLeadsHenchmen.HenchmenName))
+                if (henchmenList.All(x => x.Name != mastermindLeadsHenchmen.Name))
                 {
                     henchmenList.Add(mastermindLeadsHenchmen);
                 }
@@ -442,7 +444,7 @@ namespace MarvelLegendary
         //currentHenchmen is the list of henchmen to be included in the henchmen deck
         private List<Henchmen> GetExtraHenchmen(int numberOfHenchmen, List<Henchmen> currentHenchmen, List<Henchmen> schemeHenchmen)
         {
-            var schemeHenchmenNames = schemeHenchmen.Select(x => x.HenchmenName).ToList();
+            var schemeHenchmenNames = schemeHenchmen.Select(x => x.Name).ToList();
 
             //This will be the list of henchmen to include in the villain deck
             var henchmenList = new List<Henchmen>(currentHenchmen);
@@ -512,14 +514,14 @@ namespace MarvelLegendary
                 for (int i = currentHeroCount; i < numberOfHeroes; i++)
                 {
                     var newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes);
-                    var heroName = newHero.HeroName;
+                    var heroName = newHero.Name;
 
                     //This will make sure there are no duplicate heroes in the list.
                     //It will also ignore any heroes that will be included in the villain deck
-                    while (returnList.Any(x => x.HeroName == heroName && x.SetName == newHero.SetName) || exclusionList.Any(h => h.HeroName == heroName && h.SetName == newHero.SetName))
+                    while (returnList.Any(x => x.Name == heroName && x.SetName == newHero.SetName) || exclusionList.Any(h => h.Name == heroName && h.SetName == newHero.SetName))
                     {
                         newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes);
-                        heroName = newHero.HeroName;
+                        heroName = newHero.Name;
                     }
 
                     returnList.Add(newHero);
@@ -539,12 +541,12 @@ namespace MarvelLegendary
                 for (int i = currentHeroCount; i < numberOfHeroes; i++)
                 {
                     var newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes, false);
-                    var heroName = newHero.HeroName;
+                    var heroName = newHero.Name;
                     //This will make sure there are no duplicate heroes in the list. It will also ignore any heroes that will be included in the villain deck
-                    while (returnList.Any(x => x.HeroName == heroName || exclusionList.Contains(heroName)))
+                    while (returnList.Any(x => x.Name == heroName || exclusionList.Contains(heroName)))
                     {
                         newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes, false);
-                        heroName = newHero.HeroName;
+                        heroName = newHero.Name;
                     }
                     returnList.Add(newHero);
                 }
@@ -681,7 +683,7 @@ namespace MarvelLegendary
             //On the other hand, Captain America and Captain America (Falcon) are not duplicates
             if (Scheme.SchemeInfo.NoDuplicates)
             {
-                var duplicateHeroes = AllHeroesInGame.SelectMany(hero => HeroRepository.AllHeroes.Where(h => h.HeroName == hero.HeroName)).ToList();
+                var duplicateHeroes = AllHeroesInGame.SelectMany(hero => HeroRepository.AllHeroes.Where(h => h.Name == hero.Name)).ToList();
 
                 idsInGame = new HashSet<int>(duplicateHeroes.Select(h => h.HeroInfo.Id));
                 remainingHeroes = remainingHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
@@ -705,7 +707,7 @@ namespace MarvelLegendary
 
             if (Scheme.SchemeInfo.NoDuplicates)
             {
-                var duplicateHeroes = heroList.SelectMany(hero => HeroRepository.AllHeroes.Where(h => h.HeroName == hero.HeroName)).ToList();
+                var duplicateHeroes = heroList.SelectMany(hero => HeroRepository.AllHeroes.Where(h => h.Name == hero.Name)).ToList();
 
                 idsInGame = new HashSet<int>(duplicateHeroes.Select(h => h.HeroInfo.Id));
                 remainingHeroes = remainingHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
@@ -724,9 +726,9 @@ namespace MarvelLegendary
 
                 var heroesToExclude = new List<Hero>(nameLimitHeroes);
                 //This will remove all other heroes with that name. Deadpool Writes a Scheme doesn't require only the one Deadpool hero
-                if (Scheme.SchemeInfo.SchemeName != "Deadpool Writes a Scheme")
+                if (Scheme.SchemeInfo.Name != "Deadpool Writes a Scheme")
                 {
-                    heroesToExclude = Hero.ConvertToHeroList(HeroRepository.All.Where(x => x.HeroName.Contains(Scheme.SchemeInfo.CustomNameString)).ToList());
+                    heroesToExclude = Hero.ConvertToHeroList(HeroRepository.All.Where(x => x.Name.Contains(Scheme.SchemeInfo.CustomNameString)).ToList());
                     if(Scheme.SchemeInfo.CustomNameString == "Hulk")
                     {
                         heroesToExclude.Add(Hero.GetNewHero("Nul, Breaker of Worlds", Set.Fi));

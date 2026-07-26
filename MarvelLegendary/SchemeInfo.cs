@@ -6,7 +6,7 @@ namespace MarvelLegendary
 {
     public class SchemeInfo
     {
-        public string SchemeName { get; set; }
+        public string Name { get; set; }
         public List<int> SchemeTwists { get; set; }
         public Set SetName { get; set; }
         public bool CannotBeSolo { get; set; }
