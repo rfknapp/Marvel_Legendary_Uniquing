@@ -11,8 +11,31 @@ namespace MarvelLegendary
         static void Main()
         {
             SqlHelper.SetupDatabase();
-            ConvertGames.ConvertTrackedGames();
 
+            var exitProgram = false;
+            
+            while (!exitProgram)
+            {
+                switch (GetMenuSelection())
+                {
+                    case 1:
+                        ConvertGames.ConvertTrackedGames();
+                        break;
+                    case 2:
+                        Console.WriteLine("This option is still in development. For now all expansions will be treated as owned.");
+                        break;
+                    case 3:
+                        MarvelLegendaryRandomizer();
+                        break;
+                    case 0:
+                        exitProgram = true;
+                        return;
+                }
+            }
+        }
+
+        private static void MarvelLegendaryRandomizer()
+        { 
             Console.WriteLine("How many players are playing? (1-5)");
             var playerCount = Console.ReadLine();
 
@@ -43,9 +66,6 @@ namespace MarvelLegendary
                 }
 
                 //WatchForDuplicates(game);
-
-                //Need to rework this now that there is a different db schema
-                //var test = new GetExclusions().GetMastermindByMastermindExclusions(game.Mastermind);
 
                 Console.WriteLine("How many players are playing? (0 to quit)");
                 playerCount = Console.ReadLine();
@@ -147,6 +167,32 @@ namespace MarvelLegendary
             }
             
             return returnString;
+        }
+
+        private static int GetMenuSelection()
+        {
+            var validOptions = new HashSet<int> { 0, 1, 2, 3 };
+
+            while (true)
+            {
+                Console.WriteLine(
+                    "Menu:\r\n" +
+                    "1: Convert tracking spreadsheet\r\n" +
+                    "2: Update owned expansions\r\n" +
+                    "3: Run randomizer for Marvel Legendary\r\n" +
+                    "0: End program");
+
+                var input = Console.ReadLine();
+
+                if (int.TryParse(input, out var selection) &&
+                    validOptions.Contains(selection))
+                {
+                    return selection;
+                }
+
+                Console.WriteLine("Please enter one of the listed menu options.");
+                Console.WriteLine();
+            }
         }
     }
 
