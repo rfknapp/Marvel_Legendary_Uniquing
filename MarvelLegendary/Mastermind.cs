@@ -333,7 +333,7 @@ namespace MarvelLegendary
             };
 
             //Get Masterminds that have played with the scheme
-            var mastermindCardsByScheme = SqlHelper.GetCardRelationships(CardType.Mastermind, schemeCard);
+            var mastermindCardsByScheme = DatabaseHelper.GetCardRelationships(CardType.Mastermind, schemeCard);
             var mastermindsByScheme = ConvertToMastermindList(mastermindCardsByScheme);
 
             //Remove all Masterminds that have played with the scheme from the list
@@ -350,7 +350,7 @@ namespace MarvelLegendary
                 };
 
                 //Get all the masterminds that have played with the mastermind
-                var mastermindCardsByMastermind = SqlHelper.GetCardRelationships(CardType.Mastermind, mastermindCard);
+                var mastermindCardsByMastermind = DatabaseHelper.GetCardRelationships(CardType.Mastermind, mastermindCard);
                 var mastermindByMastermind = ConvertToMastermindList(mastermindCardsByMastermind);
 
                 //Remove all Masterminds that have played with the Masterminds

@@ -523,7 +523,7 @@ namespace MarvelLegendary
                 CardType = (int)CardType.Scheme,
                 SetId = (int)scheme.SetName
             };
-            var heroCardsByScheme = SqlHelper.GetCardRelationships(CardType.Hero, schemeCard);
+            var heroCardsByScheme = DatabaseHelper.GetCardRelationships(CardType.Hero, schemeCard);
             var heroesByScheme = ConvertToHeroList(heroCardsByScheme);
 
             //Remove all Heroes that have played with the scheme from the list
@@ -540,7 +540,7 @@ namespace MarvelLegendary
                     SetId = (int)mastermind.SetName
                 };
 
-                var heroCardsByMastermind = SqlHelper.GetCardRelationships(CardType.Hero, mastermindCard);
+                var heroCardsByMastermind = DatabaseHelper.GetCardRelationships(CardType.Hero, mastermindCard);
                 var heroesByMastermind = ConvertToHeroList(heroCardsByMastermind);
 
                 //Remove all Heroes that have played with the Mastermind(s)
@@ -558,7 +558,7 @@ namespace MarvelLegendary
                     SetId = (int)villain.SetName
                 };
 
-                var heroCardsByVillain = SqlHelper.GetCardRelationships(CardType.Hero, villainCard);
+                var heroCardsByVillain = DatabaseHelper.GetCardRelationships(CardType.Hero, villainCard);
                 var heroesByVillain = ConvertToHeroList(heroCardsByVillain);
 
                 //Remove all Heroes that have played with the Villains
@@ -576,7 +576,7 @@ namespace MarvelLegendary
                     SetId = (int)henchmen.SetName
                 };
 
-                var heroCardsByHenchmen = SqlHelper.GetCardRelationships(CardType.Hero, henchmenCard);
+                var heroCardsByHenchmen = DatabaseHelper.GetCardRelationships(CardType.Hero, henchmenCard);
                 var heroesByHenchmen = ConvertToHeroList(heroCardsByHenchmen);
 
                 //Remove all Heroes that have played with the Henchmen
@@ -594,7 +594,7 @@ namespace MarvelLegendary
                     SetId = (int)hero.SetName
                 };
 
-                var heroCardsByHero = SqlHelper.GetCardRelationships(CardType.Hero, heroCard);
+                var heroCardsByHero = DatabaseHelper.GetCardRelationships(CardType.Hero, heroCard);
                 var heroesByHero = ConvertToHeroList(heroCardsByHero);
 
                 //Remove all Heroes that have played with the Hero

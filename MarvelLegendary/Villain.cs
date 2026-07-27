@@ -317,7 +317,7 @@ namespace MarvelLegendary
             };
 
             //This is the new implementation of the VillainByScheme table lookup
-            var villainCardssByScheme = SqlHelper.GetCardRelationships(CardType.Villain, schemeCard);
+            var villainCardssByScheme = DatabaseHelper.GetCardRelationships(CardType.Villain, schemeCard);
             var villainsByScheme = ConvertToVillainList(villainCardssByScheme);
 
             //Remove all Villains that have played with the scheme from the list
@@ -335,7 +335,7 @@ namespace MarvelLegendary
                 };
 
                 //This is the new implementation of the VillainByMastermind table lookup
-                var villainCardsByMastermind = SqlHelper.GetCardRelationships(CardType.Villain, mastermindCard);
+                var villainCardsByMastermind = DatabaseHelper.GetCardRelationships(CardType.Villain, mastermindCard);
                 var villainsByMastermind = ConvertToVillainList(villainCardsByMastermind);
 
                 idsInGame = new HashSet<int>(villainsByMastermind.Select(v => v.Id));
@@ -352,7 +352,7 @@ namespace MarvelLegendary
                     SetId = (int)v.SetName
                 };
 
-                var villainCardsByVillain = SqlHelper.GetCardRelationships(CardType.Villain, villainCard);
+                var villainCardsByVillain = DatabaseHelper.GetCardRelationships(CardType.Villain, villainCard);
                 var villainsByVillain = ConvertToVillainList(villainCardsByVillain);
 
                 //Remove all Villains that have played with the Villains(s)

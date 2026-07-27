@@ -10,7 +10,7 @@ namespace MarvelLegendary
     {
         static void Main()
         {
-            SqlHelper.SetupDatabase();
+            DatabaseHelper.SetupDatabase();
 
             var exitProgram = false;
             

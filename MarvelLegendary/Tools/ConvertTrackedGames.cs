@@ -215,7 +215,7 @@ namespace MarvelLegendary.Tools
 
         private static void InsertIntoCardRelationshipTable(Card card1, Card card2, bool doNotIncrement = false)
         {
-            using (var connection = SqlHelper.GetConnection())
+            using (var connection = DatabaseHelper.GetConnection())
             {
                 connection.Open();
 
@@ -231,7 +231,7 @@ namespace MarvelLegendary.Tools
                 command.Parameters.AddWithValue("$name", card1.CardName);
                 command.Parameters.AddWithValue("$setId", card1.SetId);
 
-                var card1Id = SqlHelper.RunCommandScalar<int>(command);
+                var card1Id = DatabaseHelper.RunCommandScalar<int>(command);
 
                 //2. Get the id of the second card in the card game
                 command.Parameters.Clear();
@@ -244,7 +244,7 @@ namespace MarvelLegendary.Tools
                 command.Parameters.AddWithValue("$name", card2.CardName);
                 command.Parameters.AddWithValue("$setId", card2.SetId);
 
-                var card2Id = SqlHelper.RunCommandScalar<int>(command);
+                var card2Id = DatabaseHelper.RunCommandScalar<int>(command);
 
                 var cardsToEnter = (First: Math.Min(card1Id, card2Id), Second: Math.Max(card1Id, card2Id));
                 

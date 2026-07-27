@@ -242,7 +242,7 @@ namespace MarvelLegendary
                 SetId = (int)scheme.SetName
             };
 
-            var henchmenCardsByScheme = SqlHelper.GetCardRelationships(CardType.Henchmen, schemeCard);
+            var henchmenCardsByScheme = DatabaseHelper.GetCardRelationships(CardType.Henchmen, schemeCard);
             var henchmenByScheme = ConvertToHenchmenList(henchmenCardsByScheme);
 
             //Remove all Henchmen that have played with the scheme from the list
@@ -259,7 +259,7 @@ namespace MarvelLegendary
                     SetId = (int)mastermind.SetName
                 };
 
-                var henchmenCardsByMastermind = SqlHelper.GetCardRelationships(CardType.Henchmen, mastermindCard);
+                var henchmenCardsByMastermind = DatabaseHelper.GetCardRelationships(CardType.Henchmen, mastermindCard);
                 var henchmenByMastermind = ConvertToHenchmenList(henchmenCardsByMastermind);
                 //Remove all Henchmen that have played with the Mastermind(s)
 
@@ -277,7 +277,7 @@ namespace MarvelLegendary
                     SetId = (int)villain.SetName
                 };
 
-                var henchmenCardsByVillain = SqlHelper.GetCardRelationships(CardType.Henchmen, villainCard);
+                var henchmenCardsByVillain = DatabaseHelper.GetCardRelationships(CardType.Henchmen, villainCard);
                 var henchmenByVillain = ConvertToHenchmenList(henchmenCardsByVillain);
 
                 //Remove all Henchmen that have played with the Villains
@@ -295,7 +295,7 @@ namespace MarvelLegendary
                     SetId = (int)h.SetName
                 };
 
-                var henchmenCardsByHenchmen = SqlHelper.GetCardRelationships(CardType.Henchmen, henchmenCard);
+                var henchmenCardsByHenchmen = DatabaseHelper.GetCardRelationships(CardType.Henchmen, henchmenCard);
                 var henchmenByHenchmen = ConvertToHenchmenList(henchmenCardsByHenchmen);
 
                 //Remove all Henchmen that have played with the Henchmen

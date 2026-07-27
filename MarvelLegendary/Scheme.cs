@@ -356,7 +356,7 @@ namespace MarvelLegendary
                 SetId = (int)mastermind.SetName
             };
 
-            var schemeCardsPlayedWithMastermind = SqlHelper.GetCardRelationships(CardType.Scheme, mastermindCard);
+            var schemeCardsPlayedWithMastermind = DatabaseHelper.GetCardRelationships(CardType.Scheme, mastermindCard);
             var schemesPlayedWithMastermind = ConvertToSchemeList(schemeCardsPlayedWithMastermind);
 
             var schemeNameList = SchemeRepository.All.ToList();
