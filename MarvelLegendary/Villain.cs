@@ -227,7 +227,7 @@ namespace MarvelLegendary
             new VillainInfo(125, "Berserkers", Set.WeaponX),
             new VillainInfo(126, "Weapon Plus", Set.WeaponX),
             
-            new VillainInfo(127, "Brotherhood", Set.Core2E, new List<int> { 1, 127}),
+            new VillainInfo(127, "Brotherhood of Mutants", Set.Core2E, new List<int> { 1, 127}),
             new VillainInfo(128, "Enemies of Asgard", Set.Core2E, new List<int> { 2, 72, 128}),
             new VillainInfo(129, "HYDRA", Set.Core2E, new List<int> { 3, 74, 129}),
             new VillainInfo(130, "Masters of Evil", Set.Core2E, new List<int> { 4, 130}),
@@ -255,10 +255,10 @@ namespace MarvelLegendary
             return GetNewVillain(villainInfo);
         }
 
-        public static List<Villain> ConvertToVillainList(List<VillainInfo> villainInfoList)
+        public static List<Villain> ConvertToVillainList(List<VillainInfo> villainInfoList, bool allowDuplicates = false)
         {
             return (from villainInfo in villainInfoList
-                    select GetNewVillain(villainInfo)).ToList();
+                    select GetNewVillain(villainInfo, allowDuplicates)).ToList();
         }
 
         private static List<Villain> ConvertToVillainList(List<Card> villainCards)
@@ -273,9 +273,9 @@ namespace MarvelLegendary
             return returnList;
         }
 
-        public static Villain GetNewVillain(VillainInfo villainInfo)
+        public static Villain GetNewVillain(VillainInfo villainInfo, bool allowDuplicates = false)
         {
-            if (villainInfo.IsDuplicate)
+            if (villainInfo.IsDuplicate && !allowDuplicates)
             {
                 villainInfo = GetDuplicateVillain(villainInfo);
             }
@@ -395,24 +395,11 @@ namespace MarvelLegendary
             return $"{returnString.Remove(returnString.Length-2)}\r\n";
         }
 
-        public static List<string> GetListOfVillains()
-        {
-            var returnList = VillainRepository.All.Select(v => v.Name).ToList();
-            return returnList;
-        }
-
         public static List<Villain> GetListOfVillainsWithKeyword(Keywords keyword)
         {
             var returnList = VillainRepository.All.Where(villain => villain.KeywordsList.Contains(keyword)).ToList();
 
             return ConvertToVillainList(returnList);
-        }
-
-        public string GetRandomVillain()
-        {
-            var allVillains = GetListOfVillains();
-            var villain = allVillains[RandomHelper.Instance.Next(allVillains.Count)];
-            return villain;
         }
     }
 }

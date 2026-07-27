@@ -151,9 +151,9 @@ namespace MarvelLegendary
             return GetNewHenchmen(henchmenInfo);
         }
 
-        public static Henchmen GetNewHenchmen(HenchmenInfo henchmenInfo)
+        public static Henchmen GetNewHenchmen(HenchmenInfo henchmenInfo, bool allowDuplicates = false)
         {
-            if (henchmenInfo.IsDuplicate)
+            if (henchmenInfo.IsDuplicate && !allowDuplicates)
             {
                 henchmenInfo = GetDuplicateHenchmen(henchmenInfo);
             }
@@ -191,12 +191,12 @@ namespace MarvelLegendary
             return newestHenchmen;
         }
 
-        public static List<Henchmen> ConvertToHenchmenList(List<HenchmenInfo> henchmenInfoList)
+        public static List<Henchmen> ConvertToHenchmenList(List<HenchmenInfo> henchmenInfoList, bool allowDuplicates = false)
         {
             var returnList = new List<Henchmen>();
             foreach (var henchmenInfo in henchmenInfoList)
             {
-                returnList.Add(GetNewHenchmen(henchmenInfo));
+                returnList.Add(GetNewHenchmen(henchmenInfo, allowDuplicates));
             }
 
             return returnList;

@@ -306,21 +306,6 @@ namespace MarvelLegendary
         {
         }
 
-        //This function is only used in the ConverTrackedGames class
-        public static Scheme GetNewScheme(Scheme schemeName = null)
-        {
-            if (schemeName != null) return schemeName;
-            
-            var allSchemes = SchemeRepository.All.ToList();
-            var schemeInfo = allSchemes[RandomHelper.Instance.Next(allSchemes.Count)];
-
-            return new Scheme
-            {
-                Name = schemeInfo.Name,
-                SetName = schemeInfo.SetName
-            };
-        }
-
         public static Scheme GetNewScheme(string schemeName, Set set)
         {
             if(schemeName.StartsWith("..."))
@@ -329,7 +314,6 @@ namespace MarvelLegendary
             }
             var schemeInfo = schemeName.StartsWith("...") ? UnveiledScheme.All.FirstOrDefault(s=>s.Name == schemeName && s.SetName == set)
                 : SchemeRepository.All.FirstOrDefault(s => s.Name == schemeName && s.SetName == set);
-            //var schemeInfo = SchemeRepository.All.FirstOrDefault(s => s.Name == schemeName && s.SetName == set);
 
             return new Scheme
             {
@@ -477,12 +461,6 @@ namespace MarvelLegendary
             newScheme.Wounds = schemeInfo.WoundPerPlayer;
 
             return newScheme;
-        }
-
-        public static List<string> GetListOfSchemes()
-        {
-            var allSchemes = SchemeRepository.All.Select(s => s.Name).ToList();
-            return allSchemes;
         }
 
         public static string ToString(Scheme scheme)

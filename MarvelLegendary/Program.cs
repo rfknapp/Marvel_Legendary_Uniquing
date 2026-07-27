@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MarvelLegendary.Exclusions;
-using MarvelLegendary.Enums;
 using MarvelLegendary.Tools;
-using Microsoft.Data.Sqlite;
 
 namespace MarvelLegendary
 {
@@ -14,7 +11,7 @@ namespace MarvelLegendary
         static void Main()
         {
             SqlHelper.SetupDatabase();
-            //ConvertGames.ConvertTrackedGames();
+            ConvertGames.ConvertTrackedGames();
 
             Console.WriteLine("How many players are playing? (1-5)");
             var playerCount = Console.ReadLine();
@@ -83,7 +80,6 @@ namespace MarvelLegendary
 
             var playerCount = $"{game.PlayerCount} players take on\r\n";
             var mastermindOutput = $"Mastermind is {Mastermind.ToString(new List<Mastermind> { game.Mastermind })}\r\n";
-            //var schemeOutput = $"Whose scheme is\r\n1) {scheme.SchemeName}, {scheme.SetName}\r\n\r\n";
             var schemeOutput = $"Whose scheme is\r\n1) {Scheme.ToString(scheme)}\r\n\r\n";
             var villainOutput = $"Villains are {Villain.ToString(game.Villains)}\r\n";
             var villainHeroOutput = game.Scheme.SchemeInfo.IsHeroesInVillainDeck || game.Scheme.SchemeInfo.IsRandomHeroesInVillainDeck ? $"Heroes in Villain Deck are {Hero.ToString(game.VillainHeroes)}\r\n" : "";

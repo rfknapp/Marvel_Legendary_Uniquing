@@ -68,7 +68,7 @@
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="HeroInfo.cs" />
     <Compile Include="HeroInfoBuilder.cs" />
-    <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="DatabaseHelper_old.cs" />
     <Compile Include="Exclusions\GetExclusions.cs" />
     <Compile Include="Exclusions\GetSpreadsheet.cs" />
     <Compile Include="GameInfo.cs" />
@@ -115,6 +115,9 @@
     <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ClosedXML">
+      <Version>0.105.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite">
       <Version>10.0.9</Version>
     </PackageReference>

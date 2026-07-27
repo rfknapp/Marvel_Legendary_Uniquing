@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ClosedXML.Excel;
 using System.Data;
-using System.Data.OleDb;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarvelLegendary.Exclusions
 {
@@ -15,15 +10,36 @@ namespace MarvelLegendary.Exclusions
         {
             var spreadsheetName = "Marvel_Legendary_Every_Combo.xlsx";
             var filePath = $@"..\..\Resources\{spreadsheetName}";
-            var connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0; data source={filePath}; Extended Properties=Excel 12.0;";
 
-            var adapter = new OleDbDataAdapter($"SELECT * FROM [{tabName}$]", connectionString);
-            var ds = new DataSet();
+            var table = new DataTable();
 
-            adapter.Fill(ds, "testTableName");
+            using (var workbook = new XLWorkbook(filePath))
+            {
+                var worksheet = workbook.Worksheet(tabName);
 
-            var data = ds.Tables["testTableName"].AsEnumerable();
-            return data;
+                var range = worksheet.RangeUsed();
+
+                // Create columns
+                for (int i = 0; i < range.ColumnCount(); i++)
+                {
+                    table.Columns.Add($"Column{i}");
+                }
+
+                // Add rows
+                foreach (var row in range.Rows())
+                {
+                    var dataRow = table.NewRow();
+
+                    for (int i = 0; i < range.ColumnCount(); i++)
+                    {
+                        dataRow[i] = row.Cell(i + 1).Value;
+                    }
+
+                    table.Rows.Add(dataRow);
+                }
+            }
+
+            return table.AsEnumerable();
         }
     }
 }

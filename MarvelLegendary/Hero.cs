@@ -391,7 +391,7 @@ namespace MarvelLegendary
             return HeroRepository.AllHeroes.ToList();
         }
 
-        public static Hero GetNewHero(string heroName = null, Set? set = null)
+        public static Hero GetNewHero(string heroName = null, Set? set = null, bool allowDuplicates = false)
         {
             var heroInfo = new HeroInfo();
             if (string.IsNullOrEmpty(heroName) || set == null)
@@ -404,7 +404,7 @@ namespace MarvelLegendary
                 heroInfo = HeroRepository.All.FirstOrDefault(h => h.Name == heroName && h.SetName == set);
             }
 
-            return GetNewHero(heroInfo);
+            return GetNewHero(heroInfo, allowDuplicates);
         }
 
         public static Hero GetNewHero(List<Hero> excludedHeroes)

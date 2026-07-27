@@ -97,7 +97,7 @@ namespace MarvelLegendary
                     command.ExecuteNonQuery();
                 }
 
-                foreach (var villain in VillainRepository.AllVillains.ToList())
+                foreach (var villain in Villain.ConvertToVillainList(VillainRepository.All.ToList(), true))
                 {
                     command.Parameters.Clear();
                     command.CommandText =
@@ -111,7 +111,7 @@ namespace MarvelLegendary
                     command.ExecuteNonQuery();
                 }
 
-                foreach (var henchmen in HenchmenRepository.AllHenchmen.ToList())
+                foreach (var henchmen in Henchmen.ConvertToHenchmenList(HenchmenRepository.All.ToList(), true))
                 {
                     command.Parameters.Clear();
                     command.CommandText =
@@ -125,7 +125,7 @@ namespace MarvelLegendary
                     command.ExecuteNonQuery();
                 }
 
-                foreach (var hero in HeroRepository.AllHeroes.ToList())
+                foreach (var hero in Hero.ConvertToHeroList(HeroRepository.All.ToList(), true))
                 {
                     command.Parameters.Clear();
                     command.CommandText =

@@ -1,42 +1,41 @@
 ﻿using MarvelLegendary.Enums;
 using MarvelLegendary.Exclusions;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static MarvelLegendary.Exclusions.GetExclusions;
 
 namespace MarvelLegendary.Tools
 {
     public static class ConvertGames
     {
-        //Need to rework this now that there is a different db schema
         public static void ConvertTrackedGames()
         {
             ConvertMastermindGames();
             ConvertSchemeGames();
-            //ConvertVillainGames();
-            //ConvertHenchmenGames();
-            //ConvertHeroGames();
+            ConvertUnveiledSchemeGames();
+            ConvertVillainGames();
+            ConvertHenchmenGames();
+            ConvertHeroGames();
         }
 
         private static void ConvertMastermindGames()
         {
+            var stopwatch = Stopwatch.StartNew();
             var listOfMasterminds = Mastermind.ConvertToMastermindList(MastermindRepository.All.ToList());
+
+            var mastermindSpreadsheet = new GetSpreadsheet();
+            var mastermindSpreadsheetInfo = mastermindSpreadsheet.GetSpreadsheetInfo("By Mastermind").ToList();
+            mastermindSpreadsheetInfo.RemoveAt(0);
+            var mastermindByMastermindSpreadsheet = new GetSpreadsheet();
+            var mastermindByMastermindSpreadsheetInfo = mastermindByMastermindSpreadsheet.GetSpreadsheetInfo("Mastermind x Mastermind").ToList();
+            mastermindByMastermindSpreadsheetInfo.RemoveAt(0);
 
             foreach (var mastermind in listOfMasterminds)
             {
-                var newMastermind = mastermind;
-                var setName = newMastermind.SetName;
-        
                 var getExclusions = new GetExclusions();
-                var exclusions = getExclusions.GetMastermindExclusion(mastermind);
-        
-                var schemeExclusions = exclusions.SchemeList;
-                var villainExclusions = exclusions.VillainList;
-                var henchmenExclusions = exclusions.HenchmenList;
-                var heroExclusions = exclusions.HeroList;
-                var mastermindExclusions = getExclusions.GetMastermindByMastermindExclusions(mastermind);
+                var exclusions = getExclusions.GetMastermindExclusion(mastermindSpreadsheetInfo, mastermind);
+                exclusions.MastermindList = getExclusions.GetMastermindByMastermindExclusions(mastermindByMastermindSpreadsheetInfo, mastermind);
 
                 var mastermindCard = new Card
                 {
@@ -45,81 +44,26 @@ namespace MarvelLegendary.Tools
                     SetId = (int)mastermind.SetName
                 };
 
-                foreach (var scheme in schemeExclusions)
-                {
-                    var schemeCard = new Card
-                    {
-                        CardName = scheme.Name,
-                        CardType = (int)CardType.Scheme,
-                        SetId = (int)scheme.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(mastermindCard, schemeCard);
-                }
-        
-                foreach (var villain in villainExclusions)
-                {
-                    var villainCard = new Card
-                    {
-                        CardName = villain.Name,
-                        CardType = (int)CardType.Villain,
-                        SetId = (int)villain.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(mastermindCard, villainCard);
-                }
-
-                foreach (var henchmen in henchmenExclusions)
-                {
-                    var henchmenCard = new Card
-                    {
-                        CardName = henchmen.Name,
-                        CardType = (int)CardType.Henchmen,
-                        SetId = (int)henchmen.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(mastermindCard, henchmenCard);
-                }
-
-                foreach (var hero in heroExclusions)
-                {
-                    var heroCard = new Card
-                    {
-                        CardName = hero.Name,
-                        CardType = (int)CardType.Hero,
-                        SetId = (int)hero.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(mastermindCard, heroCard);
-                }
-
-                foreach (var mastermindItem in mastermindExclusions)
-                {
-                    var mastermindItemCard = new Card
-                    {
-                        CardName = mastermindItem.Name,
-                        CardType = (int)CardType.Mastermind,
-                        SetId = (int)mastermindItem.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(mastermindCard, mastermindItemCard);
-                }
+                ConvertGamesInsert(mastermindCard, exclusions);
             }
+            stopwatch.Stop();
+
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
         }
 
         private static void ConvertSchemeGames()
         {
+            var stopwatch = Stopwatch.StartNew();
             var listOfSchemeInfo = SchemeRepository.All.ToList();
-        
+
+            var schemeSpreadsheet = new GetSpreadsheet();
+            var schemeSpreadsheetInfo = schemeSpreadsheet.GetSpreadsheetInfo("By Scheme").ToList();
+            schemeSpreadsheetInfo.RemoveAt(0);
+
             foreach (var schemeInfo in listOfSchemeInfo)
             {
                 var getExclusions = new GetExclusions();
-                var exclusions = getExclusions.GetSchemeExclusions(schemeInfo);
-        
-                var mastermindExclusions = exclusions.MastermindList;
-                var villainExclusions = exclusions.VillainList;
-                var henchmenExclusions = exclusions.HenchmenList;
-                var heroExclusions = exclusions.HeroList;
+                var exclusions = getExclusions.GetSchemeExclusions(schemeSpreadsheetInfo, schemeInfo);
 
                 var schemeCard = new Card
                 {
@@ -128,249 +72,148 @@ namespace MarvelLegendary.Tools
                     SetId = (int)schemeInfo.SetName
                 };
 
-                foreach (var mastermind in mastermindExclusions)
-                {
-                    var mastermindItemCard = new Card
-                    {
-                        CardName = mastermind.Name,
-                        CardType = (int)CardType.Mastermind,
-                        SetId = (int)mastermind.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(schemeCard, mastermindItemCard);
-                }
-
-                foreach (var villain in villainExclusions)
-                {
-                    var villainCard = new Card
-                    {
-                        CardName = villain.Name,
-                        CardType = (int)CardType.Villain,
-                        SetId = (int)villain.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(schemeCard, villainCard);
-                }
-
-                foreach (var henchmen in henchmenExclusions)
-                {
-                    var henchmenCard = new Card
-                    {
-                        CardName = henchmen.Name,
-                        CardType = (int)CardType.Henchmen,
-                        SetId = (int)henchmen.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(schemeCard, henchmenCard);
-                }
-
-                foreach (var hero in heroExclusions)
-                {
-                    var heroCard = new Card
-                    {
-                        CardName = hero.Name,
-                        CardType = (int)CardType.Hero,
-                        SetId = (int)hero.SetName
-                    };
-
-                    InsertIntoCardRelationshipTable(schemeCard, heroCard);
-                }
+                ConvertGamesInsert(schemeCard, exclusions);
             }
+            stopwatch.Stop();
+
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
         }
 
-        //private static void ConvertVillainGames()
-        //{
-        //    var outputVbM = "";
-        //    var outputVbS = "";
-        //    var outputVbV = "";
-        //    var outputVbH = "";
-        //    var outputVbHo = "";
-        //    var listOfVillains = VillainRepository.All.ToList();
-        //
-        //    foreach (var villain in listOfVillains)
-        //    {
-        //        var newVillain = Villain.GetNewVillain(villain);
-        //        var setName = newVillain.SetName;
-        //
-        //        if (!targetSets.Contains(setName))
-        //        {
-        //            var getExclusions = new GetExclusions();
-        //            var exclusions = getExclusions.GetVillainExclusion(villain.VillainName);
-        //
-        //            var mastermindExclusions = exclusions.MastermindList;
-        //            var schemeExclusions = exclusions.SchemeList;
-        //            var henchmenExclusions = exclusions.HenchmenList;
-        //            var heroExclusions = exclusions.HeroList;
-        //            var villainExclusions = getExclusions.GetVillainByVillainExclusion(new List<string>() { villain.VillainName });
-        //
-        //            foreach (var item2 in mastermindExclusions)
-        //            {
-        //                outputVbM = $"{outputVbM}{villain}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in schemeExclusions)
-        //            {
-        //                outputVbS = $"{outputVbS}{villain}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in henchmenExclusions)
-        //            {
-        //                outputVbH = $"{outputVbH}{villain}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in heroExclusions)
-        //            {
-        //                outputVbHo = $"{outputVbHo}{villain}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in villainExclusions)
-        //            {
-        //                outputVbV = $"{outputVbV}{villain}, {item2}\r\n";
-        //            }
-        //        }
-        //    }
-        //}
+        private static void ConvertUnveiledSchemeGames()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var listOfUnveiledSchemeInfo = UnveiledScheme.All.ToList();
 
-        //private static void ConvertHenchmenGames()
-        //{
-        //    var newTargetSets = new HashSet<Enums.Set>(targetSets);
-        //    newTargetSets.Add(Enums.Set.P1);
-        //
-        //    var outputHbM = "";
-        //    var outputHbS = "";
-        //    var outputHbV = "";
-        //    var outputHbH = "";
-        //    var outputHbHo = "";
-        //    var henchmenList = Henchmen.ConvertToHenchmenList(HenchmenRepository.All.ToList());
-        //
-        //    foreach (var henchmen in henchmenList)
-        //    {
-        //        var newHenchmen = Henchmen.GetNewHenchmen(henchmen.HenchmenName, henchmen.HenchmenSet);
-        //        var setName = newHenchmen.HenchmenSet;
-        //
-        //        if (!newTargetSets.Contains(setName))
-        //        {
-        //            var getExclusions = new GetExclusions();
-        //            var exclusions = getExclusions.GetHenchmenExclusion(henchmen.HenchmenName, henchmen.HenchmenSet);
-        //
-        //            var mastermindExclusions = exclusions.MastermindList;
-        //            var schemeExclusions = exclusions.SchemeList;
-        //            var villainExclusions = exclusions.VillainList;
-        //            var heroExclusions = exclusions.HeroList;
-        //            var henchmenExclusions = getExclusions.GetHenchmenByHenchmenExclusions(new List<Henchmen>() { henchmen });
-        //
-        //            foreach (var item2 in mastermindExclusions)
-        //            {
-        //                outputHbM = $"{outputHbM}{henchmen}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in schemeExclusions)
-        //            {
-        //                outputHbS = $"{outputHbS}{henchmen}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in villainExclusions)
-        //            {
-        //                outputHbV = $"{outputHbV}{henchmen}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in heroExclusions)
-        //            {
-        //                outputHbHo = $"{outputHbHo}{henchmen}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in henchmenExclusions)
-        //            {
-        //                outputHbH = $"{outputHbH}{henchmen}, {item2}\r\n";
-        //            }
-        //        }
-        //    }
-        //}
+            var schemeBySchemeSpreadsheet = new GetSpreadsheet();
+            var schemeBySchemeSpreadsheetInfo = schemeBySchemeSpreadsheet.GetSpreadsheetInfo("Scheme x Scheme").ToList();
+            schemeBySchemeSpreadsheetInfo.RemoveAt(0);
 
-        //private static void ConvertHeroGames()
-        //{
-        //    var outputHobM = "";
-        //    var outputHobS = "";
-        //    var outputHobV = "";
-        //    var outputHobH = "";
-        //    var outputHobHo = "";
-        //    var heroList = Hero.GetListOfHeroes();
-        //
-        //    foreach (var hero in heroList)
-        //    {
-        //        var newHero = Hero.GetNewHero(hero);
-        //        var setName = newHero.SetName;
-        //
-        //        if (!targetSets.Contains(setName))
-        //        {
-        //            var getExclusions = new GetExclusions();
-        //            var exclusions = getExclusions.GetHeroExclusion(hero);
-        //
-        //            var mastermindExclusions = exclusions.MastermindList;
-        //            var schemeExclusions = exclusions.SchemeList;
-        //            var villainExclusions = exclusions.VillainList;
-        //            var henchmenExclusions = exclusions.HenchmenList;
-        //            var heroExclusions = getExclusions.GetHeroByHeroExclusions(new List<string>() { hero });
-        //
-        //            foreach (var item2 in mastermindExclusions)
-        //            {
-        //                outputHobM = $"{outputHobM}{hero}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in schemeExclusions)
-        //            {
-        //                outputHobS = $"{outputHobS}{hero}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in villainExclusions)
-        //            {
-        //                outputHobV = $"{outputHobV}{hero}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in henchmenExclusions)
-        //            {
-        //                outputHobH = $"{outputHobH}{hero}, {item2}\r\n";
-        //            }
-        //
-        //            foreach (var item2 in heroExclusions)
-        //            {
-        //                outputHobHo = $"{outputHobHo}{hero}, {item2}\r\n";
-        //            }
-        //        }
-        //    }
-        //}
+            foreach (var unveiledSchemeInfo in listOfUnveiledSchemeInfo)
+            {
+                var getExclusions = new GetExclusions();
+                var schemeExclusions = getExclusions.GetSchemeBySchemeExclusions(schemeBySchemeSpreadsheetInfo, unveiledSchemeInfo);
 
-        ////If someone wants to put Magnito playing with "The Legacy Virus" into the MastermindByScheme table, they would pass in 
-        ////tablePrefix = Mastermind
-        ////tableSuffix = Scheme
-        ////prefixItem = Magnito
-        ////suffixItem = The Legacy Virus
-        //private static void EnterIntoByTable(string tablePrefix, string tableSuffix, string prefixItem, string suffixItem)
-        //{
-        //    var prefixTableName = (tablePrefix == "Henchmen") ? "Henchmen" : (tablePrefix == "Hero" ? "Heroes" : (prefixItem.StartsWith(".") ? "UnveiledSchemes" : $"{tablePrefix}s"));
-        //    var updatedPrefixItem = prefixItem.Contains("'") ? prefixItem.Replace("'", "''") : prefixItem;
-        //    var suffixTableName = (tableSuffix == "Henchmen") ? "Henchmen" : (tableSuffix == "Hero" ? "Heroes" : (suffixItem.StartsWith(".") ? "UnveiledSchemes" : $"{tableSuffix}s"));
-        //    var updatedSuffixItem = suffixItem.Contains("'") ? suffixItem.Replace("'", "''") : suffixItem;
-        //    var updatedTablePrefix = prefixItem.StartsWith(".") ? "UnveiledScheme" : $"{tablePrefix}";
-        //    var updatedTableSuffix = suffixItem.StartsWith(".") ? "UnveiledScheme" : $"{tableSuffix}";
-        //    //If this is a table like MastermindByMastermind then the suffixId has to be Mastermind2Id
-        //    var tableSuffixId = tablePrefix == tableSuffix ? $"{updatedTableSuffix}2Id" : $"{updatedTableSuffix}Id";
-        //
-        //    var prefixItemId = new DatabaseHelper().GetResult($"SELECT ID FROM {prefixTableName} WHERE {updatedTablePrefix}Name = '{updatedPrefixItem}'");
-        //    var suffixItemId = new DatabaseHelper().GetResult($"SELECT ID FROM {suffixTableName} WHERE {updatedTableSuffix}Name = '{updatedSuffixItem}'");
-        //
-        //    //This will check to see if that entry is already in the table
-        //    var itemCount = new DatabaseHelper().GetResult($"SELECT COUNT(*) FROM {updatedTablePrefix}By{updatedTableSuffix} WHERE {updatedTablePrefix}Id = {prefixItemId} AND {tableSuffixId} = {suffixItemId}");
-        //
-        //    //The following code will run if the entry is not in the table
-        //    if (itemCount == "0")
-        //    {
-        //        string sqlQuery = $"INSERT INTO {tablePrefix}By{tableSuffix} ({tablePrefix}Id, {tableSuffixId}) VALUES ({prefixItemId}, {suffixItemId})";
-        //        new DatabaseHelper().InsertInto(sqlQuery);
-        //    }
-        //}
+                var schemeCard = new Card
+                {
+                    CardName = unveiledSchemeInfo.Name,
+                    CardType = (int)CardType.Scheme,
+                    SetId = (int)unveiledSchemeInfo.SetName
+                };
 
-        private static void InsertIntoCardRelationshipTable(Card card1, Card card2)
+                foreach (var scheme in schemeExclusions)
+                {
+                    var unveiledSchemeCard = new Card
+                    {
+                        CardName = scheme.Name,
+                        CardType = (int)CardType.Scheme,
+                        SetId = (int)scheme.SetName
+                    };
+
+                    InsertIntoCardRelationshipTable(schemeCard, unveiledSchemeCard, true);
+                }
+            }
+            stopwatch.Stop();
+
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+        }
+
+        private static void ConvertVillainGames()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var listOfVillains = Villain.ConvertToVillainList(VillainRepository.All.ToList(), true);
+
+            var villainSpreadsheet = new GetSpreadsheet();
+            var villainSpreadsheetInfo = villainSpreadsheet.GetSpreadsheetInfo("By Villain").ToList();
+            villainSpreadsheetInfo.RemoveAt(0);
+            var villainByVillainSpreadsheet = new GetSpreadsheet();
+            var villainByVillainSpreadsheetInfo = villainByVillainSpreadsheet.GetSpreadsheetInfo("Villain x Villain").ToList();
+            villainByVillainSpreadsheetInfo.RemoveAt(0);
+
+            foreach (var villain in listOfVillains)
+            {
+                var getExclusions = new GetExclusions();
+                var exclusions = getExclusions.GetVillainExclusion(villainSpreadsheetInfo, villain);
+                exclusions.VillainList = getExclusions.GetVillainByVillainExclusions(villainByVillainSpreadsheetInfo, villain);
+
+                var villainCard = new Card
+                {
+                    CardName = villain.Name,
+                    CardType = (int)CardType.Villain,
+                    SetId = (int)villain.SetName
+                };
+
+                ConvertGamesInsert(villainCard, exclusions);
+            }
+            stopwatch.Stop();
+
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+        }
+
+        private static void ConvertHenchmenGames()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var listOfHenchmen = Henchmen.ConvertToHenchmenList(HenchmenRepository.All.ToList(), true);
+
+            var henchmenSpreadsheet = new GetSpreadsheet();
+            var henchmenSpreadsheetInfo = henchmenSpreadsheet.GetSpreadsheetInfo("By Henchmen").ToList();
+            henchmenSpreadsheetInfo.RemoveAt(0);
+            var henchmenByHenchmenSpreadsheet = new GetSpreadsheet();
+            var henchmenByHenchmenSpreadsheetInfo = henchmenByHenchmenSpreadsheet.GetSpreadsheetInfo("Henchmen x Henchmen").ToList();
+            henchmenByHenchmenSpreadsheetInfo.RemoveAt(0);
+
+            foreach (var henchmen in listOfHenchmen)
+            {
+                var getExclusions = new GetExclusions();
+                var exclusions = getExclusions.GetHenchmenExclusion(henchmenSpreadsheetInfo, henchmen);
+                exclusions.HenchmenList = getExclusions.GetHenchmenByHenchmenExclusions(henchmenByHenchmenSpreadsheetInfo, henchmen);
+
+                var henchmenCard = new Card
+                {
+                    CardName = henchmen.Name,
+                    CardType = (int)CardType.Henchmen,
+                    SetId = (int)henchmen.SetName
+                };
+
+                ConvertGamesInsert(henchmenCard, exclusions);
+            }
+            stopwatch.Stop();
+
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+        }
+
+        private static void ConvertHeroGames()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var listOfHeroes = Hero.ConvertToHeroList(HeroRepository.All.ToList(), true);
+
+            var heroSpreadsheet = new GetSpreadsheet();
+            var heroSpreadsheetInfo = heroSpreadsheet.GetSpreadsheetInfo("By Hero").ToList();
+            heroSpreadsheetInfo.RemoveAt(0);
+            var heroByHeroSpreadsheet = new GetSpreadsheet();
+            var heroByHeroSpreadsheetInfo = heroByHeroSpreadsheet.GetSpreadsheetInfo("Hero x Hero").ToList();
+            heroByHeroSpreadsheetInfo.RemoveAt(0);
+
+            foreach (var hero in listOfHeroes)
+            {
+                var getExclusions = new GetExclusions();
+                var exclusions = getExclusions.GetHeroExclusion(heroSpreadsheetInfo, hero);
+                exclusions.HeroList = getExclusions.GetHeroByHeroExclusions(heroByHeroSpreadsheetInfo, hero);
+
+                var heroCard = new Card
+                {
+                    CardName = hero.Name,
+                    CardType = (int)CardType.Hero,
+                    SetId = (int)hero.SetName
+                };
+
+                ConvertGamesInsert(heroCard, exclusions);
+            }
+            stopwatch.Stop();
+
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+        }
+
+        private static void InsertIntoCardRelationshipTable(Card card1, Card card2, bool doNotIncrement = false)
         {
             using (var connection = SqlHelper.GetConnection())
             {
@@ -408,15 +251,80 @@ namespace MarvelLegendary.Tools
                 //3. Insert it into
                 command.Parameters.Clear();
                 command.CommandText =
-                    @"INSERT INTO CardRelationship (Card1Id, Card2Id, TimesPlayed)
-                  VALUES (@card1Id, @card2Id, 1)
-                  ON CONFLICT(Card1Id, Card2Id)
-                  DO UPDATE SET TimesPlayed = TimesPlayed + 1;";
+                    $@"INSERT INTO CardRelationship (Card1Id, Card2Id, TimesPlayed)
+                    VALUES (@card1Id, @card2Id, 1)
+                    ON CONFLICT(Card1Id, Card2Id)
+                    {(doNotIncrement
+                        ? "DO NOTHING"
+                        : "DO UPDATE SET TimesPlayed = TimesPlayed + 1")}; ";
 
                 command.Parameters.AddWithValue("@card1Id", cardsToEnter.First);
                 command.Parameters.AddWithValue("@card2Id", cardsToEnter.Second);
 
                 command.ExecuteNonQuery();
+            }
+        }
+
+        private static void ConvertGamesInsert(Card mainCard, GameExclusions exclusions)
+        {
+            foreach (var mastermindItem in exclusions.MastermindList)
+            {
+                var mastermindItemCard = new Card
+                {
+                    CardName = mastermindItem.Name,
+                    CardType = (int)CardType.Mastermind,
+                    SetId = (int)mastermindItem.SetName
+                };
+
+                InsertIntoCardRelationshipTable(mainCard, mastermindItemCard, true);
+            }
+
+            foreach (var scheme in exclusions.SchemeList)
+            {
+                var schemeCard = new Card
+                {
+                    CardName = scheme.Name,
+                    CardType = (int)CardType.Scheme,
+                    SetId = (int)scheme.SetName
+                };
+
+                InsertIntoCardRelationshipTable(mainCard, schemeCard, true);
+            }
+
+            foreach (var villain in exclusions.VillainList)
+            {
+                var villainCard = new Card
+                {
+                    CardName = villain.Name,
+                    CardType = (int)CardType.Villain,
+                    SetId = (int)villain.SetName
+                };
+
+                InsertIntoCardRelationshipTable(mainCard, villainCard, true);
+            }
+
+            foreach (var henchmen in exclusions.HenchmenList)
+            {
+                var henchmenCard = new Card
+                {
+                    CardName = henchmen.Name,
+                    CardType = (int)CardType.Henchmen,
+                    SetId = (int)henchmen.SetName
+                };
+
+                InsertIntoCardRelationshipTable(mainCard, henchmenCard, true);
+            }
+
+            foreach (var hero in exclusions.HeroList)
+            {
+                var heroCard = new Card
+                {
+                    CardName = hero.Name,
+                    CardType = (int)CardType.Hero,
+                    SetId = (int)hero.SetName
+                };
+
+                InsertIntoCardRelationshipTable(mainCard, heroCard, true);
             }
         }
     }

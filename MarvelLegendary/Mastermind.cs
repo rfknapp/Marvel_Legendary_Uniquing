@@ -287,12 +287,6 @@ namespace MarvelLegendary
             return $"{returnString.Remove(returnString.Length - 2)}\r\n";
         }
 
-        public static List<string> GetListOfMasterminds()
-        {
-            var allMasterminds = MastermindRepository.All.Select(m => m.Name).ToList();
-            return allMasterminds;
-        }
-
         public static List<Mastermind> ConvertToMastermindList(List<MastermindInfo> mastermindInfoList)
         {
             return (from mastermindInfo in mastermindInfoList
