@@ -154,9 +154,11 @@ namespace MarvelLegendary
             //This will add all Villain objects matching the VillianName strings
             Villains.AddRange(villainNames);
 
-            Villains = GetVillains(Scheme.NumberOfVillains + Mastermind.MastermindInfo.MastermindNumberOfVillains, Villains, setAsideVillains);
+            //This will add all the villains that are required for the scheme
+            Villains.AddRange(Scheme.RequiredVillains);
 
-            AllVillainsInGame = Villains.Concat(Scheme.RequiredVillains).ToList();
+            Villains = GetVillains(Scheme.NumberOfVillains + Mastermind.MastermindInfo.MastermindNumberOfVillains, Villains, setAsideVillains);
+            AllVillainsInGame = Villains.ToList();
         }
 
         public void SetHenchmen(List<Henchmen> henchmenNames = null)
@@ -233,6 +235,8 @@ namespace MarvelLegendary
                 Heroes = GetHeroes();
             }
 
+            AllHeroesInGame.AddRange(Heroes);
+
             if (Scheme.SchemeInfo.IsRandomHeroesInVillainDeck)
             {
                 VillainHeroes = GetHeroes(Scheme.SchemeInfo.NumberOfHeroesInVillainDeck);
@@ -280,6 +284,7 @@ namespace MarvelLegendary
 
                 SchemeHeroes.AddRange(royalWeddingHeroes);
             }
+            AllHeroesInGame.AddRange(SchemeHeroes);
         }
 
         #region Villains

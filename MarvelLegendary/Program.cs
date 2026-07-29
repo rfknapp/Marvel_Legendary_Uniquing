@@ -27,6 +27,9 @@ namespace MarvelLegendary
                     case 3:
                         MarvelLegendaryRandomizer();
                         break;
+                    case 4:
+                        Console.WriteLine("Stats are still in development.");
+                        break;
                     case 0:
                         exitProgram = true;
                         return;
@@ -67,8 +70,12 @@ namespace MarvelLegendary
 
                 //WatchForDuplicates(game);
 
-                Console.WriteLine("How many players are playing? (0 to quit)");
+                var gameId = ConvertGames.AddNewGame(game.PlayerCount);
+                ConvertGames.LogCombinations(gameId, game);
+
+                Console.WriteLine("\r\nHow many players are playing? (0 to return to main menu)");
                 playerCount = Console.ReadLine();
+                Console.WriteLine();
             }
 
             void WatchForDuplicates(GameInfo game)
@@ -171,7 +178,7 @@ namespace MarvelLegendary
 
         private static int GetMenuSelection()
         {
-            var validOptions = new HashSet<int> { 0, 1, 2, 3 };
+            var validOptions = new HashSet<int> { 0, 1, 2, 3, 4 };
 
             while (true)
             {
@@ -180,6 +187,7 @@ namespace MarvelLegendary
                     "1: Convert tracking spreadsheet\r\n" +
                     "2: Update owned expansions\r\n" +
                     "3: Run randomizer for Marvel Legendary\r\n" +
+                    "4: Get stats for games played\r\n" +
                     "0: End program");
 
                 var input = Console.ReadLine();

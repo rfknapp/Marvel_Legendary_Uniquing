@@ -79,6 +79,285 @@ namespace MarvelLegendary.Tools
             Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
         }
 
+        public static int AddNewGame(int playerCount)
+        {
+            Console.WriteLine("Did you win the game? 1 for yes, anything else for no.");
+            var input = Console.ReadLine();
+            var gameId = 0;
+
+            using (var connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+
+                using (var pragma = connection.CreateCommand())
+                {
+                    pragma.CommandText = "PRAGMA foreign_keys = ON;";
+                    pragma.ExecuteNonQuery();
+                }
+
+                var command = connection.CreateCommand();
+                command.Parameters.Clear();
+                command.CommandText =
+                        @"INSERT OR IGNORE INTO Game (GamePlayDate, PlayerCount, GameSuccess)
+                VALUES (@gamePlayDate, @playerCount, @gameSuccess)";
+
+                command.Parameters.AddWithValue("@gamePlayDate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                command.Parameters.AddWithValue("@playerCount", playerCount);
+                command.Parameters.AddWithValue("@gameSuccess", input.Equals("1") ? 1 : 0);
+
+                command.ExecuteNonQuery();
+
+                command.Parameters.Clear();
+                command.CommandText = "SELECT last_insert_rowid();";
+
+                gameId = Convert.ToInt32(command.ExecuteScalar());
+            }
+
+            return gameId;
+        }
+
+        public static void LogCombinations(int gameId, GameInfo game)
+        {
+            //Masterminds, need all
+            LogMastermindRelationships(gameId, game);
+
+            //Schemes, just need to do it with everything but masterminds
+            LogSchemeRelationships(game);
+
+            //Villains, just need villains, henchmen, and heroes
+            LogVillainRelationships(game);
+
+            //Henchmen, just need henchmen, and heroes
+            LogHenchmenRelationships(game);
+
+            //Heroes, just need heroes
+            LogHeroRelationships(game);
+        }
+
+        private static void LogMastermindRelationships(int gameId, GameInfo game)
+        {
+            Card mastermindCard, schemeCard, unveiledSchemeCard, villainCard, henchmenCard, heroCard;
+            var masterminds = game.AllMastermindsInGame;
+            var scheme = game.Scheme;
+            var unveiledScheme = game.UnveiledScheme;
+            var villains = game.AllVillainsInGame;
+            var henchmen = game.AllHenchmenInGame;
+            var heroes = game.AllHeroesInGame;
+
+            var mastermindsCopy = masterminds.ToList();
+
+            foreach (var mastermind in masterminds)
+            {
+                mastermindCard = Card.ToCard(mastermind.Name, mastermind.SetName, CardType.Mastermind);
+
+                InsertIntoGameCardTable(gameId, mastermindCard);
+
+                mastermindsCopy.RemoveAt(0);
+
+                foreach (var m in mastermindsCopy)
+                {
+                    var mCard = Card.ToCard(m.Name, m.SetName, CardType.Mastermind);
+
+                    InsertIntoCardRelationshipTable(mastermindCard, mCard);
+                }
+
+                schemeCard = Card.ToCard(scheme.Name, scheme.SetName, CardType.Scheme);
+
+                InsertIntoGameCardTable(gameId, schemeCard);
+                InsertIntoCardRelationshipTable(mastermindCard, schemeCard);
+
+                if (unveiledScheme != null)
+                {
+                    unveiledSchemeCard = Card.ToCard(unveiledScheme.Name, unveiledScheme.SetName, CardType.Scheme);
+
+                    InsertIntoGameCardTable(gameId, unveiledSchemeCard);
+                    InsertIntoCardRelationshipTable(mastermindCard, unveiledSchemeCard);
+                }
+
+                foreach (var villain in villains)
+                {
+                    villainCard = Card.ToCard(villain.Name, villain.SetName, CardType.Villain);
+
+                    InsertIntoGameCardTable(gameId, villainCard);
+                    InsertIntoCardRelationshipTable(mastermindCard, villainCard);
+                }
+
+                foreach (var henchman in henchmen)
+                {
+                    henchmenCard = Card.ToCard(henchman.Name, henchman.SetName, CardType.Henchmen);
+
+                    InsertIntoGameCardTable(gameId, henchmenCard);
+                    InsertIntoCardRelationshipTable(mastermindCard, henchmenCard);
+                }
+
+                foreach (var hero in heroes)
+                {
+                    heroCard = Card.ToCard(hero.Name, hero.SetName, CardType.Hero);
+
+                    InsertIntoGameCardTable(gameId, heroCard);
+                    InsertIntoCardRelationshipTable(mastermindCard, heroCard);
+                }
+            }
+        }
+
+        private static void LogSchemeRelationships(GameInfo game)
+        {
+            Card schemeCard, unveiledSchemeCard, villainCard, henchmenCard, heroCard;
+            var scheme = game.Scheme;
+            var unveiledScheme = game.UnveiledScheme;
+            var villains = game.AllVillainsInGame;
+            var henchmen = game.AllHenchmenInGame;
+            var heroes = game.AllHeroesInGame;
+
+            schemeCard = Card.ToCard(scheme.Name, scheme.SetName, CardType.Scheme);
+
+            if (unveiledScheme != null)
+            {
+                unveiledSchemeCard = Card.ToCard(unveiledScheme.Name, unveiledScheme.SetName, CardType.Scheme);
+
+                InsertIntoCardRelationshipTable(schemeCard, unveiledSchemeCard);
+            }
+
+            foreach (var villain in villains)
+            {
+                villainCard = Card.ToCard(villain.Name, villain.SetName, CardType.Villain);
+
+                InsertIntoCardRelationshipTable(schemeCard, villainCard);
+            }
+
+            foreach (var henchman in henchmen)
+            {
+                henchmenCard = Card.ToCard(henchman.Name, henchman.SetName, CardType.Henchmen);
+
+                InsertIntoCardRelationshipTable(schemeCard, henchmenCard);
+            }
+
+            foreach (var hero in heroes)
+            {
+                heroCard = Card.ToCard(hero.Name, hero.SetName, CardType.Hero);
+
+                InsertIntoCardRelationshipTable(schemeCard, heroCard);
+            }
+        }
+
+        private static void LogVillainRelationships(GameInfo game)
+        {
+            Card villainCard, henchmenCard, heroCard;
+            var villains = game.AllVillainsInGame;
+            var henchmen = game.AllHenchmenInGame;
+            var heroes = game.AllHeroesInGame;
+
+            var villainsCopy = villains.ToList();
+
+            foreach (var villain in villains)
+            {
+                villainCard = Card.ToCard(villain.Name, villain.SetName, CardType.Villain);
+
+                villainsCopy.RemoveAt(0);
+
+                foreach (var v in villainsCopy)
+                {
+                    var vCard = Card.ToCard(v.Name, v.SetName, CardType.Villain);
+
+                    InsertIntoCardRelationshipTable(villainCard, vCard);
+                }
+
+                foreach (var henchman in henchmen)
+                {
+                    henchmenCard = Card.ToCard(henchman.Name, henchman.SetName, CardType.Henchmen);
+
+                    InsertIntoCardRelationshipTable(villainCard, henchmenCard);
+                }
+
+                foreach (var hero in heroes)
+                {
+                    heroCard = Card.ToCard(hero.Name, hero.SetName, CardType.Hero);
+
+                    InsertIntoCardRelationshipTable(villainCard, heroCard);
+                }
+            }
+        }
+
+        private static void LogHenchmenRelationships(GameInfo game)
+        {
+            Card henchmenCard, heroCard;
+            var henchmen = game.AllHenchmenInGame;
+            var heroes = game.AllHeroesInGame;
+
+            var henchemnCopy = henchmen.ToList();
+
+            foreach (var henchman in henchmen)
+            {
+                henchmenCard = Card.ToCard(henchman.Name, henchman.SetName, CardType.Henchmen);
+
+                henchemnCopy.RemoveAt(0);
+
+                foreach (var h in henchemnCopy)
+                {
+                    var hCard = Card.ToCard(h.Name, h.SetName, CardType.Henchmen);
+
+                    InsertIntoCardRelationshipTable(henchmenCard, hCard);
+                }
+
+                foreach (var hero in heroes)
+                {
+                    heroCard = Card.ToCard(hero.Name, hero.SetName, CardType.Hero);
+
+                    InsertIntoCardRelationshipTable(henchmenCard, heroCard);
+                }
+            }
+        }
+
+        private static void LogHeroRelationships(GameInfo game)
+        {
+            Card heroCard;
+            var heroes = game.AllHeroesInGame;
+
+            var heroesCopy = heroes.ToList();
+            foreach (var hero in heroes)
+            {
+                heroCard = Card.ToCard(hero.Name, hero.SetName, CardType.Hero);
+
+                heroesCopy.RemoveAt(0);
+
+                foreach (var h in heroesCopy)
+                {
+                    var hCard = Card.ToCard(h.Name, h.SetName, CardType.Hero);
+
+                    InsertIntoCardRelationshipTable(heroCard, hCard);
+                }
+            }
+        }
+
+        private static void InsertIntoGameCardTable(int gameId, Card card)
+        {
+            using (var connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText =
+                    @"SELECT CardId
+                  FROM Card
+                  WHERE CardName = $name
+                    AND SetId = $setId";
+
+                command.Parameters.AddWithValue("$name", card.CardName);
+                command.Parameters.AddWithValue("$setId", card.SetId);
+
+                var cardId = DatabaseHelper.RunCommandScalar<int>(command);
+
+                command.CommandText =
+                        @"INSERT OR IGNORE INTO GameCard (GameId, CardId)
+                VALUES (@gameId, @cardId)";
+
+                command.Parameters.AddWithValue("@gameId", gameId);
+                command.Parameters.AddWithValue("@cardId", cardId);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
         private static void ConvertUnveiledSchemeGames()
         {
             var stopwatch = Stopwatch.StartNew();

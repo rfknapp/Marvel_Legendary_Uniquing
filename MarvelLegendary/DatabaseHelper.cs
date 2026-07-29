@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using MarvelLegendary.Enums;
-using MarvelLegendary.Helpers;
-using MarvelLegendary.Tools;
 using Microsoft.Data.Sqlite;
 
 namespace MarvelLegendary
@@ -15,6 +12,16 @@ namespace MarvelLegendary
         public string CardName { get; set; }
         public int CardType { get; set; }
         public int SetId { get; set; }
+
+        public static Card ToCard(string name, Set set, CardType cardType)
+        {
+            return new Card
+            {
+                CardName = name,
+                CardType = (int)cardType,
+                SetId = (int)set
+            };
+        }
     }
 
     public static class DatabaseHelper
@@ -165,7 +172,7 @@ namespace MarvelLegendary
                     GameId          INTEGER PRIMARY KEY AUTOINCREMENT,
                     GamePlayDate    TEXT NOT NULL,
                     PlayerCount     INTEGER,
-                    GameSuccess     INTEGER NOT NULL CHECK (GameSuccess IN (0,1)),
+                    GameSuccess     INTEGER NOT NULL CHECK (GameSuccess IN (-1,0,1)),
                     Notes           TEXT
                 );
 

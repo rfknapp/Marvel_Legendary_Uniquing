@@ -87,6 +87,7 @@
     <Compile Include="MastermindInfoBuilder.cs" />
     <Compile Include="SchemeInfoBuilder.cs" />
     <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="Stats.cs" />
     <Compile Include="Tools\ConvertTrackedGames.cs" />
     <Compile Include="Villain.cs" />
   </ItemGroup>
