@@ -5,7 +5,10 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelLegendary_Uniquing", "MarvelLegendary\MarvelLegendary_Uniquing.csproj", "{D5968644-152F-48F3-BD9F-C8C0AFBF6236}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelLegendary_Uniquing_Tests", "MarvelLegendary_Uniquing_Tests\MarvelLegendary_Uniquing_Tests.csproj", "{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelLegendary_Uniquing_Tests", "MarvelLegendary_Uniquing_Tests\MarvelLegendary_Uniquing_Tests.csproj", "{0B2BDD78-6889-417B-928D-DEFE1D2AAE11}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D5968644-152F-48F3-BD9F-C8C0AFBF6236} = {D5968644-152F-48F3-BD9F-C8C0AFBF6236}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +20,10 @@ Global
 		{D5968644-152F-48F3-BD9F-C8C0AFBF6236}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5968644-152F-48F3-BD9F-C8C0AFBF6236}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5968644-152F-48F3-BD9F-C8C0AFBF6236}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49DBCAB1-7B10-4427-9B0C-15894F81E4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B2BDD78-6889-417B-928D-DEFE1D2AAE11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B2BDD78-6889-417B-928D-DEFE1D2AAE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B2BDD78-6889-417B-928D-DEFE1D2AAE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B2BDD78-6889-417B-928D-DEFE1D2AAE11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

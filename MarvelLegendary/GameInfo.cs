@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
 using MarvelLegendary.Exclusions;
-using MarvelLegendary.DetermineLists;
-using System.Xml.Linq;
+using MarvelLegendary.Enums;
+using MarvelLegendary.Helpers;
 
 namespace MarvelLegendary
 {
@@ -25,8 +25,11 @@ namespace MarvelLegendary
         public List<Villain> Villains { get; set; }
         public List<Villain> MonsterPitVillains { get; set; }
         public List<Villain> AllVillainsInGame { get; set; }
+        public List<Villain> QuantumRealmVillains { get; set; }
+        public List<Villain> MarvelZombieVillains { get; set; }
+        public List<Villain> SchemeVillains { get; set; }
 
-        public List<Henchmen> Henchmen { get; set; }
+        public List<Henchmen> HenchmenList { get; set; }
         public List<Henchmen> SchemeHenchmen { get; set; }
         public List<Henchmen> InfectedHenchmen { get; set; }
         public List<Henchmen> AllHenchmenInGame { get; set; }
@@ -45,78 +48,6 @@ namespace MarvelLegendary
         public int NumberHenchmenNextToScheme { get; set; }
         public bool GameIncludeHeroTeam { get; set; }
 
-        public enum Set
-        {
-            [Description("Core")]
-            Core,
-            [Description("Dark City")]
-            Dc,
-            [Description("Fantastic Four")]
-            Ff,
-            [Description("Paint The Town Red")]
-            PttR,
-            [Description("Villains")]
-            Villains,
-            [Description("Guardians Of The Galaxy")]
-            GotG,
-            [Description("Fear Itself")]
-            Fi,
-            [Description("Secret Wars Volume 1")]
-            Sw1,
-            [Description("Secret Wars Volume 2")]
-            Sw2,
-            [Description("Captain America 75th Anniversary")]
-            Ca,
-            [Description("Civil War")]
-            Cw,
-            [Description("3D")]
-            ThreeD,
-            [Description("Deadpool")]
-            Deadpool,
-            [Description("Noir")]
-            Noir,
-            [Description("X-Men")]
-            XMen,
-            [Description("Spider-Man Homecoming")]
-            Sm,
-            [Description("Champions")]
-            Champions,
-            [Description("World War Hulk")]
-            Wwh,
-            [Description("Phase 1")]
-            P1,
-            [Description("Ant-Man")]
-            Antman,
-            [Description("Venom")]
-            Venom,
-            [Description("Dimensions")]
-            Dimensions,
-            [Description("Revelations")]
-            Revelations,
-            [Description("S.H.I.E.L.D.")]
-            Shield,
-            [Description("Heroes of Asgard")]
-            Asgard,
-            [Description("The New Mutants")]
-            NewMutants,
-            [Description("Into the Cosmos")]
-            Cosmos,
-            [Description("Realm of Kings")]
-            Inhumans,
-            [Description("Annihilation")]
-            Annihilation,
-            [Description("Messiah Complex")]
-            Messiah,
-            [Description("Doctor Strange")]
-            DoctorStrange,
-            [Description("MCU's Guardians of the Galaxy")]
-            McuGotG,
-            [Description("Black Panther")]
-            BlackPanther,
-            [Description("Black Widow")]
-            BlackWidow
-        }
-
         public GameInfo(int players)
         {
             ExtraMasterminds = new List<Mastermind>();
@@ -130,10 +61,12 @@ namespace MarvelLegendary
             VillainHeroes = new List<Hero>();
             RandomVillainHeroes = new List<Hero>();
             MonsterPitVillains = new List<Villain>();
+            MarvelZombieVillains = new List<Villain>();
             Villains = new List<Villain>();
             AllVillainsInGame = new List<Villain>();
+            SchemeVillains = new List<Villain>();
 
-            Henchmen = new List<Henchmen>();
+            HenchmenList = new List<Henchmen>();
             SchemeHenchmen = new List<Henchmen>();
             InfectedHenchmen = new List<Henchmen>();
             AllHenchmenInGame = new List<Henchmen>();
@@ -147,15 +80,24 @@ namespace MarvelLegendary
             UnveiledScheme = null;
         }
 
-        public void SetMastermind(string mastermindName = "")
+        public void SetMastermind(string mastermindName = "", Set set = Set.Unknown)
         {
-            Mastermind = mastermindName == "" ? new Mastermind() : new Mastermind(mastermindName);
+            Mastermind = Mastermind.GetNewMastermind(mastermindName, set);
             AllMastermindsInGame.Add(Mastermind);
         }
 
-        public void SetScheme(string schemeName = "")
+        public void SetScheme(string schemeName = null, Set set = Set.Unknown)
         {
-            Scheme = schemeName == "" ? new Scheme(PlayerCount, Mastermind) : new Scheme(PlayerCount, schemeName);
+            if(string.IsNullOrEmpty(schemeName) || set == Set.Unknown)
+            {
+                Scheme = Scheme.GetNewScheme(PlayerCount, Mastermind, schemeName, set);
+            }
+            else
+            {
+                var schemeInfo = SchemeRepository.All.FirstOrDefault(s => s.Name == schemeName && s.SetName == set);
+                Scheme = Scheme.ProcessSchemeInfo(PlayerCount, schemeInfo, Mastermind);
+            }
+
             PlayerCount = Scheme.NumberOfPlayers;
 
             WoundNumber = GetWoundInformation(Scheme.CustomWoundNumber, Scheme.Wounds);
@@ -171,118 +113,139 @@ namespace MarvelLegendary
 
         public void SetExtraMasterminds()
         {
-            ExtraMasterminds = GetMasterminds(Scheme, Mastermind);
-            AllMastermindsInGame.Concat(ExtraMasterminds).ToList();
+            for (int i = 0; i < Scheme.SchemeInfo.NumberExtraMasterminds; i++)
+            {
+                var mastermind = Mastermind.GetExtraMastermind(Scheme, AllMastermindsInGame);
+                ExtraMasterminds.Add(mastermind);
+                AllMastermindsInGame.Add(mastermind);
+                if(Scheme.Name == "Symbiotic Absorption" && Scheme.SetName == Set.Venom)
+                {
+                    Scheme.SchemeInfo.DrainedMastermind = mastermind;
+                }
+            }
         }
 
-        public void SetVillains(List<string> villainNames, bool doubleVillains)
+        public void SetVillains(List<Villain> villainNames = null)
         {
-            var getExclusions = new GetExclusions();
-            var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
-            var exclusions = getExclusions.GetMastermindExclusion(masterminds);
+            var schemeInfo = Scheme.SchemeInfo;
+            var setAsideVillains = new List<Villain>();
 
-            if (Scheme.SchemeInfo.IsMonsterPitDeck)
+            //villainNames is a list of villains to be included in the game
+            villainNames = villainNames ?? new List<Villain>();
+
+            //Ultimately I'm refactoring this to use SchemeVillains instead of individual lists like MonsterPitVillains, MarvelZombieVillians, 
+            //QuantumRealmVillains, etc. This also is going to change that the schemes will set a SchemeVillainName variable so in the end I can
+            //just use one if statement to set up the scheme villains
+            if (schemeInfo.IsMonsterPitDeck || schemeInfo.IsQuantumRealmDeck)
             {
-                MonsterPitVillains.Add(new Villain("Monsters Unleashed"));
+                var schemeVillain = schemeInfo.SchemeVillain;
+                SchemeVillains.Add(schemeVillain);
+                setAsideVillains.Add(schemeVillain);
             }
 
-            if (Scheme.SchemeInfo.IncludeExtraAlwaysLeadsVillains && Scheme.SchemeInfo.DrainedMastermind.DoesLeadVillain)
+            if (schemeInfo.IsDrainedMastermind && schemeInfo.DrainedMastermind.DoesLeadVillain)
             {
-                Scheme.RequiredVillains.Add(Scheme.SchemeInfo.DrainedMastermind.LeadsVillain);
+                var schemeVillain = schemeInfo.DrainedMastermind.LeadsVillain;
+                Scheme.RequiredVillains.Add(schemeVillain);
                 Scheme.NumberOfVillains += 1;
+                villainNames.Add(schemeVillain);
             }
 
-            foreach (var villainNotAllowed in Scheme.SchemeInfo.VillainsNotAllowed)
-            {
-                exclusions.VillainList.Add(villainNotAllowed);
-            }
+            //This will add all Villain objects matching the VillianName strings
+            Villains.AddRange(villainNames);
 
-            if (villainNames != null)
-            {
-                Villains.AddRange(from item in villainNames select new Villain(item));
-            }
+            //This will add all the villains that are required for the scheme
+            Villains.AddRange(Scheme.RequiredVillains);
 
-            if (doubleVillains)
-            {
-                Scheme.NumberOfVillains *= 2;
-            }
-
-            Villains = GetVillains(Scheme.NumberOfVillains, Scheme.RequiredVillains, Villains);
-
-            AllVillainsInGame = new List<Villain>(Villains);
-
-            foreach (var schemeRequiredVillain in Scheme.RequiredVillains)
-            {
-                AllVillainsInGame.Add(new Villain(schemeRequiredVillain));
-            }
+            Villains = GetVillains(Scheme.NumberOfVillains + Mastermind.MastermindInfo.MastermindNumberOfVillains, Villains, setAsideVillains);
+            AllVillainsInGame = Villains.ToList();
         }
 
-        public void SetHenchmen(List<string> henchmenNames, bool doubleHenchmen)
+        public void SetHenchmen(List<Henchmen> henchmenNames = null)
         {
-            var getExclusions = new GetExclusions();
-            var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
-            var exclusions = getExclusions.GetMastermindExclusion(masterminds);
+            henchmenNames = henchmenNames ?? new List<Henchmen>();
 
+            //This comes from Cytoplasm Spike Invasion. The Cytoplasm Spikes Henchmen group is set aside,
+            //so it isn't going to be one of the henchmen groups
             if (Scheme.SchemeInfo.IsInfectedDeck)
             {
-                InfectedHenchmen.Add(new Henchmen("Cytoplasm Spikes"));
+                var henchmen = Henchmen.GetNewHenchmen("Cytoplasm Spikes", Set.Wwh);
+                InfectedHenchmen.Add(henchmen);
+                SchemeHenchmen.Add(henchmen);
             }
 
-            //This is for Symbiotic Absorbtion
-            if (Scheme.SchemeInfo.IncludeExtraAlwaysLeadsVillains && Scheme.SchemeInfo.DrainedMastermind.DoesLeadHenchmen)
+            //This comes from Cage Villains in Power-Suppressing Cells. The Cops henchmen group is set aside,
+            //so it isn't going to be one of the henchmen groups
+            //Right now it is only Cops but another scheme could use this
+            if (Scheme.SchemeInfo.IsHenchmenNextToScheme)
+            {
+                SchemeHenchmen.Add(Scheme.SchemeInfo.HenchmenNextToScheme);
+            }
+
+            //This is for Symbiotic Absorption. It says to add to add the Drained Mastermind's "Always Leads Villians" as an extra villain group.
+            //There was no clarification if it just meant villains or also henchmen, so this just assumes that it will add the henchmen if that
+            //mastermind is chosen
+            if (Scheme.SchemeInfo.IsDrainedMastermind && Scheme.SchemeInfo.DrainedMastermind.DoesLeadHenchmen)
             {
                 Scheme.RequiredHenchmen.Add(ExtraMasterminds.First().LeadsHenchmen);
                 Scheme.NumberOfHenchmen += 1;
+                HenchmenList.Add(ExtraMasterminds.First().LeadsHenchmen);
             }
 
-            var henchmen = Scheme.SchemeInfo.IsHenchmenNextToScheme ? Scheme.SchemeInfo.HenchmenNextToScheme :
-                Scheme.SchemeInfo.IsInfectedDeck ? "Cytoplasm Spikes" : null;
-            if (henchmen != null)
+            //This will add all the henchmen from the list, if it is passed, and ignore duplicates
+            HenchmenList = HenchmenList.Concat(henchmenNames).GroupBy(h => h.Id).Select(g => g.First()).ToList();
+
+            //Henchmen is the list of henchmen in the villain deck
+            HenchmenList = GetHenchmen(Scheme.NumberOfHenchmen, HenchmenList, SchemeHenchmen);
+
+            //Smuggler adds an extra henchmen to the deck
+            //HenchmenInHeroDeck adds a henchmen group to the hero deck
+            //AnnihilationHenchmen adds a henchmen group to the KO pile
+            //IsXerogenHenchmen adds an extra henchmen to the deck
+            //IsVampireNeonaniteHenchmen adds an extra henchmen to the deck
+            if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen
+                || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
             {
-                SchemeHenchmen.Add(new Henchmen(henchmen));
+                var extraHenchmen = GetExtraHenchmen(1, HenchmenList, SchemeHenchmen).FirstOrDefault();
+                SchemeHenchmen.Add(extraHenchmen);
+
+                if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen || Scheme.SchemeInfo.IsVampireNeonaniteHenchmen)
+                    HenchmenList.Add(extraHenchmen);
             }
 
-            if (Scheme.SchemeInfo.IsSmugglerHenchmen || Scheme.SchemeInfo.IsHenchmenInHeroDeck || Scheme.SchemeInfo.HasAnnihilationHenchmen || Scheme.SchemeInfo.IsXerogenHenchmen)
-            {
-                SchemeHenchmen.Add(new Henchmen(exclusions.HenchmenList));
-                Scheme.NumberOfHenchmen += 1;
-            }
-
-            if (henchmenNames != null)
-            {
-                Henchmen.AddRange(from item in henchmenNames select new Henchmen(item));
-            }
-
-            if (doubleHenchmen)
-            {
-                Scheme.NumberOfHenchmen *= 2;
-            }
-
-            Henchmen = GetHenchmen(Scheme.RequiredHenchmen, SchemeHenchmen, Mastermind, Henchmen);
-            AllHenchmenInGame = new List<Henchmen>(Henchmen).Concat(SchemeHenchmen).ToList();
-            foreach (var schemeRequiredHenchmen in Scheme.RequiredHenchmen)
-            {
-                AllHenchmenInGame.Add(new Henchmen(schemeRequiredHenchmen));
-            }
+            AllHenchmenInGame = HenchmenList.Concat(SchemeHenchmen)
+                .Concat(Scheme.RequiredHenchmen.Select(schemeRequiredHenchmen => schemeRequiredHenchmen))
+                             .ToList();
         }
 
-        public void SetHeroes(List<string> heroNames = null)
+        public void SetHeroes(List<Hero> heroNames = null)
         {
-            var getExclusions = new GetExclusions();
-            var masterminds = AllMastermindsInGame.Select(x => x.MastermindName).ToList();
-            var exclusions = getExclusions.GetMastermindExclusion(masterminds);
-            var allHeroesInGame = new List<Hero>();
-            var allHeroes = new Hero().GetListOfHeroes();
+            heroNames = heroNames ?? new List<Hero>();
+            if (Scheme.SchemeInfo.Is4v2 || Scheme.SchemeInfo.Is3v3)
+            {
+                Heroes = GetHeroesByTeam();
+            }
+            else
+            {
+                //This will replace heroNames with an empty list of strings if heroNames is null, otherwise use what was passed in
+                //And then it will add each item in the list as a new hero to Heroes.
+                Heroes.AddRange(heroNames);
+
+                //This will get all the heroes needed for the game
+                Heroes = GetHeroes();
+            }
+
+            AllHeroesInGame.AddRange(Heroes);
 
             if (Scheme.SchemeInfo.IsRandomHeroesInVillainDeck)
             {
-                VillainHeroes = getHeroes(Scheme.SchemeInfo.NumberOfHeroesInVillainDeck, exclusions.HeroList);
+                VillainHeroes = GetHeroes(Scheme.SchemeInfo.NumberOfHeroesInVillainDeck);
                 SchemeHeroes.AddRange(from item in VillainHeroes select item);
             }
 
             if (Scheme.SchemeInfo.IsHeroesInVillainDeck)
             {
-                VillainHeroes = getHeroes(Scheme.HeroesInVillainDeck);
+                VillainHeroes = Scheme.HeroesInVillainDeck;
                 SchemeHeroes.AddRange(from item in VillainHeroes select item);
             }
 
@@ -291,132 +254,102 @@ namespace MarvelLegendary
                 SchemeHeroes.Add(Scheme.SchemeInfo.SoulsHero);
             }
 
+            if (Scheme.SchemeInfo.IsShrinkTechHero)
+            {
+                SchemeHeroes.Add(Scheme.SchemeInfo.ShrinkTechHero);
+            }
+
             if (Scheme.SchemeInfo.IsDarkLoyalty)
             {
-                DarkLoyaltyHero = GetDarkLoyaltyHero(SchemeHeroes);
-                Scheme.SchemeInfo.DarkLoyaltyHero = DarkLoyaltyHero.HeroName;
+                DarkLoyaltyHero = Hero.GetNewHero();
+                Scheme.SchemeInfo.DarkLoyaltyHero = DarkLoyaltyHero.Name;
                 SchemeHeroes.Add(DarkLoyaltyHero);
             }
 
             if (Scheme.SchemeInfo.IsMutationDeck || Scheme.SchemeInfo.IsHulkDeck)
             {
-                var hero = new Hero(true, "Hulk", allHeroes);
-                SchemeHeroes.Add(hero);
+                var newHero = Hero.GetNewHeroByContainsString("Hulk");
+                SchemeHeroes.Add(newHero);
             }
 
+            //Sets aside 2 random heroes for the scheme
             if (Scheme.SchemeInfo.IsRoyalWedding)
             {
                 var excludedHeroes = new List<string>();
-                excludedHeroes.AddRange(from item in SchemeHeroes select item.HeroName);
-                excludedHeroes.AddRange(from item in Heroes select item.HeroName);
+                excludedHeroes.AddRange(from item in SchemeHeroes select item.Name);
+                excludedHeroes.AddRange(from item in Heroes select item.Name);
 
-                var test = GetHeroes(Scheme.SchemeInfo.RoyalWeddingHeroCount, SchemeHeroes, allHeroes, excludedHeroes, getExclusions);
+                //var royalWeddingHeroes = GetHeroes(Scheme.SchemeInfo.RoyalWeddingHeroCount, SchemeHeroes, allHeroes, excludedHeroes, getExclusions);
+                var royalWeddingHeroes = GetHeroes(Scheme.SchemeInfo.NumberOfHeroesInVillainDeck);
 
-                SchemeHeroes.AddRange(from item in test select new Hero(item));
+                SchemeHeroes.AddRange(royalWeddingHeroes);
             }
-
-            if (heroNames != null)
-            {
-                Heroes.AddRange(from item in heroNames select new Hero(item));
-            }
-
-            if (Scheme.SchemeInfo.Is4v2 || Scheme.SchemeInfo.Is3v3)
-            {
-                Heroes = GetHeroesByTeam(exclusions.HeroList, allHeroes);
-            }
-            else
-            {
-                Heroes = GetHeroes(exclusions.HeroList, SchemeHeroes, Heroes, allHeroes, getExclusions);
-            }
+            AllHeroesInGame.AddRange(SchemeHeroes);
         }
-
-        #region Masterminds
-        private static List<Mastermind> GetMasterminds(Scheme scheme, Mastermind mainMastermind)
-        {
-            var returnList = new List<Mastermind>();
-            var mastermindsInGame = new List<string> { mainMastermind.MastermindName };
-            var extraMasterminds = new List<string>();
-            var mastermindList = new Mastermind().GetListOfMasterminds();
-
-            for (int i = 0; i < scheme.SchemeInfo.NumberExtraMasterminds; i++)
-            {
-                var remainingMasterminds = mastermindList.Except(mastermindsInGame).ToList();
-                var exclusions = DetermineMastermindList(mastermindsInGame);
-                var mastermindsToChooseFrom = remainingMasterminds.Except(exclusions).ToList();
-
-                var newMastermind = mastermindsToChooseFrom[new Random().Next(mastermindsToChooseFrom.Count)];
-                mastermindsInGame.Add(newMastermind);
-                extraMasterminds.Add(newMastermind);
-            }
-
-            returnList.AddRange(from item in extraMasterminds
-                                select new Mastermind(item));
-
-            if (scheme.SchemeInfo.IsDrainedMastermind)
-            {
-                scheme.SchemeInfo.DrainedMastermind = new Mastermind(extraMasterminds.First());
-            }
-
-            return returnList;
-        }
-
-        private static List<string> DetermineMastermindList(List<string> mastermindsInGame)
-        {
-            var mastermindsToExcludeWith = new List<string>(mastermindsInGame);
-            var getExclusions = new GetExclusions();
-
-            for (int i = mastermindsToExcludeWith.Count - 1; i >= 0; i--)
-            {
-                var test = getExclusions.GetMastermindByMastermindExclusions(mastermindsToExcludeWith);
-                var mastermindList = new Mastermind().GetListOfMasterminds();
-                var compareList = mastermindList.Except(mastermindsInGame).Except(test).ToList();
-                if (compareList.Count > 0)
-                {
-                    return test;
-                }
-                mastermindsToExcludeWith.RemoveAt(i);
-            }
-
-            return new List<string>();
-        }
-        #endregion
 
         #region Villains
-        private List<Villain> GetVillains(int numberOfVillains, List<string> requiredVillains, List<Villain> currentVillains)
+        //currentVillains is the list of villains to be included in the villain deck
+        //schemeVillains is the list of villains that are set aside but needed to avoid being added to the list of villains
+        //to include in the villain deck
+        private List<Villain> GetVillains(int numberOfVillains, List<Villain> currentVillains, List<Villain> schemeVillains)
         {
+            var schemeInfo = Scheme.SchemeInfo;
+
+            //This will be the list of villians to include in the villain deck
             var villainList = new List<Villain>();
-            var allVillainsInGame = new List<Villain>();
+
+            var allVillains = VillainRepository.AllVillains.ToList();
+
+            //villainsNotAllowed is a list of villains that are not allowed to be in the game based on the scheme
+            var villainsNotAllowed = Scheme.SchemeInfo.VillainsNotAllowed;
+
+            //This will remove all the villians not allowed by the scheme from the list of villians to choose from
+            var idsInGame = new HashSet<int>(villainsNotAllowed.Select(v => v.Id));
+            var remainingVillains = allVillains.Where(h => !idsInGame.Contains(h.Id)).ToList();
+
+            //This will remove all the villains coming from the schemes from the list of villains to choose from
+            idsInGame = new HashSet<int>(schemeVillains.Select(v => v.Id));
+            remainingVillains = remainingVillains.Where(h => !idsInGame.Contains(h.Id)).ToList();
 
             villainList.AddRange(from item in currentVillains select item);
-            allVillainsInGame.AddRange(from item in currentVillains select item);
 
-            //Bring in the Monster Pit villain if it that scheme
-            villainList.AddRange(from item in MonsterPitVillains select item);
-            allVillainsInGame.AddRange(from item in MonsterPitVillains select item);
-
-            //There is one scheme that brings in two villains, so this will actually allow 2 villain groups in a solo game
-            villainList.AddRange(from item in requiredVillains select new Villain(item));
-            allVillainsInGame.AddRange(from item in requiredVillains select new Villain(item));
-
-            //If this is a solo game, then the Mastermind Leads is ignored
-            //If the number of villains required for the player count hasn't been reached, then it will add the mastermind leads villain group
-            if (PlayerCount > 1 && Mastermind.DoesLeadVillain && numberOfVillains > villainList.Count)
+            //If the game isn't a solo game or the Mastermind has his Leads Villain even when solo
+            //if the number of villains required for the player count hasn't been reached
+            //then it will add the mastermind leads villain group
+            if ((Mastermind.MastermindInfo.AlwaysLeadsOnSolo || PlayerCount > 1) && Mastermind.DoesLeadVillain
+                && numberOfVillains > villainList.Count)
             {
                 //If the masterminds leads one of the villains brought in through the scheme, it won't be added twice
-                var mastermindLeadsVillain = new Villain(Mastermind.LeadsVillain);
-                var mastermindLeadsVillainName = mastermindLeadsVillain.VillainName;
-                if (allVillainsInGame.All(x => x.VillainName != mastermindLeadsVillainName))
+                var mastermindLeadsVillain = Mastermind.LeadsVillain;
+                var mastermindLeadsVillainName = mastermindLeadsVillain.Name;
+                if (villainList.All(x => x.Name != mastermindLeadsVillainName))
                 {
                     villainList.Add(mastermindLeadsVillain);
-                    allVillainsInGame.Add(mastermindLeadsVillain);
                 }
             }
 
-            if (villainList.Count == 0)
+            if (schemeInfo.IsMarvelZombies)
             {
-                var villain = new Villain(AllMastermindsInGame);
-                villainList.Add(villain);
-                allVillainsInGame.Add(villain);
+                var allKeywordVillains = Villain.GetListOfVillainsWithKeyword(schemeInfo.ZombieKeyword);
+                var mastermindVillain = Mastermind.MastermindInfo.LeadsVillain;
+
+                //If the Mastermind leads a villain group with the "Rise of the Living Dead" keyword then this shouldn't grab another one
+                if (mastermindVillain != null && allKeywordVillains.Any(v => v.Name == mastermindVillain.Name))
+                {
+                    allKeywordVillains.Remove(mastermindVillain);
+                    schemeInfo.VillainsNotAllowed = allKeywordVillains;
+                }
+                else
+                {
+                    var marvelZombieVillains = GetMarvelZombieVillains(schemeInfo.NumberOfSchemeVillains, schemeInfo.ZombieKeyword);
+                    var remainingKeywordVillains = allKeywordVillains.Except(marvelZombieVillains).ToList();
+
+                    //This will add the Marvel Zombie villain to the deck
+                    villainList.AddRange(marvelZombieVillains);
+
+                    //This scheme only allows one group with "Rise of the Living Dead" keyword
+                    schemeInfo.VillainsNotAllowed = remainingKeywordVillains;
+                }
             }
 
             var currentVillainCount = villainList.Count;
@@ -427,96 +360,68 @@ namespace MarvelLegendary
             if (numRemainingVillains <= 0) return villainList;
 
             var returnList = new List<Villain>();
-            var villainsInGame = new List<string>(villainList.Select(x => x.VillainName));
-            var allVillains = new Villain().GetListOfVillains();
+            var villainsInGame = villainList;
 
-            for (int i = 0; i < numRemainingVillains; i++)
+            while (numRemainingVillains > 0)
             {
-                var exclusions = DetermineVillainList(villainsInGame, AllMastermindsInGame);
-            
-                var remainingVillains = allVillains.Except(villainsInGame).ToList();
-                var villainsToChooseFrom = remainingVillains.Except(exclusions).ToList();
-            
-                var newVillain = villainsToChooseFrom[new Random().Next(villainsToChooseFrom.Count)];
+                var newVillain = Villain.GetNewVillain(AllMastermindsInGame, Scheme, villainsInGame);
                 villainsInGame.Add(newVillain);
+                numRemainingVillains--;
             }
 
-            returnList.AddRange(from item in villainsInGame
-                                select new Villain(item));
+            returnList.AddRange(villainsInGame);
 
             return returnList;
         }
 
-        private static List<string> DetermineVillainList(List<string> villainsInGame, List<Mastermind> mastermindsInGame)
+        private List<Villain> GetMarvelZombieVillains(int numberOfVillains, Keywords keyword)
         {
-            var masterminds = mastermindsInGame.Select(x => x.MastermindName).ToList();
-            var villainList = new Villain().GetListOfVillains();
-            var getExclusions = new GetExclusions();
+            var returnList = new List<Villain>();
+            var keywordVillains = Villain.GetListOfVillainsWithKeyword(keyword);
 
-            for (int i = masterminds.Count - 1; i >= 0; i--)
+            while (returnList.Count < numberOfVillains && keywordVillains.Count > 0)
             {
-                var villainsToExcludeWith = new List<string>(villainsInGame);
-                var exclusions = getExclusions.GetMastermindExclusion(masterminds);
-
-                if (villainList.Except(exclusions.VillainList).Except(villainsInGame).ToList().Count != 0)
-                {
-                    for (int j = villainsToExcludeWith.Count - 1; j >= 0; j--)
-                    {
-                        var excludedVillains = getExclusions.GetVillainByVillainExclusion(villainsToExcludeWith);
-                        var excludeList = new List<string>(excludedVillains);
-                        excludeList.AddRange(from item in exclusions.VillainList
-                                             select item);
-
-                        var villainCompareList = villainList.Except(villainsInGame).Except(excludedVillains).Except(exclusions.VillainList).ToList();
-                        if (villainCompareList.Count > 0)
-                        {
-                            return excludeList;
-                        }
-                        villainsToExcludeWith.RemoveAt(j);
-                    }
-
-                    var mastermindCompareList = villainList.Except(villainsInGame).Except(exclusions.VillainList).ToList();
-                    if (mastermindCompareList.Count > 0)
-                    {
-                        return exclusions.VillainList;
-                    }
-                }
-                masterminds.RemoveAt(i);
+                var zombieVillain = keywordVillains[RandomHelper.Instance.Next(keywordVillains.Count)];
+                returnList.Add(zombieVillain);
+                keywordVillains.Remove(zombieVillain);
             }
 
-            return new List<string>();
+            return returnList;
         }
         #endregion
 
         #region Henchmen
-        private List<Henchmen> GetHenchmen(List<string> requiredHenchmenString, List<Henchmen> schemeHenchmenGroups, Mastermind mastermind, List<Henchmen> currentHenchmen)
+        //schemeHenchmenGroups is the list of henchmen that are set aside but needed to avoid being added to the list of henchmen
+        //to include in the henchmen deck
+        //currentHenchmen is the list of henchmen to be included in the henchmen deck
+        private List<Henchmen> GetHenchmen(int numberOfHenchmen, List<Henchmen> currentHenchmen, List<Henchmen> schemeHenchmen)
         {
+            //var schemeHenchmenNames = schemeHenchmen.Select(x => x.HenchmenName).ToList();
+
+            //This will be the list of henchmen to include in the villain deck
             var henchmenList = new List<Henchmen>();
-            var allHenchmenInGame = new List<Henchmen>();
-            var requiredHenchmen = new List<Henchmen>();
-            var numberOfHenchmen = Scheme.NumberOfHenchmen;
-            requiredHenchmen.AddRange(from item in requiredHenchmenString select new Henchmen(item));
 
-            henchmenList.AddRange(from item in currentHenchmen select item);
-            allHenchmenInGame.AddRange(from item in currentHenchmen select item);
+            var allHenchmen = Henchmen.GetAllHenchmen();
 
-            henchmenList.AddRange(from schemeHenchmen in schemeHenchmenGroups select schemeHenchmen);
-            allHenchmenInGame.AddRange(from schemeHenchmen in schemeHenchmenGroups select schemeHenchmen);
+            henchmenList.AddRange(currentHenchmen);
 
-            //Adds all required henchmen from the scheme to the list
-            henchmenList.AddRange(from item in requiredHenchmen select item);
-            allHenchmenInGame.AddRange(from item in requiredHenchmen select item);
+            //This will remove the henchmen that are currently in the game from the pool to choose from
+            var idsInGame = new HashSet<int>(schemeHenchmen.Select(h => h.Id));
+            var remainingHenchmen = allHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
+
+            //This will remove all the henchmen that come in from the scheme from the list of henchmen to choose
+            allHenchmen = allHenchmen.Except(schemeHenchmen).ToList();
 
             //If the scheme didn't bring in any henchmen or there are more than one henchmen group included we then include from the Mastermind
             //If this is a solo game, then the Mastermind Leads is ignored
-            if (PlayerCount != 1 && numberOfHenchmen > henchmenList.Count && mastermind.DoesLeadHenchmen)
+            if ((Mastermind.MastermindInfo.AlwaysLeadsOnSolo || PlayerCount > 1) && Mastermind.DoesLeadHenchmen
+                && numberOfHenchmen > henchmenList.Count)
             {
                 //If the masterminds leads one of the henchmen brought in through the scheme twist, it won't be added twice
-                var mastermindLeadsHenchmen = new Henchmen(mastermind.LeadsHenchmen);
-                if (allHenchmenInGame.All(x => x.HenchmenName != mastermindLeadsHenchmen.HenchmenName))
+                var mastermindLeadsHenchmen = Mastermind.LeadsHenchmen; 
+                if (henchmenList.All(x => x.Name != mastermindLeadsHenchmen.Name))
                 {
                     henchmenList.Add(mastermindLeadsHenchmen);
-                    allHenchmenInGame.Add(mastermindLeadsHenchmen);
                 }
             }
 
@@ -528,98 +433,103 @@ namespace MarvelLegendary
             if (numRemainingHenchmen <= 0) return henchmenList;
 
             var returnList = new List<Henchmen>();
-            var henchmenInGame = new List<string>(henchmenList.Select(x => x.HenchmenName));
-            var allHenchmen = new Henchmen().GetListOfHenchmen();
 
-            for (int i = 0; i < numRemainingHenchmen; i++)
+            while(numRemainingHenchmen > 0)
             {
-                var exclusions = DetermineHenchmen.DetermineHenchmenList(Villains, AllMastermindsInGame, henchmenInGame, Scheme);
-                
-                var exclusionsWithoutHenchmenInGame = allHenchmen.Except(henchmenInGame).ToList();
-                var henchmenToChooseFrom = exclusionsWithoutHenchmenInGame.Except(exclusions).ToList();
-                var henchmenName = henchmenToChooseFrom[new Random().Next(henchmenToChooseFrom.Count)];
-
-                henchmenInGame.Add(henchmenName);
+                var henchmen = Henchmen.GetNewHenchmen(AllMastermindsInGame, Scheme, Villains, henchmenList);
+                henchmenList.Add(henchmen);
+                numRemainingHenchmen--;
             }
 
-            returnList.AddRange(from item in henchmenInGame
-                                select new Henchmen(item));
+            return henchmenList;
+        }
+
+        //schemeHenchmenGroups is the list of henchmen that are set aside but needed to avoid being added to the list of henchmen
+        //to include in the henchmen deck
+        //currentHenchmen is the list of henchmen to be included in the henchmen deck
+        private List<Henchmen> GetExtraHenchmen(int numberOfHenchmen, List<Henchmen> currentHenchmen, List<Henchmen> schemeHenchmen)
+        {
+            var schemeHenchmenNames = schemeHenchmen.Select(x => x.Name).ToList();
+
+            //This will be the list of henchmen to include in the villain deck
+            var henchmenList = new List<Henchmen>(currentHenchmen);
+            var henchmentToExclude = new List<Henchmen>(currentHenchmen).Concat(schemeHenchmen).ToList();
+
+            var allHenchmen = Henchmen.GetAllHenchmen();
+
+            //This will remove the henchmen that are currently in the game from the pool to choose from
+            var idsInGame = new HashSet<int>(henchmenList.Select(h => h.Id));
+            var remainingHenchmen = allHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
+
+            //This will remove the henchmen that are currently brought in by the scheme from the pool to choose from
+            idsInGame = new HashSet<int>(schemeHenchmen.Select(h => h.Id));
+            remainingHenchmen = remainingHenchmen.Where(h => !idsInGame.Contains(h.Id)).ToList();
+
+            var currentHenchmenCount = henchmenList.Count;
+            var totalHenchmenInGame = Scheme.NumberOfHenchmen + Scheme.SchemeInfo.NumberExtraHenchmenGroups;
+            var numRemainingHenchmen = totalHenchmenInGame - currentHenchmenCount;
+
+            //If the required number of henchmen from schemes and mastermind lead abilities hasn't reached the number of
+            //henchmen for the player count, it will do this
+            if (numRemainingHenchmen <= 0) return henchmenList;
+
+            var returnList = new List<Henchmen>();
+
+            while (numRemainingHenchmen > 0)
+            {
+                var henchmen = Henchmen.GetNewHenchmen(AllMastermindsInGame, Scheme, Villains, henchmentToExclude);
+                returnList.Add(henchmen);
+                numRemainingHenchmen--;
+            }
 
             return returnList;
         }
         #endregion
 
         #region Heroes
-        private Hero GetDarkLoyaltyHero(List<Hero> allHeroesInGame)
+        private List<Hero> GetHeroes(int numberOfHeroes)
         {
-            List<string> heroes = new List<string>();
-            foreach (var heroInGame in allHeroesInGame)
+            var heroList = new List<Hero>(AllHeroesInGame); // Initialize heroList with AllHeroesInGame
+            
+            for (int i = 0; i < numberOfHeroes; i++)
             {
-                heroes.Add(heroInGame.HeroName);
-            }
-            var newHero = new Hero(heroes);
-
-            return newHero;
-        }
-
-        private List<Hero> getHeroes(int randomHeroesInVillainDeck, List<string> exclusionHeroes)
-        {
-            var heroList = new List<Hero>();
-            var getExclusions = new GetExclusions();
-
-            var hero = new Hero(exclusionHeroes);
-            heroList.Add(hero);
-
-            var heroByHeroExclusions = getExclusions.GetHeroByHeroExclusions(heroList.First().HeroName);
-
-            if (randomHeroesInVillainDeck > heroList.Count)
-            {
-                for (int i = 0; i < randomHeroesInVillainDeck; i++)
-                {
-                    hero = new Hero(heroByHeroExclusions);
-                    var heroName = hero.HeroName;
-                    while (heroList.Any(x => x.HeroName == heroName) || (heroByHeroExclusions.Count < new Hero().GetNumberOfHeroes() - 1 && heroByHeroExclusions.Any(x => x == heroName)))
-                    {
-                        hero = new Hero(heroByHeroExclusions);
-                        heroName = hero.HeroName;
-                    }
-                    heroList.Add(hero);
-                }
+                //var newHero = Hero.GetNewHero(exclusionHeroes);
+                var newHero = Hero.GetNewHero(AllMastermindsInGame, Scheme, AllVillainsInGame, AllHenchmenInGame, heroList);
+                heroList.Add(newHero);
             }
 
             return heroList;
         }
 
-        private List<Hero> getHeroes(List<string> heroesInVillainDeck)
+        public List<Hero> GetHeroes(List<Hero> heroList, List<Hero> availableHeroes, List<Hero> excludedHeroes, IGetExclusions getExclusions)
         {
-            var heroList = new List<Hero>();
-
-            foreach (var hero in heroesInVillainDeck)
-            {
-                heroList.Add(new Hero(hero));
-            }
-
-            return heroList;
+            return new List<Hero>();
         }
 
-        private List<Hero> getHeroes(int numberOfHeroes, HeroTeam heroTeam, List<string> exclusionList, List<string> availableHeroes)
+        public List<Hero> GetHeroes(int numberOfHeroes, HeroTeam heroTeam, List<Hero> availableHeroes, List<Hero> exclusionList = null)
         {
             var returnList = new List<Hero>();
+
+            //This will set exclusion list to an empty list if it comes in as null otherwise it will keep the passed in value
+            exclusionList = exclusionList ?? new List<Hero>();
 
             var currentHeroCount = 0;
             if (numberOfHeroes > currentHeroCount)
             {
                 for (int i = currentHeroCount; i < numberOfHeroes; i++)
                 {
-                    var hero = new Hero(heroTeam, availableHeroes);
-                    var heroName = hero.HeroName;
-                    //This will make sure there are no duplicate heroes in the list. It will also ignore any heroes that will be included in the villain deck
-                    while (returnList.Any(x => x.HeroName == heroName || exclusionList.Contains(heroName)))
+                    var newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes);
+                    var heroName = newHero.Name;
+
+                    //This will make sure there are no duplicate heroes in the list.
+                    //It will also ignore any heroes that will be included in the villain deck
+                    while (returnList.Any(x => x.Name == heroName && x.SetName == newHero.SetName) || exclusionList.Any(h => h.Name == heroName && h.SetName == newHero.SetName))
                     {
-                        hero = new Hero(heroTeam, availableHeroes);
-                        heroName = hero.HeroName;
+                        newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes);
+                        heroName = newHero.Name;
                     }
-                    returnList.Add(hero);
+
+                    returnList.Add(newHero);
                 }
             }
 
@@ -635,94 +545,79 @@ namespace MarvelLegendary
             {
                 for (int i = currentHeroCount; i < numberOfHeroes; i++)
                 {
-                    var hero = new Hero(heroTeam, availableHeroes, false);
-                    var heroName = hero.HeroName;
+                    var newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes, false);
+                    var heroName = newHero.Name;
                     //This will make sure there are no duplicate heroes in the list. It will also ignore any heroes that will be included in the villain deck
-                    while (returnList.Any(x => x.HeroName == heroName || exclusionList.Contains(heroName)))
+                    while (returnList.Any(x => x.Name == heroName || exclusionList.Contains(heroName)))
                     {
-                        hero = new Hero(heroTeam, availableHeroes, false);
-                        heroName = hero.HeroName;
+                        newHero = Hero.GetNewHeroByTeam(heroTeam, availableHeroes, false);
+                        heroName = newHero.Name;
                     }
-                    returnList.Add(hero);
+                    returnList.Add(newHero);
                 }
             }
 
             return returnList;
         }
 
-        private List<Hero> GetHeroesByTeam(List<string> exclusionHeroes, List<string> availableHeroes)
+        //exclusionHeroes is the list of heroes that have played with the mastermind
+        //this will be going away, but documenting what it is
+        private List<Hero> GetHeroesByTeam()
         {
+            var availableHeroes = Hero.GetAllHeroes();
             var returnList = new List<Hero>();
+            var usedHeroTeams = new List<HeroTeam>();
 
-            if (Scheme.SchemeInfo.Is4v2)
-            {
-                var heroTeams = Enum.GetValues(typeof(HeroTeam));
-                var randomHeroTeam = (HeroTeam) heroTeams.GetValue(new Random().Next(heroTeams.Length));
-                while (new Hero().GetHeroTeamMemberCount(randomHeroTeam) < 4 || randomHeroTeam == HeroTeam.Unaffiliated)
-                {
-                    randomHeroTeam = (HeroTeam)heroTeams.GetValue(new Random().Next(heroTeams.Length));
-                }
-                var enoughHeroes = new Hero().IsEnoughHeroes(new List<HeroTeam>{randomHeroTeam}, 4, exclusionHeroes);
-                var exclusionCompare = enoughHeroes ? exclusionHeroes : new List<string>();
+            var teamOneMembers = Scheme.SchemeInfo.Is4v2 ? 4 : 3;
+            var teamTwoMembers = Scheme.SchemeInfo.Is4v2 ? 2 : 3;
 
-                var heroList = getHeroes(4, randomHeroTeam, exclusionCompare, availableHeroes);
+            //Need to get all the hero teams that have teamOneMembers or more members
+            var heroTeam = Hero.GetHeroTeam(teamOneMembers);
+            usedHeroTeams.Add(heroTeam);
 
-                foreach (var item in heroList)
-                {
-                    returnList.Add(item);
-                    AllHeroesInGame.Add(item);
-                }
-                
+            //Need to get teamOneMembers heroes from that team
+            //TODO
+            //Need to bring in Scheme, Mastermind, Villain, and Henchmen data to unique these heroes
+            //It could mean that another team would have to be chosen if not enough heroes are left in the team after uniquing
+            //or choosing any hero once it gets down to not enough heroes left in the team after uniquing
+            //Can use the function IsEnoughHeroes to check for this
+            var heroList = GetHeroes(teamOneMembers, heroTeam, availableHeroes);
 
-                enoughHeroes = new Hero().IsEnoughHeroesWithout(randomHeroTeam, 2, exclusionHeroes);
-                exclusionCompare = enoughHeroes ? exclusionHeroes : new List<string>();
+            returnList.AddRange(heroList);
+            AllHeroesInGame.AddRange(heroList);
 
-                heroList = getHeroesNotInTeam(2, randomHeroTeam, exclusionCompare, availableHeroes);
+            //Need to get another hero team that has teamTwoMembers or more members
+            heroTeam = Hero.GetHeroTeam(teamTwoMembers, usedHeroTeams);
+            usedHeroTeams.Add(heroTeam);
 
-                foreach (var item in heroList)
-                {
-                    returnList.Add(item);
-                    AllHeroesInGame.Add(item);
-                }
-                
-            }
+            //Need to get teamTwoMembers heroes from that team
+            heroList = GetHeroes(teamTwoMembers, heroTeam, availableHeroes);
 
-            else
-            {
-                var heroTeams = new Hero().GetHeroTeams(2, true);
-                var enoughHeroes = new Hero().IsEnoughHeroes(heroTeams, 3, exclusionHeroes);
-                var exclusionCompare = enoughHeroes ? exclusionHeroes : new List<string>();
-
-                foreach (var heroTeam in heroTeams)
-                {
-                    var heroList = getHeroes(3, heroTeam, exclusionCompare, availableHeroes);
-
-                    foreach (var item in heroList)
-                    {
-                        returnList.Add(item);
-                        AllHeroesInGame.Add(item);
-                    }
-                }
-            }
+            returnList.AddRange(heroList);
+            AllHeroesInGame.AddRange(heroList);
 
             return returnList;
         }
 
-        public List<Hero> GetHeroes(List<string> exclusionHeroes, List<Hero> schemeHeroGroups, List<Hero> currentHeroes, List<string> availableHeroes, IGetExclusions getExclusions)
+        //This is kept around until I can fix the integration tests
+        public List<Hero> GetHeroes(List<Hero> exclusionHeroes, List<Hero> schemeHeroGroups, List<Hero> currentHeroes, List<Hero> availableHeroes, IGetExclusions getExclusions)
         {
             var heroList = new List<Hero>(currentHeroes);
-            var numberOfHeroes = Scheme.NumberOfHeroes;
-            var excludedHeroes = new List<string>();
+
+            //The second variable will only be a non-zero number if Alchemax Executives are the Mastermind
+            var numberOfHeroes = Scheme.NumberOfHeroes + Mastermind.MastermindInfo.MastermindNumberOfHeroes;
+
+            var excludedHeroes = new List<Hero>();
 
             AllHeroesInGame.AddRange(from item in schemeHeroGroups select item);
             AllHeroesInGame.AddRange(from item in currentHeroes select item);
 
-            excludedHeroes.AddRange(from item in schemeHeroGroups select item.HeroName);
-            excludedHeroes.AddRange(from item in currentHeroes select item.HeroName);
+            excludedHeroes.AddRange(from item in schemeHeroGroups select item);
+            excludedHeroes.AddRange(from item in currentHeroes select item);
 
             if (Scheme.SchemeInfo.IsIncludeHeroTeam)
             {
-                var heroGroupList = getHeroes(Scheme.SchemeInfo.NumberOfHeroesFromTeam, Scheme.SchemeInfo.IncludeHeroTeam, exclusionHeroes, availableHeroes);
+                var heroGroupList = GetHeroes(Scheme.SchemeInfo.NumberOfHeroesFromTeam, Scheme.SchemeInfo.IncludeHeroTeam, availableHeroes, exclusionHeroes);
                 foreach (var heroGroup in heroGroupList)
                 {
                     SchemeHeroes.Add(heroGroup);
@@ -737,8 +632,8 @@ namespace MarvelLegendary
                 heroList.AddRange(from item in nameLimitHeroes select item);
                 AllHeroesInGame.AddRange(from item in nameLimitHeroes select item);
 
-                var heroesToExclude = new Hero().GetListOfHeroes().Where(x => x.Contains(Scheme.SchemeInfo.CustomNameString)).ToList();
-                excludedHeroes.AddRange(from item in nameLimitHeroes select item.HeroName);
+                var heroesToExclude = Hero.GetListOfHeroes().Where(x => x.Contains(Scheme.SchemeInfo.CustomNameString)).ToList();
+                excludedHeroes.AddRange(from item in nameLimitHeroes select item);
             }
 
             var currentHeroCount = heroList.Count;
@@ -748,46 +643,149 @@ namespace MarvelLegendary
             if (numRemainingHeroes <= 0) return heroList;
 
             var returnList = new List<Hero>();
-            var heroes = GetHeroes(numRemainingHeroes, heroList, availableHeroes, excludedHeroes, getExclusions);
+            var heroes = new List<Hero>();
+
+            for (int i = numRemainingHeroes; i > 0; i--)
+            {
+                heroes.Concat(GetHeroes(heroList, availableHeroes, excludedHeroes, getExclusions));
+            }
+
+            //heroes = GetHeroes(numRemainingHeroes, heroList, availableHeroes, excludedHeroes, getExclusions);
 
             //returnList.AddRange(from item in heroesInGame select new Hero(item));
-            returnList.AddRange(from item in heroes select new Hero(item));
+            returnList.AddRange(heroes);
 
             return returnList;
         }
-
-        public List<string> GetHeroes(int heroCount, List<Hero> heroList, List<string> availableHeroes, List<string> excludedHeroes, IGetExclusions getExclusions)
+        
+        public List<Hero> GetHeroes()
         {
-            var heroesInGame = new List<string>(heroList.Select(x => x.HeroName));
+            //Heroes in the game
+            var heroList = new List<Hero>(Heroes);
 
-            var availableHeroesWithoutExcludedHeroes = new List<string>(availableHeroes);
-            availableHeroesWithoutExcludedHeroes = availableHeroesWithoutExcludedHeroes.Except(excludedHeroes).ToList();
+            //List of all Heroes
+            var availableHeroes = Hero.GetAllHeroes();
+
+            //This will remove any of the current heroes from the list of heroes to choose from
+            var idsInGame = new HashSet<int>(heroList.Select(h => h.HeroInfo.Id));
+            var remainingHeroes = availableHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
+
+            //Alchemax Executives are the only Mastermind that brings in hero groups
+            var numberOfHeroes = Scheme.NumberOfHeroes + Mastermind.MastermindInfo.MastermindNumberOfHeroes;
+
+            //This will add all the current heroes brought in from the scheme to a list of heroes in the game.
+            AllHeroesInGame.AddRange(SchemeHeroes);
+
+            //There are some instances where specific heroes are set to be in the game, this is mainly used for testing.
+            //If those heroes are set, this will add them to a list of heroes in the game
+            AllHeroesInGame.AddRange(heroList);
+
+            //Schemes like "Distract the Hero" say to include X number of heroes from a certain team.
+            //Should use GetHeroes(teamOneMembers, heroTeam, availableHeroes) to get the hero
+
+            //Go After Heroes' Loved Ones makes it so you can't have heroes with the same name. For example, 
+            //Black Panther is in Secret Wars V1 and Infinity Saga. These would be heroes with the same name
+            //On the other hand, Captain America and Captain America (Falcon) are not duplicates
+            if (Scheme.SchemeInfo.NoDuplicates)
+            {
+                var duplicateHeroes = AllHeroesInGame.SelectMany(hero => HeroRepository.AllHeroes.Where(h => h.Name == hero.Name)).ToList();
+
+                idsInGame = new HashSet<int>(duplicateHeroes.Select(h => h.HeroInfo.Id));
+                remainingHeroes = remainingHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
+            }
+
+            if (Scheme.SchemeInfo.IsIncludeHeroTeam)
+            {
+                var heroGroupList = GetHeroes(Scheme.SchemeInfo.NumberOfHeroesFromTeam, Scheme.SchemeInfo.IncludeHeroTeam, remainingHeroes);
+                foreach (var heroGroup in heroGroupList)
+                {
+                    SchemeHeroes.Add(heroGroup);
+                    heroList.Add(heroGroup);
+                    
+                    AllHeroesInGame.Add(heroGroup);
+
+                    //This will remove any of the current heroes from the list of heroes to choose from
+                    idsInGame = new HashSet<int>(AllHeroesInGame.Select(h => h.HeroInfo.Id));
+                    remainingHeroes = remainingHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
+                }
+            }
+
+            if (Scheme.SchemeInfo.NoDuplicates)
+            {
+                var duplicateHeroes = heroList.SelectMany(hero => HeroRepository.AllHeroes.Where(h => h.Name == hero.Name)).ToList();
+
+                idsInGame = new HashSet<int>(duplicateHeroes.Select(h => h.HeroInfo.Id));
+                remainingHeroes = remainingHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
+            }
+
+            //Schemes like "Deadpool Writes a Scheme" say to include a certain hero.
+            //Schemes like "Fall of the Hulks" say to use only a certain number of heroes with a certain keyword in their name
+            //If the second is true I need to add a method to remove all others that weren't chosen from the main list
+            //Possibly create a method to remove heroes that match a certain string
+            if (Scheme.SchemeInfo.IsHeroNameLimit)
+            {
+                //This will add the number of heroes with the name to the game
+                var nameLimitHeroes = GetNameLimitHeroes(Scheme.SchemeInfo.CustomNameString, remainingHeroes, Scheme.SchemeInfo.NumberOfHeroesWithNameString);
+                heroList.AddRange(nameLimitHeroes);
+                AllHeroesInGame.AddRange(nameLimitHeroes);
+
+                var heroesToExclude = new List<Hero>(nameLimitHeroes);
+                //This will remove all other heroes with that name. Deadpool Writes a Scheme doesn't require only the one Deadpool hero
+                if (Scheme.SchemeInfo.Name != "Deadpool Writes a Scheme")
+                {
+                    heroesToExclude = Hero.ConvertToHeroList(HeroRepository.All.Where(x => x.Name.Contains(Scheme.SchemeInfo.CustomNameString)).ToList());
+                    if(Scheme.SchemeInfo.CustomNameString == "Hulk")
+                    {
+                        heroesToExclude.Add(Hero.GetNewHero("Nul, Breaker of Worlds", Set.Fi));
+                    }
+                }
+
+                idsInGame = new HashSet<int>(heroesToExclude.Select(h => h.HeroInfo.Id));
+                remainingHeroes = remainingHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
+            }
+
+            var currentHeroCount = heroList.Count;
+            var numRemainingHeroes = numberOfHeroes - currentHeroCount;
+
+            //If the required number of heroes from schemes reached the number of heroes for the player count, it will return the list
+            if (numRemainingHeroes <= 0) return heroList;
+            
+            //This will chose the remaining heroes for the setup. It will then add them to the main heroList
+            var heroes = GetHeroes(numRemainingHeroes, remainingHeroes);
+            heroList.AddRange(heroes);
+
+            return heroList;
+        }
+
+        public List<Hero> GetHeroes(int heroCount, List<Hero> remainingHeroes)
+        {
+            var heroesLeft = new List<Hero>(remainingHeroes);
+            var heroesToAdd = new List<Hero>();
 
             //If the required number of heroes from schemes hasn't reached the number of heroes for the player count, it will do this
             for (int i = 0; i < heroCount; i++)
             {
-                var exclusions = DetermineHeroes.DetermineHeroList(Villains, AllMastermindsInGame, Henchmen, Scheme, heroesInGame, availableHeroesWithoutExcludedHeroes, getExclusions);
-
-                var exclusionsWithoutHeroesInGame = availableHeroesWithoutExcludedHeroes.Except(heroesInGame).ToList();
-                var heroesToChooseFrom = exclusionsWithoutHeroesInGame.Except(exclusions).ToList();
-                var heroName = heroesToChooseFrom[new Random().Next(heroesToChooseFrom.Count)];
-
-                heroesInGame.Add(heroName);
+                var hero = Hero.GetNewHero(AllMastermindsInGame, Scheme, AllVillainsInGame, AllHenchmenInGame, heroesToAdd, heroesLeft);
+                heroesToAdd.Add(hero);
             }
 
-            return heroesInGame;
+            return heroesToAdd;
         }
 
-        public List<Hero> GetNameLimitHeroes(string heroNamePart, List<string> availableHeroes, int numberOfHeroes)
+        public List<Hero> GetNameLimitHeroes(string heroNamePart, List<Hero> availableHeroes, int numberOfHeroes)
         {
             var heroList = new List<Hero>();
-            var listOfHeroes = new Hero().GetAllHeroesByNamePart(heroNamePart, availableHeroes);
+            var listOfHeroes = Hero.GetAllHeroesByNamePart(heroNamePart, availableHeroes);
             var newListOfHeroes = new List<Hero>(listOfHeroes);
             for (int i = 0; i < numberOfHeroes; i++)
             {
-                var hero = newListOfHeroes[new Random().Next(newListOfHeroes.Count)];
+                var hero = newListOfHeroes[RandomHelper.Instance.Next(newListOfHeroes.Count)];
                 heroList.Add(hero);
                 newListOfHeroes.Remove(hero);
+
+                var duplicates = Hero.GetDuplicateHeroes(hero).ToList();
+                var idsInGame = new HashSet<int>(duplicates.Select(h => h.HeroInfo.Id));
+                newListOfHeroes = newListOfHeroes.Where(h => !idsInGame.Contains(h.HeroInfo.Id)).ToList();
             }
             return heroList;
         }
